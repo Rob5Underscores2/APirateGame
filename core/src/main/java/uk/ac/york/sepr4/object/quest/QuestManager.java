@@ -15,14 +15,16 @@ public class QuestManager {
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
+    private Array<String> capturedColleges;
 
     public QuestManager(EntityManager entityManager) {
         this.entityManager = entityManager;
 
         Json json = new Json();
-        this.questList= json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
+        this.questList = json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
         this.chooseQuest();
         allQuestsCompleted = false;
+        capturedColleges = new Array<>(questList.size);
     }
 
     /**
@@ -35,18 +37,16 @@ public class QuestManager {
         if (this.questList.size !=0) {
             this.currentQuest = this.questList.random();
             this.currentQuest.setIsStarted(true);
+
+
+            if (this.capturedColleges != null && this.capturedColleges.indexOf(this.currentQuest.getTargetEntityName(),true) == -1){
+                this.questList.removeValue(this.currentQuest, true);
+                chooseQuest();
+
+            }
             return this.currentQuest;
         }
 
-       /* do{
-            if (currentQuest.isCompleted() == true && loopCounter < questList.size - 2)  {
-                currentQuest = questList.random();
-            } else if (currentQuest.isCompleted() == true) {
-                return null;
-            }else{
-                return this.currentQuest;
-            }
-        } while (loopStop);*/
         return null;
     }
     /**
@@ -64,12 +64,14 @@ public class QuestManager {
         System.out.println("Quest is complete");
     }
 
+    public void addCapturedCollege(String inCollege){
+
+        this.capturedColleges.add(inCollege);
+
+    }
+
     public Quest getCurrentQuest(){
-        /*for (Quest quest : questList){
-            if (quest.isStarted() && !(quest.isCompleted())) {
-                return quest;
-            }
-        }*/
+
         if (allQuestsCompleted == false){
             return this.currentQuest;
         }else{
@@ -83,7 +85,7 @@ public class QuestManager {
     * @return String representation of quest status.
     **/
     public String getQuestStatus() {
-        if (this.getCurrentQuest() == null) {
+        if (this.questList.size == 0) {
             return "No quests active";
         }
         else{

@@ -17,7 +17,7 @@
   }
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
-    "name": "Capture James",
+    "name": "Capture Derwent",
     "startMessage": "Tutorial started",
     "endMessage": "Tutorial ended",
     "requires" : [],
@@ -28,13 +28,13 @@
       "gold":1000,
       "items": []
     },
-    "targetEntityName":"Halifax College",
+    "targetEntityName":"Derwent College",
     "isKillQuest":true
   }
 
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
-    "name": "Capture Alquin",
+    "name": "Capture Derwent",
     "startMessage": "Tutorial started",
     "endMessage": "Tutorial ended",
     "requires" : [],
@@ -45,7 +45,7 @@
       "gold":1000,
       "items": []
     },
-    "targetEntityName":"Halifax College",
+    "targetEntityName":"Derwent College",
     "isKillQuest":true
   }
 
