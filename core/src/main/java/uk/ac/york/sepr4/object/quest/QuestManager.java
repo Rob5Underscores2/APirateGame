@@ -20,6 +20,10 @@ public class QuestManager {
 
     }
 
+    /**
+     * Checks through the current questList to find the most recently started and not completed quest.
+     * @return Quest in progress
+     */
     public Quest getCurrentQuest(){
         for (Quest quest : questList){
             if (quest.isStarted() && !(quest.isCompleted())) {
@@ -29,7 +33,10 @@ public class QuestManager {
         return null;
     }
 
-
+    /**
+    * Returns the current quest if there is one, otherwise states no quest active.
+    * @return String representation of quest status.
+    **/
     public String getQuestStatus() {
         if (this.getCurrentQuest() == null) {
             return "No quests active";
