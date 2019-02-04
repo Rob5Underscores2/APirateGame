@@ -1,6 +1,7 @@
 package uk.ac.york.sepr4.object.quest;
 
 import lombok.Data;
+import lombok.Getter;
 import uk.ac.york.sepr4.object.item.Reward;
 
 import java.util.List;

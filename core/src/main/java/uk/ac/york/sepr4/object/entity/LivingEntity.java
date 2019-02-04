@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
+import lombok.Getter;
 import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.utils.AIUtil;
@@ -43,7 +44,7 @@ public abstract class LivingEntity extends Entity {
      * @param withBoat true if collision was with another LivingEntity (boat)
      */
     public void collide(boolean withBoat, float thetaTP) {
-        if(withBoat) {
+        if (withBoat) {
             setColliedWithBoat(10);
             setAngle(thetaTP);
         } else {
@@ -109,12 +110,12 @@ public abstract class LivingEntity extends Entity {
      * @return true if cooldown sufficient and shot has been fired
      */
     public boolean fire(float angle) {
-            if (currentCooldown >= reqCooldown) {
-                setCurrentCooldown(0f);
-                GameScreen.getInstance().getEntityManager().getProjectileManager().spawnProjectile( this, getSpeed(), angle);
-                GameScreen.getInstance().getEntityManager().getAnimationManager().addFiringAnimation(this,angle - (float)Math.PI/2);
-                return true;
-            }
+        if (currentCooldown >= reqCooldown) {
+            setCurrentCooldown(0f);
+            GameScreen.getInstance().getEntityManager().getProjectileManager().spawnProjectile(this, getSpeed(), angle);
+            GameScreen.getInstance().getEntityManager().getAnimationManager().addFiringAnimation(this, angle - (float) Math.PI / 2);
+            return true;
+        }
 
         return false;
     }

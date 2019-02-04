@@ -9,13 +9,15 @@ import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.object.quest.QuestManager;
+
 import java.util.Optional;
 
 public class HUD {
 
     private GameScreen gameScreen;
 
-    private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel, captureStatus;
+    private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel, questLabel, captureStatus;
     @Getter
     private Table table;
 
@@ -44,6 +46,8 @@ public class HUD {
         locationLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
         captureStatus = new Label("", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
 
+        questLabel = new Label("Test", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
+
         table.add(goldLabel).expandX().padTop(5);
         table.add(locationLabel).expandX().padTop(5);
         table.add(xpLabel).expandX().padTop(5);
@@ -51,6 +55,8 @@ public class HUD {
         table.add(goldValueLabel).expandX();
         table.add(captureStatus).expandX();
         table.add(xpValueLabel).expandX();
+        table.row();
+        table.add(questLabel).expandX().padLeft(10); //TODO: Fix position of quest label.
 
     }
 
@@ -64,6 +70,10 @@ public class HUD {
         goldValueLabel.setText(""+player.getBalance());
         //+" ("+(player.getLevelProgress())*100+"%)"
         xpValueLabel.setText(""+player.getLevel());
+
+        //Quest status:
+        QuestManager questManager = new QuestManager(gameScreen.getEntityManager());
+        questLabel.setText("Active Quest: " + questManager.getCurrentQuest());
 
         //location overhead
         boolean captured = false;

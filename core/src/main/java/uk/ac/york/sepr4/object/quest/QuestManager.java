@@ -20,6 +20,10 @@ public class QuestManager {
 
     }
 
+    public Quest getCurrentQuest(){
+        return this.questList.first();
+    }
+
 
 
 }
