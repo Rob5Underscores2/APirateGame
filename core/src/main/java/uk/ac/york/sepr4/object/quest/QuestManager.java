@@ -21,9 +21,22 @@ public class QuestManager {
     }
 
     public Quest getCurrentQuest(){
-        return this.questList.first();
+        for (Quest quest : questList){
+            if (quest.isStarted() && !(quest.isCompleted())) {
+                return quest;
+            }
+        }
+        return null;
     }
 
 
+    public String getQuestStatus() {
+        if (this.getCurrentQuest() == null) {
+            return "No quests active";
+        }
+        else{
+            return this.getCurrentQuest().getName();
+        }
+    }
 
 }

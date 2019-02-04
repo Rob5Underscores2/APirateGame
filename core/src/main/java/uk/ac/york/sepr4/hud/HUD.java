@@ -72,8 +72,7 @@ public class HUD {
         xpValueLabel.setText(""+player.getLevel());
 
         //Quest status:
-        QuestManager questManager = new QuestManager(gameScreen.getEntityManager());
-        questLabel.setText("Active Quest: " + questManager.getCurrentQuest().getName());
+        questLabel.setText("Active Quest: " + gameScreen.getQuestManager().getQuestStatus());
 
         //location overhead
         boolean captured = false;
