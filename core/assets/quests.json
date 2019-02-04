@@ -14,7 +14,7 @@
     },
     "targetEntityName":"Halifax College",
     "isKillQuest":true
-  }
+  },
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
     "name": "Capture James",
@@ -30,8 +30,7 @@
     },
     "targetEntityName":"Halifax College",
     "isKillQuest":true
-  }
-
+  },
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
     "name": "Capture Alquin",
