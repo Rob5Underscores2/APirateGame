@@ -73,7 +73,7 @@ public class HUD {
 
         //Quest status:
         QuestManager questManager = new QuestManager(gameScreen.getEntityManager());
-        questLabel.setText("Active Quest: " + questManager.getCurrentQuest());
+        questLabel.setText("Active Quest: " + questManager.getCurrentQuest().getName());
 
         //location overhead
         boolean captured = false;
