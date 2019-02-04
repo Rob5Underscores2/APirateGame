@@ -1,10 +1,8 @@
 package uk.ac.york.sepr4.object.quest;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 
@@ -30,23 +28,11 @@ public class QuestManager {
      * @return Random un-completed Quest
      */
     public Quest chooseQuest(){
-        /*boolean loopStop = true;
-        int loopCounter = 0;*/
         if (this.questList.size !=0) {
             this.currentQuest = this.questList.random();
             this.currentQuest.setIsStarted(true);
             return this.currentQuest;
         }
-
-       /* do{
-            if (currentQuest.isCompleted() == true && loopCounter < questList.size - 2)  {
-                currentQuest = questList.random();
-            } else if (currentQuest.isCompleted() == true) {
-                return null;
-            }else{
-                return this.currentQuest;
-            }
-        } while (loopStop);*/
         return null;
     }
     /**
@@ -65,11 +51,6 @@ public class QuestManager {
     }
 
     public Quest getCurrentQuest(){
-        /*for (Quest quest : questList){
-            if (quest.isStarted() && !(quest.isCompleted())) {
-                return quest;
-            }
-        }*/
         if (allQuestsCompleted == false){
             return this.currentQuest;
         }else{
