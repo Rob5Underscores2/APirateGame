@@ -290,13 +290,24 @@ public class GameScreen implements Screen, InputProcessor {
                     if (!(livingEntity.isDying() || livingEntity.isDead())) {
                         if (!livingEntity.damage(projectile.getDamage())) {
                             //is dead
-                            if(livingEntity instanceof NPCBoat) {
+                            if (livingEntity instanceof NPCBoat) {
                                 Gdx.app.debug("GameScreen", "NPCBoat died.");
                                 NPCBoat npcBoat = (NPCBoat) livingEntity;
                                 player.issueReward(itemManager.generateReward());
                                 //if dead NPC is a boss then player can capture its respective college
-                                if(npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
+                                if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
+
+                                    // find if college is part of quest
+                                    if (this.questManager.getCurrentQuest().getIsKillQuest()) {
+                                        if (this.questManager.getCurrentQuest().getTargetEntityName().equals(npcBoat.getAllied().get().getName())){
+                                            this.questManager.finishCurrentQuest();
+
+                                        }
+                                    }
+
                                     player.capture(npcBoat.getAllied().get());
+
+
                                 }
                             } else {
                                 Gdx.app.debug("GameScreen", "Player died.");

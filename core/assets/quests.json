@@ -1,7 +1,7 @@
 [
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
-    "name": "Tutorial",
+    "name": "Capture Halifax",
     "startMessage": "Tutorial started",
     "endMessage": "Tutorial ended",
     "requires" : [],
@@ -12,7 +12,7 @@
       "gold":1000,
       "items": []
     },
-    "targetEntityName":"BigBoss",
+    "targetEntityName":"Halifax College",
     "isKillQuest":true
   }
 ]

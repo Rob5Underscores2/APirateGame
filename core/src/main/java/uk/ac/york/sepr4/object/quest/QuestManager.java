@@ -1,6 +1,7 @@
 package uk.ac.york.sepr4.object.quest;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
@@ -17,13 +18,21 @@ public class QuestManager {
 
         Json json = new Json();
         this.questList= json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
-
+        for (Quest quest : questList){
+            quest.setIsStarted(true);
+        }
     }
+
 
     /**
      * Checks through the current questList to find the most recently started and not completed quest.
      * @return Quest in progress
      */
+   public void finishCurrentQuest() {
+        this.getCurrentQuest().setIsCompleted(true);
+        System.out.println("Quest is complete");
+    }
+
     public Quest getCurrentQuest(){
         for (Quest quest : questList){
             if (quest.isStarted() && !(quest.isCompleted())) {
