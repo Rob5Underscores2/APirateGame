@@ -302,6 +302,8 @@ public class GameScreen implements Screen, InputProcessor {
                                         if (this.questManager.getCurrentQuest().getTargetEntityName().equals(npcBoat.getAllied().get().getName())){
                                             this.questManager.finishCurrentQuest();
 
+                                            player.issueReward(itemManager.generateReward());
+
                                         }
                                     }
 
