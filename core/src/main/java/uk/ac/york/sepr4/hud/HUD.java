@@ -16,10 +16,14 @@ import java.util.Optional;
 public class HUD {
 
     private GameScreen gameScreen;
+    private QuestManager questManager;
 
     private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel, questLabel, captureStatus;
     @Getter
     private Table table;
+
+    private long lastQuestCompletion;
+    private long endMessageShowTime;
 
     /***
      * Class responsible for storing and updating HUD variables.
@@ -28,6 +32,9 @@ public class HUD {
      */
     public HUD(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
+        this.questManager = gameScreen.getQuestManager();
+        //Amount of time in ms to show the end of quest message
+        this.endMessageShowTime = 5000;
 
         //define a table used to organize our hud's labels
         table = new Table();
@@ -72,7 +79,7 @@ public class HUD {
         xpValueLabel.setText(""+player.getLevel());
 
         //Quest status:
-        questLabel.setText("Active Quest: " + gameScreen.getQuestManager().getQuestStatus());
+        questLabel.setText(updateQuestMessage());
 
         //location overhead
         boolean captured = false;
@@ -93,6 +100,28 @@ public class HUD {
             captureStatus.setText("");
         }
 
+    }
+
+    /**
+     * Checks to see if the most recently completed quest was completed within the time specified by the
+     * endMessageShowTime variable, if it was then it returns the completed message's end message.
+     * @return String containing the actual message.
+     */
+    private String updateQuestMessage(){
+        String msg;
+        if (this.questManager.getLastQuest() != null){
+            long timeSinceLastQuestCompletion = System.currentTimeMillis() - this.questManager.getLastQuest().getTimeCompleted();
+            if (timeSinceLastQuestCompletion <endMessageShowTime) {
+                msg = this.questManager.getLastQuest().getEndMessage();
+            }
+            else {
+                msg = ("Active Quest: " + this.questManager.getQuestStatus());
+            }
+        }
+        else {
+            msg = ("Active Quest: " + this.questManager.getQuestStatus());
+        }
+       return msg;
     }
 
 }
