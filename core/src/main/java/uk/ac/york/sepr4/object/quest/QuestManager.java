@@ -9,7 +9,7 @@ import uk.ac.york.sepr4.object.entity.EntityManager;
 @Data
 public class QuestManager {
 
-    private Quest currentQuest;
+    private Quest currentQuest, lastQuest;
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
@@ -41,6 +41,7 @@ public class QuestManager {
      */
    public void finishCurrentQuest() {
         this.currentQuest.setIsCompleted(true);
+        this.lastQuest = this.currentQuest;
         this.questList.removeValue(this.currentQuest,true);
         if (this.chooseQuest() == null){
             allQuestsCompleted = true;
