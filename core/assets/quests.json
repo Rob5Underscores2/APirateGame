@@ -15,4 +15,38 @@
     "targetEntityName":"Halifax College",
     "isKillQuest":true
   }
+  {
+    "class": "uk.ac.york.sepr4.object.quest.Quest",
+    "name": "Capture James",
+    "startMessage": "Tutorial started",
+    "endMessage": "Tutorial ended",
+    "requires" : [],
+    "gives" : [],
+    "reward" : {
+      "class": "uk.ac.york.sepr4.object.item.Reward",
+      "xp":100,
+      "gold":1000,
+      "items": []
+    },
+    "targetEntityName":"Halifax College",
+    "isKillQuest":true
+  }
+
+  {
+    "class": "uk.ac.york.sepr4.object.quest.Quest",
+    "name": "Capture Alquin",
+    "startMessage": "Tutorial started",
+    "endMessage": "Tutorial ended",
+    "requires" : [],
+    "gives" : [],
+    "reward" : {
+      "class": "uk.ac.york.sepr4.object.item.Reward",
+      "xp":100,
+      "gold":1000,
+      "items": []
+    },
+    "targetEntityName":"Halifax College",
+    "isKillQuest":true
+  }
+
 ]
