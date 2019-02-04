@@ -23,6 +23,7 @@ public class Quest {
     public boolean getIsKillQuest(){return this.isKillQuest;}
     public void setIsStarted(boolean val){this.isStarted = val;}
     public String getTargetEntityName(){return this.targetEntityName;}
+
     public void setIsCompleted(boolean complete){
         this.isCompleted = complete;
 

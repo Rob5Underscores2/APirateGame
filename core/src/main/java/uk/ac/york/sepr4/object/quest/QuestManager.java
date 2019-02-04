@@ -4,42 +4,78 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 
 @Data
 public class QuestManager {
 
+    private Quest currentQuest;
     private Array<Quest> questList;
     private EntityManager entityManager;
+    private Boolean allQuestsCompleted;
 
     public QuestManager(EntityManager entityManager) {
         this.entityManager = entityManager;
 
         Json json = new Json();
         this.questList= json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
-        for (Quest quest : questList){
-            quest.setIsStarted(true);
-        }
+        this.chooseQuest();
+        allQuestsCompleted = false;
     }
 
+    /**
+     * Picks a random quest and if its been completed it picks another one
+     * @return Random un-completed Quest
+     */
+    public Quest chooseQuest(){
+        /*boolean loopStop = true;
+        int loopCounter = 0;*/
+        if (this.questList.size !=0) {
+            this.currentQuest = this.questList.random();
+            this.currentQuest.setIsStarted(true);
+            return this.currentQuest;
+        }
 
+       /* do{
+            if (currentQuest.isCompleted() == true && loopCounter < questList.size - 2)  {
+                currentQuest = questList.random();
+            } else if (currentQuest.isCompleted() == true) {
+                return null;
+            }else{
+                return this.currentQuest;
+            }
+        } while (loopStop);*/
+        return null;
+    }
     /**
      * Checks through the current questList to find the most recently started and not completed quest.
      * @return Quest in progress
      */
    public void finishCurrentQuest() {
-        this.getCurrentQuest().setIsCompleted(true);
+        this.currentQuest.setIsCompleted(true);
+        this.questList.removeValue(this.currentQuest,true);
+        if (this.chooseQuest() == null){
+            allQuestsCompleted = true;
+        }else{
+            allQuestsCompleted = false;
+        }
         System.out.println("Quest is complete");
     }
 
     public Quest getCurrentQuest(){
-        for (Quest quest : questList){
+        /*for (Quest quest : questList){
             if (quest.isStarted() && !(quest.isCompleted())) {
                 return quest;
             }
+        }*/
+        if (allQuestsCompleted == false){
+            return this.currentQuest;
+        }else{
+            return null;
         }
-        return null;
+
     }
 
     /**
