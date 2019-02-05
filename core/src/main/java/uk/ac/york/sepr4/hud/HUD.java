@@ -23,8 +23,7 @@ public class HUD {
     @Getter
     private Table table;
 
-    private long lastQuestCompletion;
-    private long endMessageShowTime;
+    private long endMessageShowTime, startMessageShowTime;
 
     /***
      * Class responsible for storing and updating HUD variables.
@@ -35,7 +34,8 @@ public class HUD {
         this.gameScreen = gameScreen;
         this.questManager = gameScreen.getQuestManager();
         //Amount of time in ms to show the end of quest message
-        this.endMessageShowTime = 5000;
+        this.endMessageShowTime = 3000;
+        this.startMessageShowTime = 3000;
 
         //define a table used to organize our hud's labels
         table = new Table();
@@ -115,6 +115,9 @@ public class HUD {
             long timeSinceLastQuestCompletion = System.currentTimeMillis() - this.questManager.getLastQuest().getTimeCompleted();
             if (timeSinceLastQuestCompletion <endMessageShowTime) {
                 msg = this.questManager.getLastQuest().getEndMessage();
+            }
+            else if (timeSinceLastQuestCompletion < startMessageShowTime + endMessageShowTime){
+                msg = this.questManager.getCurrentQuest().getStartMessage();
             }
             else {
                 msg = ("Active Quest: " + this.questManager.getQuestStatus());
