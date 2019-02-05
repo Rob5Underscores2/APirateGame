@@ -19,6 +19,15 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
+    "name": "Goodricke College",
+    "mapObjectStr": "goodricke",
+    "bossName": "GBoss",
+    "bossDifficulty": 0.7,
+    "spawnChance": 0.9,
+    "enemyDifficulty": 0.7
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.College",
     "name": "Langwith College",
     "mapObjectStr": "langwith",
     "bossName": "LBoss",
