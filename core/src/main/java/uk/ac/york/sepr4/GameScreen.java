@@ -305,13 +305,11 @@ public class GameScreen implements Screen, InputProcessor {
                                             player.issueReward(itemManager.generateReward());
 
                                         }
-
-
                                         }
                                         this.questManager.addCapturedCollege(npcBoat.getAllied().get().getName());
+                                    player.capture(npcBoat.getAllied().get());
                                     }
 
-                                    player.capture(npcBoat.getAllied().get());
 
 
 
