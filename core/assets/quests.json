@@ -33,9 +33,9 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
-    "name": "Capture Derwent",
-    "startMessage": "Tutorial started",
-    "endMessage": "Tutorial ended",
+    "name": "Capture Goodricke",
+    "startMessage": "It's time you tried to take on Goodricke",
+    "endMessage": "Nice one!",
     "requires" : [],
     "gives" : [],
     "reward" : {
@@ -44,7 +44,7 @@
       "gold":1000,
       "items": []
     },
-    "targetEntityName":"Derwent College",
+    "targetEntityName":"Goodricke College",
     "isKillQuest":true
   }
 
