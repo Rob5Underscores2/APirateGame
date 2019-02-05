@@ -2,8 +2,8 @@
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
     "name": "Capture Halifax",
-    "startMessage": "Tutorial started",
-    "endMessage": "Tutorial ended",
+    "startMessage": "Time to go and capture Halifax!",
+    "endMessage": "You have defeated Oleg! Onto the next boss!",
     "requires" : [],
     "gives" : [],
     "reward" : {
@@ -18,8 +18,8 @@
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
     "name": "Capture Derwent",
-    "startMessage": "Tutorial started",
-    "endMessage": "Tutorial ended",
+    "startMessage": "Can you find and capture Derwent College?",
+    "endMessage": "Well done! You captured Derwent.",
     "requires" : [],
     "gives" : [],
     "reward" : {
