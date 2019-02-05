@@ -42,10 +42,6 @@ public class QuestManager {
             }
             return this.currentQuest;
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         return null;
     }
     /**
@@ -71,10 +67,6 @@ public class QuestManager {
     }
 
     public Quest getCurrentQuest(){
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         if (allQuestsCompleted == false){
             return this.currentQuest;
         }else{
