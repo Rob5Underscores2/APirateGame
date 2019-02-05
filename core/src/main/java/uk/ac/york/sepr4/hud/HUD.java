@@ -23,7 +23,7 @@ public class HUD {
     @Getter
     private Table table;
 
-    private long endMessageShowTime, startMessageShowTime;
+    private long endMessageShowTime, startMessageShowTime, gameStartTime;
 
     /***
      * Class responsible for storing and updating HUD variables.
@@ -34,6 +34,7 @@ public class HUD {
         this.gameScreen = gameScreen;
         this.questManager = gameScreen.getQuestManager();
         //Amount of time in ms to show the end of quest message
+        this.gameStartTime = System.currentTimeMillis();
         this.endMessageShowTime = 3000;
         this.startMessageShowTime = 3000;
 
@@ -111,7 +112,10 @@ public class HUD {
      */
     private String updateQuestMessage(){
         String msg;
-        if (this.questManager.getLastQuest() != null){
+        if (System.currentTimeMillis()<this.gameStartTime+startMessageShowTime){
+            msg = this.questManager.getCurrentQuest().getStartMessage();
+        }
+        else if (this.questManager.getLastQuest() != null){
             long timeSinceLastQuestCompletion = System.currentTimeMillis() - this.questManager.getLastQuest().getTimeCompleted();
             if (timeSinceLastQuestCompletion <endMessageShowTime) {
                 msg = this.questManager.getLastQuest().getEndMessage();
