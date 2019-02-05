@@ -27,13 +27,13 @@ public class NPCBoat extends LivingEntity {
     private Optional<LivingEntity> lastTarget = Optional.empty(); //This is the target currently being fought
 
     private boolean previousTurn = true; //right = true, left = false this is used to be able to take infomation over frames it is the prevoius turn the NPC did
-    private boolean turning = false; //This is wether the boat is turning or not. ~In conjuction these to help turnPreCalc determine the angularSpeed across multiple frames
+    private boolean turning = false; //This is whether the boat is turning or not. ~In conjuction these to help turnPreCalc determine the angularSpeed across multiple frames
 
     private int dodging = 0; //Not dodging = 0 anything other than 0 is meaning dodging. this is the amount of frames you want the NPC to dodge for
 
     private Random r = new Random(); //Just for randomness
 
-    private float targetCheck = 3f; //Timer so target check aint every frame
+    private float targetCheck = 3f; //Timer so target check does not happen every frame
 
     private boolean isBoss;
 
