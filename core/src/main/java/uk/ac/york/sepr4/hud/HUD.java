@@ -120,7 +120,7 @@ public class HUD {
             if (timeSinceLastQuestCompletion <endMessageShowTime) {
                 msg = this.questManager.getLastQuest().getEndMessage();
             }
-            else if (timeSinceLastQuestCompletion < startMessageShowTime + endMessageShowTime){
+            else if (timeSinceLastQuestCompletion < startMessageShowTime + endMessageShowTime && this.questManager.getCurrentQuest() != null){
                 msg = this.questManager.getCurrentQuest().getStartMessage();
             }
             else {
