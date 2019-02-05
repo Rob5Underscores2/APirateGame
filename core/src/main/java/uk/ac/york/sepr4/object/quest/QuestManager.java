@@ -1,17 +1,15 @@
 package uk.ac.york.sepr4.object.quest;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 
 @Data
 public class QuestManager {
 
-    private Quest currentQuest;
+    private Quest currentQuest, lastQuest;
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
@@ -32,8 +30,6 @@ public class QuestManager {
      * @return Random un-completed Quest
      */
     public Quest chooseQuest(){
-        /*boolean loopStop = true;
-        int loopCounter = 0;*/
         if (this.questList.size !=0) {
             this.currentQuest = this.questList.random();
             this.currentQuest.setIsStarted(true);
@@ -46,7 +42,10 @@ public class QuestManager {
             }
             return this.currentQuest;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         return null;
     }
     /**
@@ -55,6 +54,7 @@ public class QuestManager {
      */
    public void finishCurrentQuest() {
         this.currentQuest.setIsCompleted(true);
+        this.lastQuest = this.currentQuest;
         this.questList.removeValue(this.currentQuest,true);
         if (this.chooseQuest() == null){
             allQuestsCompleted = true;
@@ -71,7 +71,10 @@ public class QuestManager {
     }
 
     public Quest getCurrentQuest(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if (allQuestsCompleted == false){
             return this.currentQuest;
         }else{
