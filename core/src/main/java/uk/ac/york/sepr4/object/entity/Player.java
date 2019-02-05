@@ -19,6 +19,9 @@ public class Player extends LivingEntity implements InputProcessor {
     private Integer balance = 0, xp = 0;
     private List<Item> inventory = new ArrayList<>();
 
+    //For speeding movement when debugging
+    private float debugMultiplier = 2;
+
     private List<College> captured = new ArrayList<>();
 
     public Player(Vector2 pos) {
@@ -120,6 +123,11 @@ public class Player extends LivingEntity implements InputProcessor {
             GameScreen.getInstance().getOrthographicCamera().zoom = 3;
             return true;
         }
+        if((keycode == Input.Keys.SHIFT_LEFT) && (GameScreen.DEBUG)){
+            setAcceleration(debugMultiplier*getAcceleration());
+            setDeceleration(debugMultiplier*getDeceleration());
+            setMaxSpeed(debugMultiplier*getMaxSpeed());
+        }
 
         return false;
     }
@@ -149,6 +157,11 @@ public class Player extends LivingEntity implements InputProcessor {
             //minimap
             GameScreen.getInstance().getOrthographicCamera().zoom = 1;
             return true;
+        }
+        if((keycode == Input.Keys.SHIFT_LEFT) && (GameScreen.DEBUG)){
+            setAcceleration((1/debugMultiplier)*getAcceleration());
+            setDeceleration((1/debugMultiplier)*getDeceleration());
+            setMaxSpeed((1/debugMultiplier)*getMaxSpeed());
         }
         return false;
     }
