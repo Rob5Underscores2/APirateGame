@@ -65,7 +65,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     private ShapeRenderer shapeRenderer;
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     public static GameScreen getInstance() {
         return gameScreen;
