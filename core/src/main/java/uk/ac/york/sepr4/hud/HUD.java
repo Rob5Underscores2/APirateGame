@@ -8,6 +8,7 @@ import lombok.Getter;
 import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.quest.QuestManager;
 
@@ -71,7 +72,8 @@ public class HUD {
      * Update label values - called during stage render
      */
     public void update() {
-        Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+        EntityManager entityManager = gameScreen.getEntityManager();
+        Player player = entityManager.getOrCreatePlayer();
 
         //balance and xp overheads
         goldValueLabel.setText(""+player.getBalance());
@@ -83,11 +85,11 @@ public class HUD {
 
         //location overhead
         boolean captured = false;
-        Optional<Building> loc = gameScreen.getEntityManager().getPlayerLocation();
+        Optional<Building> loc = entityManager.getPlayerLocation();
         if(loc.isPresent()) {
             locationLabel.setText(loc.get().getName().toUpperCase());
             if(loc.get() instanceof College) {
-                if (gameScreen.getEntityManager().getOrCreatePlayer().getCaptured().contains(loc.get())) {
+                if (entityManager.getOrCreatePlayer().getCaptured().contains(loc.get())) {
                     captured = true;
                 }
             }
