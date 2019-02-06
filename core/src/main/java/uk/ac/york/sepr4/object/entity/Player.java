@@ -23,6 +23,7 @@ public class Player extends LivingEntity implements InputProcessor {
 
     //Experimenting with storing location
     private Optional<Building> location;
+    private boolean inMinigame;
 
     //For speeding movement when debugging
     private float debugMultiplier = 2;
@@ -168,6 +169,7 @@ public class Player extends LivingEntity implements InputProcessor {
             setDeceleration((1/debugMultiplier)*getDeceleration());
             setMaxSpeed((1/debugMultiplier)*getMaxSpeed());
         }
+
         return false;
     }
 

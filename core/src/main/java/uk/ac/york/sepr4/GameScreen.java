@@ -27,6 +27,8 @@ import uk.ac.york.sepr4.object.item.ItemManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.util.Random;
+
 /**
  * GameScreen is main game class. Holds data related to current player including the
  * {@link BuildingManager}, {@link ItemManager},
@@ -66,6 +68,9 @@ public class GameScreen implements Screen, InputProcessor {
     private ShapeRenderer shapeRenderer;
 
     public static boolean DEBUG = true;
+
+    //Not sure this belongs here tbh...
+    private int minigameCost = 50, minigameReward = 100;
 
     public static GameScreen getInstance() {
         return gameScreen;
@@ -327,6 +332,21 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    public void doMinigame(){
+       Player player = entityManager.getOrCreatePlayer();
+       Random random = new Random();
+       if (player.getBalance() < 100) {
+            System.out.println("Not enough gold to play!");
+        }
+        else {
+            player.setBalance(player.getBalance()-minigameCost);
+            Integer result = Math.round(random.nextFloat()*minigameReward);
+           System.out.println("Result = " + result.toString());
+            player.setBalance(player.getBalance()+result);
+       }
+       player.setInMinigame(false);
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -374,6 +394,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        Player player = entityManager.getOrCreatePlayer();
+        if((keycode == Input.Keys.TAB) && (player.isInMinigame() == false)){
+            player.setInMinigame(true);
+            doMinigame();
+        }
         return false;
     }
 
