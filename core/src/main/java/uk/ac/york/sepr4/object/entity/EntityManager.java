@@ -64,12 +64,22 @@ public class EntityManager {
 
     public Optional<Building> getPlayerLocation() {
         Optional<Building> loc = Optional.empty();
-        for(College building : gameScreen.getBuildingManager().getColleges()) {
+        loc = getPlayerCollegeLocation(loc);
+        loc = getPlayerDepartmentLocation(loc);
+        return loc;
+    }
+
+    public Optional<Building> getPlayerDepartmentLocation(Optional<Building> loc) {
+        for(Department building : gameScreen.getBuildingManager().getDepartments()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
             }
         }
-        for(Department building : gameScreen.getBuildingManager().getDepartments()) {
+        return loc;
+    }
+
+    public Optional<Building> getPlayerCollegeLocation(Optional<Building> loc) {
+        for(College building : gameScreen.getBuildingManager().getColleges()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
             }
