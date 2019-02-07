@@ -64,16 +64,21 @@ public class EntityManager {
 
     public Optional<Building> getPlayerLocation() {
         Optional<Building> loc = Optional.empty();
-        if (getPlayerCollegeLocation().isPresent()) {
-            loc = getPlayerCollegeLocation();
-        } else if (getPlayerDepartmentLocation().isPresent()) {
-            loc = getPlayerDepartmentLocation();
+        for(Department building : gameScreen.getBuildingManager().getDepartments()) {
+            if(building.getBuildingZone().contains(player.getX(), player.getY())) {
+                loc = Optional.of(building);
+            }
+        }
+        for(College building : gameScreen.getBuildingManager().getColleges()) {
+            if(building.getBuildingZone().contains(player.getX(), player.getY())) {
+                loc = Optional.of(building);
+            }
         }
         return loc;
     }
 
-    public Optional<Building> getPlayerDepartmentLocation() {
-        Optional<Building> loc = Optional.empty();
+    public Optional<Department> getPlayerDepartmentLocation() {
+        Optional<Department> loc = Optional.empty();
         for(Department building : gameScreen.getBuildingManager().getDepartments()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
@@ -82,8 +87,8 @@ public class EntityManager {
         return loc;
     }
 
-    public Optional<Building> getPlayerCollegeLocation() {
-        Optional<Building> loc = Optional.empty();
+    public Optional<College> getPlayerCollegeLocation() {
+        Optional<College> loc = Optional.empty();
         for(College building : gameScreen.getBuildingManager().getColleges()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
