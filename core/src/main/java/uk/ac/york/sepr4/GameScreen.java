@@ -308,7 +308,7 @@ public class GameScreen implements Screen, InputProcessor {
                                 if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
 
                                     // find if college is part of quest
-                                    if (this.questManager.getCurrentQuest().getIsKillQuest()) {
+                                    if ((this.questManager.getCurrentQuest() != null) && (this.questManager.getCurrentQuest().getIsKillQuest())) {
                                         if (this.questManager.getCurrentQuest().getTargetEntityName().equals(npcBoat.getAllied().get().getName())){
                                             this.questManager.finishCurrentQuest();
 
