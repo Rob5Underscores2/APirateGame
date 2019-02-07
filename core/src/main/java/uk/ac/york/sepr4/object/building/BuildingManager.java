@@ -43,6 +43,10 @@ public class BuildingManager {
             Json json = new Json();
             loadBuildings(json.fromJson(Array.class, College.class, Gdx.files.internal("colleges.json")));
             loadBuildings(json.fromJson(Array.class, Department.class, Gdx.files.internal("departments.json")));
+            for (Department department: departments){
+               department.setAllied(colleges.random());
+            }
+            //TODO: THIS IS TEMPORARY - IT ALLIES ALL DEPARTMENTS WITH A RANDOM (BUT NOT NECESSARILY DIFFERENT COLLEGE).
             Gdx.app.log("BuildingManager",
                     "Loaded "+colleges.size+" colleges and "+departments.size+" departments!");
 
