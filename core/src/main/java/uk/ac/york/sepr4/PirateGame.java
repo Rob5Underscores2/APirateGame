@@ -18,7 +18,7 @@ public class PirateGame extends Game {
 		PIRATEGAME = this;
 	    //switchScreen(ScreenType.MENU);
 		//FOR DEVELOPMENT
-		switchScreen(ScreenType.UPGRADES);
+		switchScreen(ScreenType.GAME);
 	}
 
 	public void gameOver() {
