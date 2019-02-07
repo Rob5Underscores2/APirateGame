@@ -40,8 +40,6 @@ public class QuestManager {
             this.currentQuest.setIsStarted(true);
 
 
-            //I know commenting code is horrible... I just might need it!
-            //if ((this.capturedColleges != null) && (this.capturedColleges.indexOf(this.currentQuest.getTargetEntityName(), true) == -1)){
             if (player.getCaptured() != null){
                 for (College college:player.getCaptured()){
                     if (college.getName() == this.currentQuest.getTargetEntityName()) {
