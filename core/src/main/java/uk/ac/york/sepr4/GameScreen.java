@@ -17,14 +17,18 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
-import uk.ac.york.sepr4.object.entity.*;
-import uk.ac.york.sepr4.object.PirateMap;
-import uk.ac.york.sepr4.object.building.BuildingManager;
-import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.hud.HUD;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.object.PirateMap;
+import uk.ac.york.sepr4.object.building.BuildingManager;
+import uk.ac.york.sepr4.object.building.Department;
+import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.LivingEntity;
+import uk.ac.york.sepr4.object.entity.NPCBoat;
+import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.item.ItemManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
+import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
 
 import java.util.Random;
@@ -338,11 +342,19 @@ public class GameScreen implements Screen, InputProcessor {
        if (player.getBalance() < 100) {
             System.out.println("Not enough gold to play!");
         }
-        else {
-            player.setBalance(player.getBalance()-minigameCost);
-            Integer result = Math.round(random.nextFloat()*minigameReward);
-           System.out.println("Result = " + result.toString());
-            player.setBalance(player.getBalance()+result);
+        else if (entityManager.getPlayerDepartmentLocation().isPresent()){
+            Department currentDepartment = entityManager.getPlayerDepartmentLocation().get();
+            if (player.getCaptured().contains(currentDepartment.getAllied())) {
+                player.setBalance(player.getBalance() - minigameCost);
+                Integer result = Math.round(random.nextFloat() * minigameReward);
+                player.setBalance(player.getBalance() + result);
+            }
+            else {
+                System.out.println("You have not captured the allied college of this department yet!");
+            }
+       }
+       else {
+           System.out.println("You are not in the right location to play!");
        }
        player.setInMinigame(false);
     }
