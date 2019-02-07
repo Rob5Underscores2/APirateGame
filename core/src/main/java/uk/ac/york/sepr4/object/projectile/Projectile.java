@@ -10,6 +10,7 @@ import uk.ac.york.sepr4.object.entity.LivingEntity;
 public class Projectile extends Entity {
 
     private LivingEntity shooter;
+
     private Double damage = 5.0;
     private Integer baseSpeed = 100;
 
@@ -35,5 +36,4 @@ public class Projectile extends Entity {
             super.act(deltaTime);
         }
     }
-
 }

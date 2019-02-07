@@ -69,6 +69,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     private static GameScreen gameScreen;
 
+
     private ShapeRenderer shapeRenderer;
 
     public static boolean DEBUG = true;
