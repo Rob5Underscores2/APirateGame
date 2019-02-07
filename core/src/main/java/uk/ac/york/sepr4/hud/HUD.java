@@ -8,6 +8,7 @@ import lombok.Getter;
 import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.quest.QuestManager;
@@ -93,6 +94,10 @@ public class HUD {
                 if (entityManager.getOrCreatePlayer().getCaptured().contains(loc.get())) {
                     captured = true;
                 }
+            }
+            //TODO: Neaten "Allied with" label
+            else if (loc.get() instanceof Department){
+                locationLabel.setText(locationLabel.getText() + " (ALLIED WITH " + ((Department) loc.get()).getAllied().getName() + ")");
             }
         } else {
             locationLabel.setText("OPEN SEAS");

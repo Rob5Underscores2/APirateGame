@@ -17,15 +17,21 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
-import uk.ac.york.sepr4.object.entity.*;
-import uk.ac.york.sepr4.object.PirateMap;
-import uk.ac.york.sepr4.object.building.BuildingManager;
-import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.hud.HUD;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.object.PirateMap;
+import uk.ac.york.sepr4.object.building.BuildingManager;
+import uk.ac.york.sepr4.object.building.Department;
+import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.LivingEntity;
+import uk.ac.york.sepr4.object.entity.NPCBoat;
+import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.item.ItemManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
+import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
+
+import java.util.Random;
 
 /**
  * GameScreen is main game class. Holds data related to current player including the
@@ -66,6 +72,9 @@ public class GameScreen implements Screen, InputProcessor {
     private ShapeRenderer shapeRenderer;
 
     public static boolean DEBUG = true;
+
+    //Not sure this belongs here tbh...
+    private int minigameCost = 50, minigameReward = 100;
 
     public static GameScreen getInstance() {
         return gameScreen;
@@ -156,6 +165,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         //if player dead, go to main menu
         Player player = entityManager.getOrCreatePlayer();
+        player.setLocation(entityManager.getPlayerLocation());
         if (player.isDead()) {
             Gdx.app.debug("GameScreen", "Player Died!");
             pirateGame.switchScreen(ScreenType.MENU);
@@ -326,6 +336,29 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    public void doMinigame(){
+       Player player = entityManager.getOrCreatePlayer();
+       Random random = new Random();
+       if (player.getBalance() < 100) {
+            System.out.println("Not enough gold to play!");
+        }
+        else if (entityManager.getPlayerDepartmentLocation().isPresent()){
+            Department currentDepartment = entityManager.getPlayerDepartmentLocation().get();
+            if (player.getCaptured().contains(currentDepartment.getAllied())) {
+                player.setBalance(player.getBalance() - minigameCost);
+                Integer result = Math.round(random.nextFloat() * minigameReward);
+                player.setBalance(player.getBalance() + result);
+            }
+            else {
+                System.out.println("You have not captured the allied college of this department yet!");
+            }
+       }
+       else {
+           System.out.println("You are not in the right location to play!");
+       }
+       player.setInMinigame(false);
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -373,6 +406,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        Player player = entityManager.getOrCreatePlayer();
+        if((keycode == Input.Keys.TAB) && (player.isInMinigame() == false)){
+            player.setInMinigame(true);
+            doMinigame();
+        }
         return false;
     }
 

@@ -6,18 +6,24 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.TextureManager;
+import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.GameScreen;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class Player extends LivingEntity implements InputProcessor {
 
     private Integer balance = 0, xp = 0;
     private List<Item> inventory = new ArrayList<>();
+
+    //Experimenting with storing location
+    private Optional<Building> location;
+    private boolean inMinigame;
 
     //For speeding movement when debugging
     private float debugMultiplier = 2;
@@ -163,6 +169,7 @@ public class Player extends LivingEntity implements InputProcessor {
             setDeceleration((1/debugMultiplier)*getDeceleration());
             setMaxSpeed((1/debugMultiplier)*getMaxSpeed());
         }
+
         return false;
     }
 
