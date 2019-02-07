@@ -316,7 +316,6 @@ public class GameScreen implements Screen, InputProcessor {
 
                                         }
                                         }
-                                        this.questManager.addCapturedCollege(npcBoat.getAllied().get().getName());
                                     player.capture(npcBoat.getAllied().get());
                                     }
 

@@ -4,7 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
+import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.Player;
+
+import java.util.ArrayList;
 
 @Data
 public class QuestManager {
@@ -13,7 +17,7 @@ public class QuestManager {
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
-    private Array<String> capturedColleges;
+    private ArrayList<College> capturedColleges;
 
     public QuestManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -22,7 +26,7 @@ public class QuestManager {
         this.questList = json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
         this.chooseQuest();
         allQuestsCompleted = false;
-        capturedColleges = new Array<>(questList.size);
+        capturedColleges = new ArrayList<>();
     }
 
     /**
@@ -30,15 +34,21 @@ public class QuestManager {
      * @return Random un-completed Quest
      */
     public Quest chooseQuest(){
+        Player player = this.entityManager.getOrCreatePlayer();
         if (this.questList.size !=0) {
             this.currentQuest = this.questList.random();
             this.currentQuest.setIsStarted(true);
 
 
-            if (this.capturedColleges != null && this.capturedColleges.indexOf(this.currentQuest.getTargetEntityName(),true) == -1){
-                this.questList.removeValue(this.currentQuest, true);
-                chooseQuest();
-
+            //I know commenting code is horrible... I just might need it!
+            //if ((this.capturedColleges != null) && (this.capturedColleges.indexOf(this.currentQuest.getTargetEntityName(), true) == -1)){
+            if (player.getCaptured() != null){
+                for (College college:player.getCaptured()){
+                    if (college.getName() == this.currentQuest.getTargetEntityName()) {
+                        this.questList.removeValue(this.currentQuest, true);
+                        chooseQuest();
+                    }
+                }
             }
             return this.currentQuest;
         }
@@ -58,12 +68,6 @@ public class QuestManager {
             allQuestsCompleted = false;
         }
         System.out.println("Quest is complete");
-    }
-
-    public void addCapturedCollege(String inCollege){
-
-        this.capturedColleges.add(inCollege);
-
     }
 
     public Quest getCurrentQuest(){
