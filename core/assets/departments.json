@@ -6,6 +6,16 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
+    "name": "Law Department",
+    "mapObjectStr": "law"
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.Department",
+    "name": "Management Department",
+    "mapObjectStr": "management"
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.Department",
     "name": "Department of Physics",
     "mapObjectStr": "physics"
   }
