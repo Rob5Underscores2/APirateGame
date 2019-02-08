@@ -8,8 +8,6 @@ import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.Player;
 
-import java.util.ArrayList;
-
 @Data
 public class QuestManager {
 
@@ -38,6 +36,8 @@ public class QuestManager {
             this.currentQuest.setIsStarted(true);
 
 
+            //Checks to see if the current target is a college which has already been captured (and therefore can't be
+            // captured again.
             if (player.getCaptured() != null){
                 for (College college:player.getCaptured()){
                     if (college.getName() == this.currentQuest.getTargetEntityName()) {

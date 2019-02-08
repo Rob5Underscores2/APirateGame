@@ -308,22 +308,19 @@ public class GameScreen implements Screen, InputProcessor {
                                 player.issueReward(itemManager.generateReward());
                                 //if dead NPC is a boss then player can capture its respective college
                                 if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
-
                                     // find if college is part of quest
+                                    // First null check is to avoid null pointer errors when checking the current quest
+                                    // The second predicate ensures the quest is a kill quest since this is section is checking whether a kill also completed a quest
                                     if ((this.questManager.getCurrentQuest() != null) && (this.questManager.getCurrentQuest().getIsKillQuest())) {
+                                        //Compares the current target of the kill quest vs. the name of the allied college of the npc
+                                        //We use string matching here because quests do not store targets as College instances but as Strings for their name
                                         if (this.questManager.getCurrentQuest().getTargetEntityName().equals(npcBoat.getAllied().get().getName())){
                                             this.questManager.finishCurrentQuest();
-
                                             player.issueReward(itemManager.generateReward());
-
                                         }
-                                        }
-                                    player.capture(npcBoat.getAllied().get());
                                     }
-
-
-
-
+                                    player.capture(npcBoat.getAllied().get());
+                                }
                             } else {
                                 Gdx.app.debug("GameScreen", "Player died.");
                             }
@@ -337,24 +334,31 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    /**
+     * Gambles the players money with the chance to double their money.
+     * (Follows the requirement of needing to be at a department allied with a captured college: ReqID 2.14)
+     */
     public void doMinigame(){
        Player player = entityManager.getOrCreatePlayer();
        Random random = new Random();
-       if (player.getBalance() < 100) {
+       if (player.getBalance() < minigameCost) {
             System.out.println("Not enough gold to play!");
         }
         else if (entityManager.getPlayerDepartmentLocation().isPresent()){
             Department currentDepartment = entityManager.getPlayerDepartmentLocation().get();
+            //Checks whether the player is at a department which is allied with a college which they have captured (ReqID 2.13)
             if (player.getCaptured().contains(currentDepartment.getAllied())) {
                 player.setBalance(player.getBalance() - minigameCost);
                 Integer result = Math.round(random.nextFloat() * minigameReward);
                 player.setBalance(player.getBalance() + result);
             }
             else {
+                //TODO: Show this on the HUD
                 System.out.println("You have not captured the allied college of this department yet!");
             }
        }
        else {
+           //TODO: Show this on the HUD
            System.out.println("You are not in the right location to play!");
        }
        player.setInMinigame(false);
@@ -404,13 +408,18 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
 
-    // Stub methods for InputProcessor (unused) - must return false
+    // Stub methods for InputProcessor (unused) - must return false (otherwise key detection for that method will not run in Player.java
     @Override
     public boolean keyDown(int keycode) {
         return false;
     }
 
     @Override
+    /**
+     * Currently only used to detect when the player has pressed tab to play the minigame.
+     * Uses keyUp not keyDown so that holding down the key has no effect.
+     * @return False so that the key detection does not terminate here
+     */
     public boolean keyUp(int keycode) {
         Player player = entityManager.getOrCreatePlayer();
         if((keycode == Input.Keys.TAB) && (player.isInMinigame() == false)){
