@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.object.building.College;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -119,6 +120,28 @@ public class NPCBuilder {
         builder.angle((float) (2*Math.PI*random.nextDouble()));
 
         return builder.buildNPC(pos);
+    }
+
+
+    public NPCBoat buildMonster(Vector2 pos) {
+        NPCBoat monster;
+        monster = new NPCBoat(TextureManager.MONSTER, pos);
+        monster.setAngle(angle);
+        monster.setAccuracy(accuracy);
+        monster.setSpeed(0);
+        monster.setMaxSpeed(0);
+        monster.setRange(range);
+        monster.setIdealDistFromTarget(idealDistFromTarget);
+        monster.setGradientForNormalDist(gradientFromNormalDist);
+        monster.setHealth(150.0);
+        monster.setMaxHealth(150.0);
+        monster.setTurningSpeed(turningSpeed);
+        monster.setAllied(allied);
+        monster.setDamage(damage);
+        monster.setReqCooldown(reqCooldown);
+
+        return monster;
+
     }
 
 }

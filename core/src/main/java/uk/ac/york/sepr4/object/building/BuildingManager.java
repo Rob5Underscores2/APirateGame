@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
+import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.NPCBoat;
 import uk.ac.york.sepr4.object.entity.NPCBuilder;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.GameScreen;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,9 @@ public class BuildingManager {
 
     //time till next spawn attempt
     private float spawnDelta;
+
+    private boolean MonsterSpawned = false;
+    private Vector2 monsterLocation = new Vector2(232,232);
 
     /***
      * This class handles instances of buildings (Colleges and Departments)
@@ -73,6 +76,15 @@ public class BuildingManager {
             }
         }
     }
+
+    public void checkMonsterSpawn() {
+        if(!MonsterSpawned) {
+            NPCBoat monster = new NPCBuilder().buildMonster(monsterLocation);
+
+        }
+    }
+
+
 
     private Optional<Vector2> getValidRandomSpawn(College college, float size) {
         int attempts = 0;
