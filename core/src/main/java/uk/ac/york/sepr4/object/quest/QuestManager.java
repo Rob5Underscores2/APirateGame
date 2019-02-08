@@ -17,7 +17,6 @@ public class QuestManager {
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
-    private ArrayList<College> capturedColleges;
 
     public QuestManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -26,7 +25,6 @@ public class QuestManager {
         this.questList = json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
         this.chooseQuest();
         allQuestsCompleted = false;
-        capturedColleges = new ArrayList<>();
     }
 
     /**

@@ -58,6 +58,7 @@ public class GameScreen implements Screen, InputProcessor {
     private ItemManager itemManager;
     @Getter
     private EntityManager entityManager;
+    //Use this entitymanager for finding the player
     @Getter
     private QuestManager questManager;
     @Getter
@@ -359,6 +360,11 @@ public class GameScreen implements Screen, InputProcessor {
        player.setInMinigame(false);
     }
 
+    //TODO: PRINCE - Use this for setting stats
+//    public void upgradeStats {
+//        Player player = this.entityManager.getOrCreatePlayer()
+//        this.entityManager.getOrCreatePlayer().setMaxSpeed(4000f);
+//    }
 
     @Override
     public void resize(int width, int height) {
