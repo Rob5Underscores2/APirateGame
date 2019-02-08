@@ -8,8 +8,6 @@ import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.Player;
 
-import java.util.ArrayList;
-
 @Data
 public class QuestManager {
 
@@ -17,7 +15,6 @@ public class QuestManager {
     private Array<Quest> questList;
     private EntityManager entityManager;
     private Boolean allQuestsCompleted;
-    private ArrayList<College> capturedColleges;
 
     public QuestManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -26,7 +23,6 @@ public class QuestManager {
         this.questList = json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
         this.chooseQuest();
         allQuestsCompleted = false;
-        capturedColleges = new ArrayList<>();
     }
 
     /**
@@ -40,6 +36,8 @@ public class QuestManager {
             this.currentQuest.setIsStarted(true);
 
 
+            //Checks to see if the current target is a college which has already been captured (and therefore can't be
+            // captured again.
             if (player.getCaptured() != null){
                 for (College college:player.getCaptured()){
                     if (college.getName() == this.currentQuest.getTargetEntityName()) {

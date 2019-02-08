@@ -96,6 +96,7 @@ public class HUD {
                 }
             }
             //TODO: Neaten "Allied with" label
+            //Checks to see if the player is at a department, if so, it shows the department and its appropriate alliance.
             else if (loc.get() instanceof Department){
                 locationLabel.setText(locationLabel.getText() + " (ALLIED WITH " + ((Department) loc.get()).getAllied().getName() + ")");
             }
@@ -117,9 +118,13 @@ public class HUD {
      */
     private String updateQuestMessage(){
         String msg;
+        //The whole method works based on comparisons between System.currentTimeMillis() and the two constants
+        //start(and end)MessageShowtime
         if (System.currentTimeMillis()<this.gameStartTime+startMessageShowTime){
+            //If the game has started but hasn't been running for longer than the startMessageShowTime
             msg = this.questManager.getCurrentQuest().getStartMessage();
         }
+        //This section manages the quest completion message from the most recently completed quest.
         else if (this.questManager.getLastQuest() != null){
             long timeSinceLastQuestCompletion = System.currentTimeMillis() - this.questManager.getLastQuest().getTimeCompleted();
             if (timeSinceLastQuestCompletion <endMessageShowTime) {
