@@ -1,9 +1,16 @@
 package uk.ac.york.sepr4.hud;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Getter;
 import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.building.Building;
@@ -21,8 +28,11 @@ public class HUD {
     private QuestManager questManager;
 
     private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel, questLabel, captureStatus;
+    public  TextButton upgradeShipSpeedButton;
+
     @Getter
     private Table table;
+    private Stage stage;
 
     private long endMessageShowTime, startMessageShowTime, gameStartTime;
 
@@ -39,12 +49,18 @@ public class HUD {
         this.endMessageShowTime = 3000;
         this.startMessageShowTime = 3000;
 
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
         //define a table used to organize our hud's labels
         table = new Table();
         //Top-Align table
         table.top();
         //make the table fill the entire stage
         table.setFillParent(true);
+        stage.addActor(table);
+
+        // temporary until we have asset manager in
+        Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
 
         //set default label values
         goldLabel = new Label("GOLD", new Label.LabelStyle(new BitmapFont(), Color.GOLD));
@@ -58,6 +74,10 @@ public class HUD {
 
         questLabel = new Label("Test", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
 
+        upgradeShipSpeedButton =  new TextButton("Upgrade ship speed Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]", skin);
+
+
+
         table.add(goldLabel).expandX().padTop(5);
         table.add(locationLabel).expandX().padTop(5);
         table.add(xpLabel).expandX().padTop(5);
@@ -67,7 +87,11 @@ public class HUD {
         table.add(xpValueLabel).expandX();
         table.row();
         table.add(questLabel).expandX().padLeft(10); //TODO: Fix position of quest label.
+        table.row();
+        table.add(upgradeShipSpeedButton).expand().bottom().left();
 
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     /***
@@ -76,6 +100,9 @@ public class HUD {
     public void update() {
         EntityManager entityManager = gameScreen.getEntityManager();
         Player player = entityManager.getOrCreatePlayer();
+
+
+
 
         //balance and xp overheads
         goldValueLabel.setText(""+player.getBalance());

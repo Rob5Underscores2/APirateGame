@@ -13,6 +13,9 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -75,8 +78,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     public static boolean DEBUG = true;
 
-    //Not sure this belongs here tbh...
+    private TextButton upgradeShipSpeedButton;
+
+    //Not sure these belongs here tbh...
     private int minigameCost = 50, minigameReward = 100;
+    public int shipSpeedUpgradeCost = 100;
 
     // Tracking the incrementing of the player XP
     private float playerXpIncrementer;
@@ -108,6 +114,9 @@ public class GameScreen implements Screen, InputProcessor {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
             shapeRenderer = new ShapeRenderer();
         }
+
+        // temporary until we have asset manager in
+        Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
 
         // Local widths and heights.
         float w = Gdx.graphics.getWidth();
@@ -143,6 +152,7 @@ public class GameScreen implements Screen, InputProcessor {
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(entityManager.getOrCreatePlayer());
         Gdx.input.setInputProcessor(inputMultiplexer);
+        Gdx.input.setInputProcessor(stage);
 
         //create and spawn player
         startGame();
@@ -181,6 +191,8 @@ public class GameScreen implements Screen, InputProcessor {
             pirateGame.gameOver();
             return;
         }
+
+        upgradeStats();
 
         if(!player.isDying()) {
 
@@ -233,7 +245,7 @@ public class GameScreen implements Screen, InputProcessor {
      */
     private void incrementPlayerXP(float delta, Player player){
         playerXpIncrementer += delta * incrementSpeed;
-        Gdx.app.debug("GameScreen", String.format("%.02f", playerXpIncrementer));
+        //Gdx.app.debug("GameScreen", String.format("%.02f", playerXpIncrementer));
        // Fps 50, 1/50
         if (playerXpIncrementer > 1){
             player.addXP(1);
@@ -388,22 +400,36 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     //TODO: PRINCE - Use this for setting stats
-//    public void upgradeStats {
-//        Player player = this.entityManager.getOrCreatePlayer()
-//        this.entityManager.getOrCreatePlayer().setMaxSpeed(4000f);
-//    }
+    public void upgradeStats() {
+        Player player = this.entityManager.getOrCreatePlayer();
+        System.out.println("players max speed: " + player.getMaxSpeed());
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) && player.getBalance() >= shipSpeedUpgradeCost){
+            //increase the ships maximum speed
+            player.setMaxSpeed((float) (player.getMaxSpeed() * 1.5));
+
+            //once I've bought extra speed, reduce the players balance
+            player.setBalance(player.getBalance() - shipSpeedUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipSpeedUpgradeCost = shipSpeedUpgradeCost * 2;
+            hud.upgradeShipSpeedButton.setText("Upgrade ship speed Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]");
+        }
+    }
 
     @Override
     public void resize(int width, int height) {
         orthographicCamera.setToOrtho(false, (float) width, (float) height);
         orthographicCamera.update();
+
+        stage.getViewport().update(width, height);
     }
 
     @Override
     public void pause() {}
 
     @Override
-    public void resume() {}
+    public void resume() {Gdx.input.setInputProcessor(stage);}
 
     @Override
     public void hide() {
