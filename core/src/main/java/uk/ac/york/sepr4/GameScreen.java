@@ -78,6 +78,10 @@ public class GameScreen implements Screen, InputProcessor {
     //Not sure this belongs here tbh...
     private int minigameCost = 50, minigameReward = 100;
 
+    // Tracking the incrementing of the player XP
+    private float playerXpIncrementer;
+    private float incrementSpeed;
+
     public static GameScreen getInstance() {
         return gameScreen;
     }
@@ -95,6 +99,9 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen(PirateGame pirateGame) {
         this.pirateGame = pirateGame;
         gameScreen = this;
+
+        playerXpIncrementer = 0f;
+        incrementSpeed = 1f;
 
         // Debug options (extra logging, collision shape renderer (viewing tile object map))
         if(DEBUG) {
@@ -137,7 +144,7 @@ public class GameScreen implements Screen, InputProcessor {
         inputMultiplexer.addProcessor(entityManager.getOrCreatePlayer());
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        //create and spawnn player
+        //create and spawn player
         startGame();
     }
 
@@ -218,6 +225,22 @@ public class GameScreen implements Screen, InputProcessor {
         stage.draw();
         hudStage.act();
         hudStage.draw();
+        this.incrementPlayerXP(delta, player);
+    }
+
+    /**
+     * Handles the incrementing of the player's XP
+     */
+    private void incrementPlayerXP(float delta, Player player){
+        playerXpIncrementer += delta * incrementSpeed;
+        Gdx.app.debug("GameScreen", String.format("%.02f", playerXpIncrementer));
+       // Fps 50, 1/50
+        if (playerXpIncrementer > 1){
+            player.addXP(1);
+
+            playerXpIncrementer = 0;
+        }
+
     }
 
     /**
