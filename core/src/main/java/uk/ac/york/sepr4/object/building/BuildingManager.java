@@ -29,7 +29,7 @@ public class BuildingManager {
     private float spawnDelta;
 
     private boolean MonsterSpawned = false;
-    private Vector2 monsterLocation = new Vector2(232,232);
+    private Vector2 monsterLocation = new Vector2(50,50);
 
     /***
      * This class handles instances of buildings (Colleges and Departments)
@@ -78,11 +78,25 @@ public class BuildingManager {
     }
 
     public void checkMonsterSpawn() {
-        if(!MonsterSpawned) {
-            NPCBoat monster = new NPCBuilder().buildMonster(monsterLocation);
-
+        for(College college : colleges){
+            while(!MonsterSpawned){
+                Optional<NPCBoat> monster = generateMonster(college, monsterLocation);
+                if(monster.isPresent()) {
+                    Gdx.app.debug("BuildingManager", "MONSTER Spawned: "+college.getName());
+                    MonsterSpawned = true;
+                    gameScreen.getEntityManager().addNPC(monster.get());
+                }
+            }
         }
     }
+    public Optional<NPCBoat> generateMonster(College college, Vector2 pos){
+        NPCBoat monster = new NPCBuilder().generateRandomEnemy(pos, college, 10.0, false, true);
+        return Optional.of(monster);
+    }
+
+
+
+
 
 
 
@@ -110,7 +124,8 @@ public class BuildingManager {
                                 pos.get(),
                                 college,
                                 boss ? college.getBossDifficulty() : college.getEnemyDifficulty(),
-                                boss);
+                                boss,
+                                false);
                 return Optional.of(boat);
             }
         }

@@ -34,5 +34,13 @@
     "bossDifficulty": 0.8,
     "spawnChance": 0.8,
     "enemyDifficulty": 0.6
+  }, {
+    "class": "uk.ac.york.sepr4.object.building.College",
+    "name": "Monsters University",
+    "mapObjectStr": "Monster",
+    "bossName": "Mike Wazowski",
+    "bossDifficulty": 10.0,
+    "spawnChance": 0.0,
+    "enemyDifficulty": 0.0
   }
 ]
