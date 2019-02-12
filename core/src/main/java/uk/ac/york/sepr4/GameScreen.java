@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -82,7 +81,10 @@ public class GameScreen implements Screen, InputProcessor {
 
     //Not sure these belongs here tbh...
     private int minigameCost = 50, minigameReward = 100;
+
     public int shipSpeedUpgradeCost = 100;
+    public int shipHealthUpgradeCost = 100;
+    public int shipDamageUpgradeCost = 100;
 
     // Tracking the incrementing of the player XP
     private float playerXpIncrementer;
@@ -402,10 +404,11 @@ public class GameScreen implements Screen, InputProcessor {
     //TODO: PRINCE - Use this for setting stats
     public void upgradeStats() {
         Player player = this.entityManager.getOrCreatePlayer();
-        System.out.println("players max speed: " + player.getMaxSpeed());
 
+        //Number keys will be used to upgrade the items
+        //Our players balance needs to be higher than the upgrade cost for the transaction to go through
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) && player.getBalance() >= shipSpeedUpgradeCost){
-            //increase the ships maximum speed
+            //increase the ships maximum speed by a constant multiplier
             player.setMaxSpeed((float) (player.getMaxSpeed() * 1.5));
 
             //once I've bought extra speed, reduce the players balance
@@ -413,7 +416,31 @@ public class GameScreen implements Screen, InputProcessor {
 
             //once player have upgraded their ship, increase the price for an extra upgrade
             shipSpeedUpgradeCost = shipSpeedUpgradeCost * 2;
-            hud.upgradeShipSpeedButton.setText("Upgrade ship speed Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]");
+            hud.upgradeShipSpeedButton.setText("Upgrade ship speed - Required: " + shipSpeedUpgradeCost + "gold [press 1]");
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && player.getBalance() >= shipHealthUpgradeCost){
+            //increase the ships maximum speed by a constant multiplier
+            player.setMaxHealth(player.getMaxHealth() * 1.5);
+
+            //once I've bought extra health, reduce the players balance
+            player.setBalance(player.getBalance() - shipHealthUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipHealthUpgradeCost = shipHealthUpgradeCost * 2;
+            hud.upgradeshipHealthButton.setText("Upgrade ship health - Required: " + shipHealthUpgradeCost + "gold [press 2]");
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) && player.getBalance() >= shipDamageUpgradeCost){
+            //increase the ships maximum speed by a constant multiplier
+            player.setDamage(player.getDamage() * 1.5);
+
+            //once I've bought extra bullet damage, reduce the players balance
+            player.setBalance(player.getBalance() - shipDamageUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipDamageUpgradeCost = shipDamageUpgradeCost * 2;
+            hud.upgradeshipHealthButton.setText("Upgrade cannon damage - Required: " + shipDamageUpgradeCost + "gold [press 3]");
         }
     }
 

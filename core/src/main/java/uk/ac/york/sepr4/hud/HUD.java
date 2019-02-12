@@ -3,13 +3,11 @@ package uk.ac.york.sepr4.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Getter;
 import uk.ac.york.sepr4.GameScreen;
@@ -28,7 +26,7 @@ public class HUD {
     private QuestManager questManager;
 
     private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel, questLabel, captureStatus;
-    public  TextButton upgradeShipSpeedButton;
+    public  TextButton upgradeShipSpeedButton, upgradeshipHealthButton, upgradeShipDamageButton;
 
     @Getter
     private Table table;
@@ -74,10 +72,15 @@ public class HUD {
 
         questLabel = new Label("Test", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
 
-        upgradeShipSpeedButton =  new TextButton("Upgrade ship speed Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]", skin);
+
+        //on-screen buttons that will signal the user to upgrade their ship
+        upgradeShipSpeedButton =  new TextButton("Upgrade ship speed - Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]", skin);
+        upgradeshipHealthButton =  new TextButton("Upgrade ship health - Required: " + gameScreen.shipHealthUpgradeCost + "gold [press 2]", skin);
+        upgradeShipDamageButton =  new TextButton("Upgrade cannon damage - Required: " + gameScreen.shipHealthUpgradeCost + "gold [press 3]", skin);
 
 
 
+        //UI widgets will be initialised as a table around the screen
         table.add(goldLabel).expandX().padTop(5);
         table.add(locationLabel).expandX().padTop(5);
         table.add(xpLabel).expandX().padTop(5);
@@ -88,8 +91,11 @@ public class HUD {
         table.row();
         table.add(questLabel).expandX().padLeft(10); //TODO: Fix position of quest label.
         table.row();
-        table.add(upgradeShipSpeedButton).expand().bottom().left();
-
+        table.add(upgradeShipSpeedButton).expand().bottom().left(); //will appear on the bottom left of the screen
+        table.row();
+        table.add(upgradeshipHealthButton).bottom().left();
+        table.row();
+        table.add(upgradeShipDamageButton).bottom().left();
 
         Gdx.input.setInputProcessor(stage);
     }
