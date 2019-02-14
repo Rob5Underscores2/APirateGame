@@ -127,10 +127,10 @@ public class NPCBuilder {
     }
 
     public NPCBoat generateRandomEnemy(Vector2 pos, College allied, Double difficulty) {
-        return generateRandomEnemy(pos, allied, difficulty, false, false);
+        return generateRandomEnemy(pos, allied, difficulty, false);
     }
 
-    public NPCBoat generateRandomEnemy(Vector2 pos, College allied, Double difficulty, boolean isBoss, boolean isMonster) {
+    public NPCBoat generateRandomEnemy(Vector2 pos, College allied, Double difficulty, boolean isBoss) {
         NPCBuilder builder = new NPCBuilder();
         Random random = new Random();
         builder.boss(isBoss);
@@ -144,19 +144,19 @@ public class NPCBuilder {
         return builder.buildNPC(pos);
     }
 
-/**
-    public NPCBoat buildMonster(Vector2 pos) {
+
+    public NPCBoat buildMonster(Vector2 pos) { //creates the monster with the correct variables
         NPCBoat monster;
         monster = new NPCBoat(TextureManager.MONSTER, pos);
         monster.setAngle(angle);
         monster.setAccuracy(accuracy);
         monster.setSpeed(0);
-        monster.setMaxSpeed(0);
+        monster.setMaxSpeed(1);
         monster.setRange(range);
         monster.setIdealDistFromTarget(idealDistFromTarget);
         monster.setGradientForNormalDist(gradientFromNormalDist);
-        monster.setHealth(150.0);
-        monster.setMaxHealth(150.0);
+        monster.setHealth(750.0);
+        monster.setMaxHealth(750.0);
         monster.setTurningSpeed(turningSpeed);
         monster.setAllied(allied);
         monster.setDamage(damage);
@@ -165,5 +165,5 @@ public class NPCBuilder {
         return monster;
 
     }
-*/
+
 }

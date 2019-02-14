@@ -185,7 +185,7 @@ public class GameScreen implements Screen, InputProcessor {
             if (pirateMap.isObjectsEnabled()) {
                 buildingManager.spawnCollegeEnemies(delta);
                 buildingManager.checkBossSpawn();
-
+                buildingManager.checkMonsterSpawn();
             }
 
             handleHealthBars();
@@ -218,7 +218,6 @@ public class GameScreen implements Screen, InputProcessor {
         stage.draw();
         hudStage.act();
         hudStage.draw();
-        buildingManager.checkMonsterSpawn();
     }
 
     /**

@@ -29,7 +29,7 @@ public class BuildingManager {
     private float spawnDelta;
 
     private boolean MonsterSpawned = false;
-    private Vector2 monsterLocation = new Vector2(50,50);
+    private Vector2 monsterLocation;
 
     /***
      * This class handles instances of buildings (Colleges and Departments)
@@ -77,11 +77,18 @@ public class BuildingManager {
         }
     }
 
+
+
+
+
+    // checkMonsterSpawn and generateMonster together spawn the monster in at the monster college
     public void checkMonsterSpawn() {
-        for(College college : colleges){
+        for(College college : colleges){ // first college loaded is monster college, so it spawns it at the monster college then halts before spawning it anywhere else
             while(!MonsterSpawned){
+                Optional<Vector2> pos = getValidRandomSpawn(college, 250); //finds suitable coordinates to spawn the monster at
+                monsterLocation = pos.get(); //converts the optional result to a Vector2
                 Optional<NPCBoat> monster = generateMonster(college, monsterLocation);
-                if(monster.isPresent()) {
+                if(monster.isPresent()) {  //stops the monster from being spawned multiple times
                     Gdx.app.debug("BuildingManager", "MONSTER Spawned: "+college.getName());
                     MonsterSpawned = true;
                     gameScreen.getEntityManager().addNPC(monster.get());
@@ -90,7 +97,7 @@ public class BuildingManager {
         }
     }
     public Optional<NPCBoat> generateMonster(College college, Vector2 pos){
-        NPCBoat monster = new NPCBuilder().generateRandomEnemy(pos, college, 10.0, false, true);
+        NPCBoat monster = new NPCBuilder().buildMonster(pos);
         return Optional.of(monster);
     }
 
@@ -124,8 +131,7 @@ public class BuildingManager {
                                 pos.get(),
                                 college,
                                 boss ? college.getBossDifficulty() : college.getEnemyDifficulty(),
-                                boss,
-                                false);
+                                boss);
                 return Optional.of(boat);
             }
         }
