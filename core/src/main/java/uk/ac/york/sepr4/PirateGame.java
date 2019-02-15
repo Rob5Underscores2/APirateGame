@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import lombok.Getter;
 
 public class PirateGame extends Game {
-
+	@Getter
 	private MenuScreen menuScreen;
 	@Getter
 	private GameScreen gameScreen;

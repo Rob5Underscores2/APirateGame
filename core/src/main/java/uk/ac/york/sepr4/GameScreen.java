@@ -33,6 +33,7 @@ import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -197,6 +198,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         upgradeStats();
+        menuUpdate();
 
         if(!player.isDying()) {
 
@@ -255,6 +257,17 @@ public class GameScreen implements Screen, InputProcessor {
             player.addXP(1);
 
             playerXpIncrementer = 0;
+        }
+
+    }
+    /**
+     * Handles in game pause menu changes
+     */
+    private void menuUpdate(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            this.pirateGame.getMenuScreen().setIsGameStarted(true);
+            this.pirateGame.switchScreen(ScreenType.MENU);
+            this.pirateGame.getMenuScreen().setIsGameStarted(false);
         }
 
     }
