@@ -156,6 +156,8 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(inputMultiplexer);
         Gdx.input.setInputProcessor(stage);
 
+
+
         //create and spawn player
         startGame();
     }
@@ -410,6 +412,7 @@ public class GameScreen implements Screen, InputProcessor {
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) && player.getBalance() >= shipSpeedUpgradeCost){
             //increase the ships maximum speed by a constant multiplier
             player.setMaxSpeed((float) (player.getMaxSpeed() * 1.5));
+            player.setTurningSpeed(player.getTurningSpeed() + 1);
 
             //once I've bought extra speed, reduce the players balance
             player.setBalance(player.getBalance() - shipSpeedUpgradeCost);
@@ -422,6 +425,7 @@ public class GameScreen implements Screen, InputProcessor {
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && player.getBalance() >= shipHealthUpgradeCost){
             //increase the ships maximum speed by a constant multiplier
             player.setMaxHealth(player.getMaxHealth() * 1.5);
+            player.setHealth(player.getMaxHealth());
 
             //once I've bought extra health, reduce the players balance
             player.setBalance(player.getBalance() - shipHealthUpgradeCost);
@@ -440,7 +444,7 @@ public class GameScreen implements Screen, InputProcessor {
 
             //once player have upgraded their ship, increase the price for an extra upgrade
             shipDamageUpgradeCost = shipDamageUpgradeCost * 2;
-            hud.upgradeshipHealthButton.setText("Upgrade cannon damage - Required: " + shipDamageUpgradeCost + "gold [press 3]");
+            hud.upgradeShipDamageButton.setText("Upgrade cannon damage - Required: " + shipDamageUpgradeCost + "gold [press 3]");
         }
     }
 
