@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.object.building.College;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ public class NPCBuilder {
     private Texture texture = TextureManager.ENEMY;
     private Optional<College> allied = Optional.empty();
     private boolean isBoss = false;
+    private boolean isMonster = false;
 
     public NPCBuilder() {}
 
@@ -24,6 +26,22 @@ public class NPCBuilder {
         if(isBoss && texture == TextureManager.ENEMY) {
             //if boss and default texture
             npcBoat = new NPCBoat(TextureManager.BOSS, pos);
+        } else if(isMonster){
+            npcBoat = new NPCBoat(TextureManager.MONSTER, pos);
+            npcBoat.setAngle(angle);
+            npcBoat.setAccuracy(accuracy);
+            npcBoat.setSpeed(0);
+            npcBoat.setMaxSpeed(0);
+            npcBoat.setRange(range);
+            npcBoat.setIdealDistFromTarget(idealDistFromTarget);
+            npcBoat.setGradientForNormalDist(gradientFromNormalDist);
+            npcBoat.setHealth(150.0);
+            npcBoat.setMaxHealth(150.0);
+            npcBoat.setTurningSpeed(turningSpeed);
+            npcBoat.setAllied(allied);
+            npcBoat.setDamage(damage);
+            npcBoat.setReqCooldown(reqCooldown);
+            return npcBoat;
         } else {
             npcBoat = new NPCBoat(texture, pos);
         }
@@ -54,6 +72,11 @@ public class NPCBuilder {
 
     public NPCBuilder boss(boolean isBoss) {
         this.isBoss = isBoss;
+        return this;
+    }
+
+    public NPCBuilder monster(boolean isMonster) {
+        this.isMonster = isMonster;
         return this;
     }
 
@@ -119,6 +142,28 @@ public class NPCBuilder {
         builder.angle((float) (2*Math.PI*random.nextDouble()));
 
         return builder.buildNPC(pos);
+    }
+
+
+    public NPCBoat buildMonster(Vector2 pos) { //creates the monster with the correct variables
+        NPCBoat monster;
+        monster = new NPCBoat(TextureManager.MONSTER, pos);
+        monster.setAngle(angle);
+        monster.setAccuracy(accuracy);
+        monster.setSpeed(0);
+        monster.setMaxSpeed(1);
+        monster.setRange(range);
+        monster.setIdealDistFromTarget(idealDistFromTarget);
+        monster.setGradientForNormalDist(gradientFromNormalDist);
+        monster.setHealth(750.0);
+        monster.setMaxHealth(750.0);
+        monster.setTurningSpeed(turningSpeed);
+        monster.setAllied(allied);
+        monster.setDamage(damage);
+        monster.setReqCooldown(reqCooldown);
+
+        return monster;
+
     }
 
 }

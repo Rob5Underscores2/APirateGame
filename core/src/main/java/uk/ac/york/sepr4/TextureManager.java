@@ -75,6 +75,7 @@ public class TextureManager {
     public static Texture WENTWORTH_MANOWAR = new Texture(Gdx.files.internal(path+"wentworthmanowarasset.png"));
     public static Texture WENTWORTH_SLOOP = new Texture(Gdx.files.internal(path+"wentworthsloopasset.png"));
 
+    public static Texture MONSTER = new Texture(Gdx.files.internal(path+"monster.png"));
 //    public static Texture swimmingFrame(int number){
 //        if (number == 1){
 //            return new Texture(Gdx.files.internal(path+"crew (1).png"));
