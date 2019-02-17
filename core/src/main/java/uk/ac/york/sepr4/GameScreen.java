@@ -387,6 +387,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    //NEW METHOD
     /**
      * Gambles the players money with the chance to double their money.
      * (Follows the requirement of needing to be at a department allied with a captured college: ReqID 2.14)
