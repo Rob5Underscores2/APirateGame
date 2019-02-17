@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
+import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.NPCBoat;
 import uk.ac.york.sepr4.object.entity.NPCBuilder;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.GameScreen;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,9 @@ public class BuildingManager {
 
     //time till next spawn attempt
     private float spawnDelta;
+
+    private boolean MonsterSpawned = false;
+    private Vector2 monsterLocation;
 
     /***
      * This class handles instances of buildings (Colleges and Departments)
@@ -73,6 +76,36 @@ public class BuildingManager {
             }
         }
     }
+
+
+
+
+
+    // checkMonsterSpawn and generateMonster together spawn the monster in at the monster college
+    public void checkMonsterSpawn() {
+        for(College college : colleges){ // first college loaded is monster college, so it spawns it at the monster college then halts before spawning it anywhere else
+            while(!MonsterSpawned){
+                Optional<Vector2> pos = getValidRandomSpawn(college, 250); //finds suitable coordinates to spawn the monster at
+                monsterLocation = pos.get(); //converts the optional result to a Vector2
+                Optional<NPCBoat> monster = generateMonster(college, monsterLocation);
+                if(monster.isPresent()) {  //stops the monster from being spawned multiple times
+                    Gdx.app.debug("BuildingManager", "MONSTER Spawned: "+college.getName());
+                    MonsterSpawned = true;
+                    gameScreen.getEntityManager().addNPC(monster.get());
+                }
+            }
+        }
+    }
+    public Optional<NPCBoat> generateMonster(College college, Vector2 pos){
+        NPCBoat monster = new NPCBuilder().buildMonster(pos);
+        return Optional.of(monster);
+    }
+
+
+
+
+
+
 
     private Optional<Vector2> getValidRandomSpawn(College college, float size) {
         int attempts = 0;
