@@ -427,7 +427,7 @@ public class GameScreen implements Screen, InputProcessor {
             player.setMaxSpeed((float) (player.getMaxSpeed() * 1.5));
             player.setTurningSpeed(player.getTurningSpeed() + 1);
 
-            //once I've bought extra speed, reduce the players balance
+            //once the user has upgraded their ship speed, reduce their gold balance
             player.setBalance(player.getBalance() - shipSpeedUpgradeCost);
 
             //once player have upgraded their ship, increase the price for an extra upgrade
@@ -440,7 +440,7 @@ public class GameScreen implements Screen, InputProcessor {
             player.setMaxHealth(player.getMaxHealth() * 1.5);
             player.setHealth(player.getMaxHealth());
 
-            //once I've bought extra health, reduce the players balance
+            //once the user has upgraded their ship health, reduce their gold balance
             player.setBalance(player.getBalance() - shipHealthUpgradeCost);
 
             //once player have upgraded their ship, increase the price for an extra upgrade
@@ -449,10 +449,10 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) && player.getBalance() >= shipDamageUpgradeCost){
-            //increase the ships maximum speed by a constant multiplier
+            //increase the ships maximum damage done by a constant multiplier
             player.setDamage(player.getDamage() * 1.5);
 
-            //once I've bought extra bullet damage, reduce the players balance
+            //once the user has upgraded their damage cannon damage, reduce their gold balance
             player.setBalance(player.getBalance() - shipDamageUpgradeCost);
 
             //once player have upgraded their ship, increase the price for an extra upgrade
