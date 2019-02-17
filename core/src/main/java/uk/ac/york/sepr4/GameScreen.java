@@ -416,7 +416,10 @@ public class GameScreen implements Screen, InputProcessor {
        player.setInMinigame(false);
     }
 
-    //TODO: PRINCE - Use this for setting stats
+    /**
+     * NEW - Used to upgrade stats of the ship using the gold earned by defeating monsters/ships
+     * (Follows the requirement of allowing the player to upgrade/repair ship)
+     */
     public void upgradeStats() {
         Player player = this.entityManager.getOrCreatePlayer();
 

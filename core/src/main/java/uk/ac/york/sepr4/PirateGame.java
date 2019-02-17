@@ -9,7 +9,6 @@ public class PirateGame extends Game {
 	@Getter
 	private GameScreen gameScreen;
 
-	private UpgradeScreen upgradeScreen;
 
 	public static PirateGame PIRATEGAME;
 	
@@ -35,11 +34,6 @@ public class PirateGame extends Game {
                 if(gameScreen == null) gameScreen = new GameScreen(this);
                 this.setScreen(gameScreen);
                 break;
-			case UPGRADES:
-				if(upgradeScreen == null) upgradeScreen = new UpgradeScreen(this);
-				this.setScreen(upgradeScreen);
-                break;
-
 		}
 	}
 }

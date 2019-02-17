@@ -73,7 +73,7 @@ public class HUD {
         questLabel = new Label("Test", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
 
 
-        //on-screen buttons that will signal the user to upgrade their ship
+        //NEW: on-screen buttons that will signal the user to upgrade their ship
         upgradeShipSpeedButton =  new TextButton("Upgrade ship speed - Required: " + gameScreen.shipSpeedUpgradeCost + "gold [press 1]", skin);
         upgradeshipHealthButton =  new TextButton("Upgrade ship health - Required: " + gameScreen.shipHealthUpgradeCost + "gold [press 2]", skin);
         upgradeShipDamageButton =  new TextButton("Upgrade cannon damage - Required: " + gameScreen.shipHealthUpgradeCost + "gold [press 3]", skin);
@@ -91,7 +91,8 @@ public class HUD {
         table.row();
         table.add(questLabel).expandX().padLeft(10); //TODO: Fix position of quest label.
         table.row();
-        table.add(upgradeShipSpeedButton).expand().bottom().left(); //will appear on the bottom left of the screen
+        //NEW - new on-screen buttons will appear on the bottom left of the screen
+        table.add(upgradeShipSpeedButton).expand().bottom().left();
         table.row();
         table.add(upgradeshipHealthButton).bottom().left();
         table.row();
