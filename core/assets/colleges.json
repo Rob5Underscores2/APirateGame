@@ -7,7 +7,7 @@
     "bossDifficulty": 10.0,
     "spawnChance": 0.0,
     "enemyDifficulty": 0.0
-  },  {
+  }, {
     "class": "uk.ac.york.sepr4.object.building.College",
     "name": "Halifax College",
     "mapObjectStr": "halifax",
@@ -36,11 +36,29 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
+    "name": "Vanbrugh College",
+    "mapObjectStr": "vanbrugh",
+    "bossName": "VBoss",
+    "bossDifficulty": 0.4,
+    "spawnChance": 0.4,
+    "enemyDifficulty": 0.4
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.College",
+    "name": "James College",
+    "mapObjectStr": "james",
+    "bossName": "JBoss",
+    "bossDifficulty": 0.9,
+    "spawnChance": 0.2,
+    "enemyDifficulty": 0.9
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.College",
     "name": "Langwith College",
     "mapObjectStr": "langwith",
     "bossName": "LBoss",
     "bossDifficulty": 0.8,
     "spawnChance": 0.8,
     "enemyDifficulty": 0.6
-  } 
+  }
 ]
