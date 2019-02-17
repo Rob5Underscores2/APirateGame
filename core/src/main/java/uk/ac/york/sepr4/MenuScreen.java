@@ -10,11 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import lombok.Getter;
 
 public class MenuScreen implements Screen {
 
     private PirateGame pirateGame;
     private Stage stage;
+    private boolean hasGameStarted = false;
 
     public MenuScreen(PirateGame pirateGame) {
         this.pirateGame = pirateGame;
@@ -23,9 +25,15 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
     }
+    public void setIsGameStarted(boolean value){
+        hasGameStarted = value;
+    }
 
     @Override
     public void show() {
+
+        String resumeOrNewGameText;
+
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
         table.setFillParent(true);
@@ -36,7 +44,12 @@ public class MenuScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
 
         //create buttons
-        TextButton newGame = new TextButton("New Game", skin);
+        if (hasGameStarted){
+            resumeOrNewGameText = "Resume";
+        }else{
+            resumeOrNewGameText = "New Game";
+        }
+        TextButton newGame = new TextButton(resumeOrNewGameText, skin);
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);
 

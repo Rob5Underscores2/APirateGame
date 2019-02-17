@@ -92,11 +92,11 @@ public abstract class LivingEntity extends Entity {
 
     /***
      * Called to inflict damage on LivingEntity
-     * @param damage amount of damage to inflict
+     * @param theDamage amount of damage to inflict
      * @return true if LivingEntity alive
      */
-    public boolean damage(Double damage) {
-        this.health = this.health - damage;
+    public boolean damage(Double theDamage) {
+        this.health = this.health - theDamage;
         if (this.health <= 0) {
             kill(false);
             return false;

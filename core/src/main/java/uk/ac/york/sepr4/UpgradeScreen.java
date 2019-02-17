@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.entity.Player;
 
 public class UpgradeScreen implements Screen {
     private PirateGame pirateGame;
@@ -31,6 +32,8 @@ public class UpgradeScreen implements Screen {
         // create stage and set it as input processor
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        entityManager = new EntityManager(pirateGame.getGameScreen());
 
     }
 
@@ -51,53 +54,17 @@ public class UpgradeScreen implements Screen {
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);*/
 
-        Label currentCannonBallDamageLabel = new Label("CURRENT CANNON BALL DAMAGE: " + " X ", skin); //will show the current cannonBall damage once I know how to access and change it
-        Label newCannonBallDamageLabel = new Label(String.format("NEW CANNON BALL DAMAGE: " + "%03d", newCannonBallDamage), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
-        TextButton increaseCannonBallDamageButton = new TextButton("->", skin);
+        TextButton upgradeShipSpeedButton = new TextButton("Upgrade ship speed Required: " + pirateGame.getGameScreen().shipSpeedUpgradeCost + "gold [press 1]", skin);
         TextButton decreaseCannonBallDamageButton = new TextButton("<-", skin);
         TextButton confirmButton = new TextButton("CONFIRM", skin);
 
         //add buttons to table
-        table.add(currentCannonBallDamageLabel).fillX().uniformX();
+        table.add(upgradeShipSpeedButton).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
-        table.add(newCannonBallDamageLabel).fillX().uniformX().center();
-        table.row().uniform();
-        table.add(decreaseCannonBallDamageButton).width(100);
-        table.add(increaseCannonBallDamageButton).width(100);
-        table.row().uniform();
-        table.add(confirmButton);
+        table.add(decreaseCannonBallDamageButton).fillX().uniformX();
+        table.row();
+        table.add(confirmButton).fillX().uniformX();
 
-
-        // create button listeners
-        increaseCannonBallDamageButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //newCannonBallDamage will increment
-                newCannonBallDamage+= 10;
-                newCannonBallDamageLabel.setText(String.format("NEW CANNONBALL DAMAGE: " + "%03d", newCannonBallDamage));
-            }
-        });
-
-        decreaseCannonBallDamageButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //only decrements the new cannonBallDamage if it is greater than 0 -> might need improving later
-                if(newCannonBallDamage > 0){
-                    newCannonBallDamage -= 10;
-                    newCannonBallDamageLabel.setText(String.format("NEW CANNONBALL DAMAGE: " + "%03d", newCannonBallDamage));
-                }
-            }
-        });
-
-        //once the user presses confirm the changes will be applied
-        confirmButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //change the amount of gold user has
-                //change the amount of damage the cannonBall does
-            }
-        });
 
 
         Gdx.input.setInputProcessor(stage);

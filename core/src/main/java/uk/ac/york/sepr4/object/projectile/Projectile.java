@@ -11,7 +11,7 @@ public class Projectile extends Entity {
 
     private LivingEntity shooter;
 
-    private Double damage = 5.0;
+    private Double damage;
     private Integer baseSpeed = 100;
 
     private boolean active = true;
@@ -25,6 +25,9 @@ public class Projectile extends Entity {
 
         setAngle(angle);
         setSpeed(speed + baseSpeed);
+        damage = this.shooter.getDamage();
+
+        Gdx.app.debug("Projectile",this.shooter.getDamage().toString());
     }
 
     @Override

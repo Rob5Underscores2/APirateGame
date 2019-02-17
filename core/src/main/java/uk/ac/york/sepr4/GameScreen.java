@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -31,6 +33,7 @@ import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -58,6 +61,7 @@ public class GameScreen implements Screen, InputProcessor {
     private ItemManager itemManager;
     @Getter
     private EntityManager entityManager;
+    //Use this entitymanager for finding the player
     @Getter
     private QuestManager questManager;
     @Getter
@@ -74,8 +78,18 @@ public class GameScreen implements Screen, InputProcessor {
 
     public static boolean DEBUG = true;
 
-    //Not sure this belongs here tbh...
+    private TextButton upgradeShipSpeedButton;
+
+    //Not sure these belongs here tbh...
     private int minigameCost = 50, minigameReward = 100;
+
+    public int shipSpeedUpgradeCost = 100;
+    public int shipHealthUpgradeCost = 100;
+    public int shipDamageUpgradeCost = 100;
+
+    // Tracking the incrementing of the player XP
+    private float playerXpIncrementer;
+    private float incrementSpeed;
 
     public static GameScreen getInstance() {
         return gameScreen;
@@ -95,11 +109,17 @@ public class GameScreen implements Screen, InputProcessor {
         this.pirateGame = pirateGame;
         gameScreen = this;
 
+        playerXpIncrementer = 0f;
+        incrementSpeed = 1f;
+
         // Debug options (extra logging, collision shape renderer (viewing tile object map))
         if(DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
             shapeRenderer = new ShapeRenderer();
         }
+
+        // temporary until we have asset manager in
+        Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
 
         // Local widths and heights.
         float w = Gdx.graphics.getWidth();
@@ -135,8 +155,11 @@ public class GameScreen implements Screen, InputProcessor {
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(entityManager.getOrCreatePlayer());
         Gdx.input.setInputProcessor(inputMultiplexer);
+        Gdx.input.setInputProcessor(stage);
 
-        //create and spawnn player
+
+
+        //create and spawn player
         startGame();
     }
 
@@ -173,6 +196,9 @@ public class GameScreen implements Screen, InputProcessor {
             pirateGame.gameOver();
             return;
         }
+
+        upgradeStats();
+        menuUpdate();
 
         if(!player.isDying()) {
 
@@ -218,6 +244,33 @@ public class GameScreen implements Screen, InputProcessor {
         stage.draw();
         hudStage.act();
         hudStage.draw();
+        this.incrementPlayerXP(delta, player);
+    }
+
+    /**
+     * Handles the incrementing of the player's XP
+     */
+    private void incrementPlayerXP(float delta, Player player){
+        playerXpIncrementer += delta * incrementSpeed;
+        //Gdx.app.debug("GameScreen", String.format("%.02f", playerXpIncrementer));
+       // Fps 50, 1/50
+        if (playerXpIncrementer > 1){
+            player.addXP(1);
+
+            playerXpIncrementer = 0;
+        }
+
+    }
+    /**
+     * Handles in game pause menu changes
+     */
+    private void menuUpdate(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            this.pirateGame.getMenuScreen().setIsGameStarted(true);
+            this.pirateGame.switchScreen(ScreenType.MENU);
+            this.pirateGame.getMenuScreen().setIsGameStarted(false);
+        }
+
     }
 
     /**
@@ -308,23 +361,19 @@ public class GameScreen implements Screen, InputProcessor {
                                 player.issueReward(itemManager.generateReward());
                                 //if dead NPC is a boss then player can capture its respective college
                                 if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
-
                                     // find if college is part of quest
-                                    if (this.questManager.getCurrentQuest().getIsKillQuest()) {
+                                    // First null check is to avoid null pointer errors when checking the current quest
+                                    // The second predicate ensures the quest is a kill quest since this is section is checking whether a kill also completed a quest
+                                    if ((this.questManager.getCurrentQuest() != null) && (this.questManager.getCurrentQuest().getIsKillQuest())) {
+                                        //Compares the current target of the kill quest vs. the name of the allied college of the npc
+                                        //We use string matching here because quests do not store targets as College instances but as Strings for their name
                                         if (this.questManager.getCurrentQuest().getTargetEntityName().equals(npcBoat.getAllied().get().getName())){
                                             this.questManager.finishCurrentQuest();
-
                                             player.issueReward(itemManager.generateReward());
-
                                         }
-                                        }
-                                        this.questManager.addCapturedCollege(npcBoat.getAllied().get().getName());
-                                    player.capture(npcBoat.getAllied().get());
                                     }
-
-
-
-
+                                    player.capture(npcBoat.getAllied().get());
+                                }
                             } else {
                                 Gdx.app.debug("GameScreen", "Player died.");
                             }
@@ -338,41 +387,94 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    /**
+     * Gambles the players money with the chance to double their money.
+     * (Follows the requirement of needing to be at a department allied with a captured college: ReqID 2.14)
+     */
     public void doMinigame(){
        Player player = entityManager.getOrCreatePlayer();
        Random random = new Random();
-       if (player.getBalance() < 100) {
+       if (player.getBalance() < minigameCost) {
             System.out.println("Not enough gold to play!");
         }
         else if (entityManager.getPlayerDepartmentLocation().isPresent()){
             Department currentDepartment = entityManager.getPlayerDepartmentLocation().get();
+            //Checks whether the player is at a department which is allied with a college which they have captured (ReqID 2.13)
             if (player.getCaptured().contains(currentDepartment.getAllied())) {
                 player.setBalance(player.getBalance() - minigameCost);
                 Integer result = Math.round(random.nextFloat() * minigameReward);
                 player.setBalance(player.getBalance() + result);
             }
             else {
+                //TODO: Show this on the HUD
                 System.out.println("You have not captured the allied college of this department yet!");
             }
        }
        else {
+           //TODO: Show this on the HUD
            System.out.println("You are not in the right location to play!");
        }
        player.setInMinigame(false);
     }
 
+    //TODO: PRINCE - Use this for setting stats
+    public void upgradeStats() {
+        Player player = this.entityManager.getOrCreatePlayer();
+
+        //Number keys will be used to upgrade the items
+        //Our players balance needs to be higher than the upgrade cost for the transaction to go through
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) && player.getBalance() >= shipSpeedUpgradeCost){
+            //increase the ships maximum speed by a constant multiplier
+            player.setMaxSpeed((float) (player.getMaxSpeed() * 1.5));
+            player.setTurningSpeed(player.getTurningSpeed() + 1);
+
+            //once the user has upgraded their ship speed, reduce their gold balance
+            player.setBalance(player.getBalance() - shipSpeedUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipSpeedUpgradeCost = shipSpeedUpgradeCost * 2;
+            hud.upgradeShipSpeedButton.setText("Upgrade ship speed - Required: " + shipSpeedUpgradeCost + "gold [press 1]");
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) && player.getBalance() >= shipHealthUpgradeCost){
+            //increase the ships maximum speed by a constant multiplier
+            player.setMaxHealth(player.getMaxHealth() * 1.5);
+            player.setHealth(player.getMaxHealth());
+
+            //once the user has upgraded their ship health, reduce their gold balance
+            player.setBalance(player.getBalance() - shipHealthUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipHealthUpgradeCost = shipHealthUpgradeCost * 2;
+            hud.upgradeshipHealthButton.setText("Upgrade ship health - Required: " + shipHealthUpgradeCost + "gold [press 2]");
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) && player.getBalance() >= shipDamageUpgradeCost){
+            //increase the ships maximum damage done by a constant multiplier
+            player.setDamage(player.getDamage() * 1.5);
+
+            //once the user has upgraded their damage cannon damage, reduce their gold balance
+            player.setBalance(player.getBalance() - shipDamageUpgradeCost);
+
+            //once player have upgraded their ship, increase the price for an extra upgrade
+            shipDamageUpgradeCost = shipDamageUpgradeCost * 2;
+            hud.upgradeShipDamageButton.setText("Upgrade cannon damage - Required: " + shipDamageUpgradeCost + "gold [press 3]");
+        }
+    }
 
     @Override
     public void resize(int width, int height) {
         orthographicCamera.setToOrtho(false, (float) width, (float) height);
         orthographicCamera.update();
+
+        stage.getViewport().update(width, height);
     }
 
     @Override
     public void pause() {}
 
     @Override
-    public void resume() {}
+    public void resume() {Gdx.input.setInputProcessor(stage);}
 
     @Override
     public void hide() {
@@ -400,13 +502,18 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
 
-    // Stub methods for InputProcessor (unused) - must return false
+    // Stub methods for InputProcessor (unused) - must return false (otherwise key detection for that method will not run in Player.java
     @Override
     public boolean keyDown(int keycode) {
         return false;
     }
 
     @Override
+    /**
+     * Currently only used to detect when the player has pressed tab to play the minigame.
+     * Uses keyUp not keyDown so that holding down the key has no effect.
+     * @return False so that the key detection does not terminate here
+     */
     public boolean keyUp(int keycode) {
         Player player = entityManager.getOrCreatePlayer();
         if((keycode == Input.Keys.TAB) && (player.isInMinigame() == false)){

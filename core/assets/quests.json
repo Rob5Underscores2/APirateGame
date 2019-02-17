@@ -33,6 +33,54 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.quest.Quest",
+    "name": "Capture Vanbrugh",
+    "startMessage": "Fancy taking V-Bar all for youself?",
+    "endMessage": "Well we know who is getting the next round in!",
+    "requires" : [],
+    "gives" : [],
+    "reward" : {
+      "class": "uk.ac.york.sepr4.object.item.Reward",
+      "xp":100,
+      "gold":1000,
+      "items": []
+    },
+    "targetEntityName":"Vanburgh College",
+    "isKillQuest":true
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.quest.Quest",
+    "name": "Capture James",
+    "startMessage": "Feel like a challenge? Go and take James college for yourself.",
+    "endMessage": "Well done! Doesn't look like it is your first time plundering a college...",
+    "requires" : [],
+    "gives" : [],
+    "reward" : {
+      "class": "uk.ac.york.sepr4.object.item.Reward",
+      "xp":100,
+      "gold":1000,
+      "items": []
+    },
+    "targetEntityName":"James College",
+    "isKillQuest":true
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.quest.Quest",
+    "name": "Capture Langwith",
+    "startMessage": "I dare you to go and plunder Langwith...",
+    "endMessage": "You came through, great job!",
+    "requires" : [],
+    "gives" : [],
+    "reward" : {
+      "class": "uk.ac.york.sepr4.object.item.Reward",
+      "xp":100,
+      "gold":1000,
+      "items": []
+    },
+    "targetEntityName":"Langwith College",
+    "isKillQuest":true
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.quest.Quest",
     "name": "Capture Goodricke",
     "startMessage": "It's time you tried to take on Goodricke",
     "endMessage": "Nice one!",

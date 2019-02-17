@@ -28,6 +28,9 @@ public class Player extends LivingEntity implements InputProcessor {
     //For speeding movement when debugging
     private float debugMultiplier = 2;
 
+    //Level Checker
+    private Integer previousLevel = 1;
+
     private List<College> captured = new ArrayList<>();
 
     public Player(Vector2 pos) {
@@ -41,7 +44,9 @@ public class Player extends LivingEntity implements InputProcessor {
 
         setMaxHealth(20.0+(0.5*(getLevel()-1)));
         setMaxSpeed(100f+(5f*(getLevel()-1)));
-        setDamage(0.5+(0.1*(getLevel()-1)));
+        setDamage(5+(0.1*(getLevel()-1)));
+
+        balance = 10000;
     }
 
     @Override
@@ -68,6 +73,19 @@ public class Player extends LivingEntity implements InputProcessor {
         return level;
     }
 
+    public void shipLevelStats(){
+
+        if (!(previousLevel == getLevel())){
+            setMaxHealth(getMaxHealth() + (0.5*(getLevel()-1)));
+            setHealth(getMaxHealth());
+            setMaxSpeed(getMaxSpeed() + (5f*(getLevel()-1)));
+            setDamage(getDamage() + (0.5*(getLevel()-1)));
+            previousLevel = getLevel();
+        }
+
+
+    }
+
     public Double getLevelProgress() {
         if(xp==0){
             return 0.0;
@@ -89,6 +107,7 @@ public class Player extends LivingEntity implements InputProcessor {
         addBalance(reward.getGold());
         addXP(reward.getXp());
         addItems(reward.getItems());
+        shipLevelStats();
     }
 
     public void addBalance(Integer val) {
@@ -96,6 +115,7 @@ public class Player extends LivingEntity implements InputProcessor {
     }
     public void addXP(Integer val) {
         xp+=val;
+        shipLevelStats();
     }
     public void addItems(List<Item> items) {
         inventory.addAll(items);
