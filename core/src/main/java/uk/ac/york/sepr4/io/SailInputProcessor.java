@@ -5,9 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.object.building.Building;
+import uk.ac.york.sepr4.object.building.Department;
+import uk.ac.york.sepr4.object.building.MinigameBuilding;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.screen.NewMinigameScreen;
 import uk.ac.york.sepr4.screen.SailScreen;
+
+import java.util.Optional;
 
 public class SailInputProcessor implements InputProcessor {
 
@@ -20,31 +25,27 @@ public class SailInputProcessor implements InputProcessor {
     //Added for Assessment 3: key listener for game events
     @Override
     public boolean keyDown(int keycode) {
-        SailScreen sailScreen = gameInstance.getSailScreen();
 
         if (keycode == Input.Keys.SPACE) {
                 gameInstance.setPaused(!gameInstance.isPaused());
                 return true;
         }
 
-//        if (keycode == Input.Keys.E) {
-//            if (nearDepartment) {
-//                nearDepartment = false;
-//                inDepartment = true;
-//                enterDepartment(sailScreen.getEntityManager().getPlayerLocation().get().getName());
-//                return true;
-//            }
-//            else if (nearMinigame) {
-//                nearMinigame = false;
-//                APirateGame APirateGame = SailScreen.getInstance().getGame();
-//                APirateGame.switchScreen(ScreenType.MINIGAME);
-//            }
-//        }
+        if (keycode == Input.Keys.E) {
+            Optional<Building> optionalBuilding = gameInstance.getEntityManager().getPlayerLocation();
+            if(optionalBuilding.isPresent()) {
+                Building building = optionalBuilding.get();
+                if(building instanceof Department) {
+
+                } else if (building instanceof MinigameBuilding) {
+                    gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
+                }
+            }
+        }
 
         if(keycode == Input.Keys.L){
-            gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
             // DEBUG code used to test minigame easily!
-            //APirateGame.switchScreen(ScreenType.MINIGAME);
+            gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
         }
 
         if (keycode == Input.Keys.ESCAPE) {

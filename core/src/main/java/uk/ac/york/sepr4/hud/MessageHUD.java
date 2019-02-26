@@ -15,7 +15,6 @@ import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
-import uk.ac.york.sepr4.screen.SailScreen;
 
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class MessageHUD {
     private Label locationPromptLabel;
 
     @Getter
-    private Table table, inDerwentBeforeEndTable, locationPrompt, minigamePromptTable;
+    private Table table;
 
     /***
      * Class responsible for storing and updating SailHUD variables.
@@ -75,7 +74,7 @@ public class MessageHUD {
         locationPromptLabel.setText("");
         if (loc.isPresent()) {
             Building building = loc.get();
-            if(!(building instanceof College)) {
+            if(building instanceof MinigameBuilding || building instanceof Department) {
                 locationPromptLabel.setText("Press E to enter " + building.getName());
             }
         }

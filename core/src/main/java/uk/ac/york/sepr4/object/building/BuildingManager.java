@@ -19,7 +19,7 @@ public class BuildingManager {
 
     private Array<College> colleges = new Array<>();
     private Array<Department> departments = new Array<>();
-    private MinigameBuilding minigame;
+    private Array<MinigameBuilding> taverns = new Array<>();
 
     private GameInstance gameInstance;
 
@@ -47,34 +47,6 @@ public class BuildingManager {
 
         } else {
             Gdx.app.error("Building Manager", "Objects not enabled, not loading buildings!");
-        }
-    }
-
-    /**
-     * Added for Assessment 3: Added a text prompt to enter department when near
-     */
-    public void departmentPrompt() {
-        for (Department department : departments) {
-            Player player = gameInstance.getEntityManager().getOrCreatePlayer();
-            if (department.getBuildingZone().contains(player.getRectBounds())) {
-                //gameInstance.setNearDepartment(true);
-            }
-            else {
-                //gameInstance.setNearDepartment(false);
-            }
-        }
-    }
-
-    /**
-     * Added for Assessment 3: Text prompt to access minigame
-     */
-    public void minigamePrompt(){
-        Player player = gameInstance.getEntityManager().getOrCreatePlayer();
-        if (minigame.getBuildingZone().contains(player.getRectBounds())) {
-           // sailScreen.setNearMinigame(true);
-        }
-        else {
-            //sailScreen.setNearMinigame(false);
         }
     }
 
@@ -160,7 +132,7 @@ public class BuildingManager {
                 } else if (building instanceof Department) {
                     departments.add((Department) building);
                 } else if (building instanceof MinigameBuilding) {
-                    minigame = (MinigameBuilding) building;
+                    taverns.add((MinigameBuilding) building);
                 }
                 Gdx.app.debug("BuildingManager", "Loaded " + building.getName());
             } else {
@@ -169,31 +141,4 @@ public class BuildingManager {
 
         }
     }
-
-
-//    //TODO: Make generic method
-//    private void loadColleges(Array<College> loading) {
-//        for(College college : loading) {
-//            if (college.load(sailScreen.getPirateMap())) {
-//                    colleges.add(college);
-//                    Gdx.app.debug("BuildingManager", "Loaded " + college.getName());
-//                } else {
-//                    Gdx.app.error("BuildingManager", "Failed to load " + college.getName());
-//                }
-//
-//        }
-//    }
-//
-//    private void loadDepartments(Array<Department> loading) {
-//        for(Department department : loading) {
-//            if (department.load(sailScreen.getPirateMap())) {
-//                    departments.add(department);
-//                    Gdx.app.debug("BuildingManager", "Loaded " + department.getName());
-//                } else {
-//                    Gdx.app.error("BuildingManager", "Failed to load " + department.getName());
-//
-//                }
-//
-//        }
-//    }
 }

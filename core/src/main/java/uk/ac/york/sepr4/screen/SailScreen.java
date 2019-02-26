@@ -107,8 +107,6 @@ public class SailScreen extends PirateScreen {
         if (gameInstance.getPirateMap().isObjectsEnabled()) {
             gameInstance.getBuildingManager().spawnCollegeEnemies(delta);
             buildingManager.checkBossSpawn();
-            buildingManager.departmentPrompt();
-            buildingManager.minigamePrompt();
         }
 
         handleHealthBars();

@@ -1,7 +1,8 @@
 [
   {
     "class": "uk.ac.york.sepr4.object.building.MinigameBuilding",
-    "name": "minigame",
-    "mapObjectStr": "minigame"
+    "name": "The Thick Sea",
+    "mapObjectStr": "minigame1",
+    "buildingRange": 750
   }
 ]

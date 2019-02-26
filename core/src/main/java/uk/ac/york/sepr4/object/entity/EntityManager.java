@@ -9,6 +9,7 @@ import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
+import uk.ac.york.sepr4.object.building.MinigameBuilding;
 import uk.ac.york.sepr4.object.projectile.ProjectileManager;
 
 import java.util.ArrayList;
@@ -63,18 +64,22 @@ public class EntityManager {
     }
 
     public Optional<Building> getPlayerLocation() {
-        Optional<Building> loc = Optional.empty();
         for(College building : gameInstance.getBuildingManager().getColleges()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
-                loc = Optional.of(building);
+                return Optional.of(building);
             }
         }
         for(Department building : gameInstance.getBuildingManager().getDepartments()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
-                loc = Optional.of(building);
+                return Optional.of(building);
             }
         }
-        return loc;
+        for(MinigameBuilding building : gameInstance.getBuildingManager().getTaverns()) {
+            if(building.getBuildingZone().contains(player.getX(), player.getY())) {
+                return Optional.of(building);
+            }
+        }
+        return  Optional.empty();
     }
 
     public void addNPC(NPCBoat npcBoat){
