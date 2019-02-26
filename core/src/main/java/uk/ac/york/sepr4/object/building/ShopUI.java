@@ -11,9 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import uk.ac.york.sepr4.GameScreen;
-import uk.ac.york.sepr4.object.entity.Player;
 import lombok.Getter;
+import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.screen.SailScreen;
 
 import javax.naming.NameNotFoundException;
 
@@ -23,7 +24,7 @@ import javax.naming.NameNotFoundException;
  */
 public class ShopUI {
 
-    private GameScreen gameScreen;
+    private SailScreen sailScreen;
     private Player player;
     @Getter
     private String name;
@@ -41,11 +42,11 @@ public class ShopUI {
     private Label bulletDamage;
     private Label accelerationLabel;
 
-    public ShopUI (GameScreen gameScreen, String name) throws NameNotFoundException {
+    public ShopUI (GameInstance gameInstance, String name) throws NameNotFoundException {
         this.name = name;
-        this.gameScreen = gameScreen;
+        this.sailScreen = sailScreen;
         this.stage = new Stage(new ScreenViewport());
-        player = gameScreen.getEntityManager().getOrCreatePlayer();
+        player = gameInstance.getEntityManager().getOrCreatePlayer();
 
         Table table = new Table();
         table.setFillParent(true);
@@ -116,16 +117,12 @@ public class ShopUI {
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gameScreen.exitDepartment();
+                sailScreen.exitDepartment();
             }
         });
         table.add(exit).colspan(3).center();
     }
-
-    public void dispose() {
-        this.stage.dispose();
-    }
-
+    
 
     /**
      * Handle attempts by the player to purchase an upgrade

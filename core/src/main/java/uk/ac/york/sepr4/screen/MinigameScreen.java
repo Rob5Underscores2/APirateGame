@@ -1,7 +1,6 @@
-package uk.ac.york.sepr4;
+package uk.ac.york.sepr4.screen;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.entity.Player;
 
 import java.util.Random;
@@ -21,8 +21,8 @@ import java.util.Random;
  */
 public class MinigameScreen implements Screen, InputProcessor {
 
-	private PirateGame pirateGame;
-	private GameScreen gameScreen;
+	private GameInstance gameInstance;
+	private SailScreen sailScreen;
 	private Stage stage;
 	private String state = "menu";
 	private SpriteBatch spriteBatch;
@@ -38,9 +38,8 @@ public class MinigameScreen implements Screen, InputProcessor {
 	private float enemyShotCountdown;
 	private String difficulty; //easy, medium, hard, very hard
 
-	public MinigameScreen(PirateGame pirateGame, GameScreen gameScreen){
-		this.pirateGame = pirateGame;
-		this.gameScreen = gameScreen;
+	public MinigameScreen(GameInstance gameInstance){
+		this.gameInstance = gameInstance;
 		this.spriteBatch = new SpriteBatch();
 
 		// create stage and set it as input processor
@@ -94,7 +93,7 @@ public class MinigameScreen implements Screen, InputProcessor {
 		veryhardText.setColor(0f, 0f, 0f, 1f);
 
 		// used to display player balance and later to enable/disable minigame buttons
-		Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+		Player player = gameInstance.getEntityManager().getOrCreatePlayer();
 		Integer money = player.getBalance();
 
 		Label currentBalance = new Label("Balance: " + money.toString(), skin);
@@ -126,7 +125,7 @@ public class MinigameScreen implements Screen, InputProcessor {
 		quitMinigame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				pirateGame.switchScreen(gameScreen);
+				gameInstance.fadeSwitchScreen(gameInstance.getSailScreen());
 			}
 		});
 
@@ -412,7 +411,7 @@ public class MinigameScreen implements Screen, InputProcessor {
 	 * Has to be called AFTER the difficulty variable has been set.
 	 */
 	private void giveReward(){
-		Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+		Player player = gameInstance.getEntityManager().getOrCreatePlayer();
 
 		switch(difficulty){
 			case "easy":

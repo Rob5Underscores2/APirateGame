@@ -6,12 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
+import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.object.entity.NPCBoat;
 import uk.ac.york.sepr4.object.entity.NPCBuilder;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.GameScreen;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
 
-import javax.naming.NameNotFoundException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -22,7 +21,7 @@ public class BuildingManager {
     private Array<Department> departments = new Array<>();
     private MinigameBuilding minigame;
 
-    private GameScreen gameScreen;
+    private GameInstance gameInstance;
 
     //time till next spawn attempt
     private float spawnDelta;
@@ -32,17 +31,17 @@ public class BuildingManager {
      *
      * It is responsible for loading from file and making sure the map object relating to this building is present.
      * There is a method which arranges spawning of college enemies.
-     * @param gameScreen
+     * @param gameInstance
      */
-    public BuildingManager(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+    public BuildingManager(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
         this.spawnDelta = 0f;
 
-        if(gameScreen.getPirateMap().isObjectsEnabled()) {
+        if(gameInstance.getPirateMap().isObjectsEnabled()) {
             Json json = new Json();
-            loadBuildings(json.fromJson(Array.class, College.class, Gdx.files.internal("colleges.json")));
-            loadBuildings(json.fromJson(Array.class, Department.class, Gdx.files.internal("departments.json")));
-            loadBuildings(json.fromJson(Array.class, MinigameBuilding.class, Gdx.files.internal("minigame.json")));
+            loadBuildings(json.fromJson(Array.class, College.class, Gdx.files.internal("data/colleges.json")));
+            loadBuildings(json.fromJson(Array.class, Department.class, Gdx.files.internal("data/departments.json")));
+            loadBuildings(json.fromJson(Array.class, MinigameBuilding.class, Gdx.files.internal("data/minigame.json")));
             Gdx.app.log("BuildingManager",
                     "Loaded "+colleges.size+" colleges and "+departments.size+" departments!");
 
@@ -56,12 +55,12 @@ public class BuildingManager {
      */
     public void departmentPrompt() {
         for (Department department : departments) {
-            Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+            Player player = gameInstance.getEntityManager().getOrCreatePlayer();
             if (department.getBuildingZone().contains(player.getRectBounds())) {
-                gameScreen.setNearDepartment(true);
+                //gameInstance.setNearDepartment(true);
             }
             else {
-                gameScreen.setNearDepartment(false);
+                //gameInstance.setNearDepartment(false);
             }
         }
     }
@@ -70,12 +69,12 @@ public class BuildingManager {
      * Added for Assessment 3: Text prompt to access minigame
      */
     public void minigamePrompt(){
-        Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+        Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         if (minigame.getBuildingZone().contains(player.getRectBounds())) {
-            gameScreen.setNearMinigame(true);
+           // sailScreen.setNearMinigame(true);
         }
         else {
-            gameScreen.setNearMinigame(false);
+            //sailScreen.setNearMinigame(false);
         }
     }
 
@@ -84,13 +83,13 @@ public class BuildingManager {
         for(College college : colleges) {
             if(!college.isBossSpawned()) {
                 //TODO: Add collision check for boss spawn
-                Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+                Player player = gameInstance.getEntityManager().getOrCreatePlayer();
                 if (college.getBuildingZone().contains(player.getRectBounds())) {
                     Gdx.app.debug("BuildingManager", "Player entered college zone: " + college.getName());
                     Optional<NPCBoat> npcBoss = generateCollegeNPC(college, true);
                     if(npcBoss.isPresent()) {
                         college.setBossSpawned(true);
-                        gameScreen.getEntityManager().addNPC(npcBoss.get());
+                        gameInstance.getEntityManager().addNPC(npcBoss.get());
                     }
 
                 }
@@ -103,8 +102,8 @@ public class BuildingManager {
         while (attempts<10) {
             Vector2 test = college.getRandomSpawnVector();
             Rectangle rectangle = new Rectangle(test.x-(size/2), test.y-(size/2), size, size);
-            if(!gameScreen.getPirateMap().isColliding(rectangle)
-                    && !gameScreen.getEntityManager().isOccupied(rectangle)) {
+            if(!gameInstance.getPirateMap().isColliding(rectangle)
+                    && !gameInstance.getEntityManager().isOccupied(rectangle)) {
                 return Optional.of(test);
             }
             attempts++;
@@ -136,13 +135,13 @@ public class BuildingManager {
         if(spawnDelta >= 1f) {
             for (College college : this.colleges) {
                 //check how many entities already exist in college zone (dont spawn too many)
-                if(gameScreen.getEntityManager().getLivingEntitiesInArea(college.getBuildingZone()).size
+                if(gameInstance.getEntityManager().getLivingEntitiesInArea(college.getBuildingZone()).size
                         < college.getMaxEntities()) {
                     Optional<NPCBoat> optionalEnemy = generateCollegeNPC(college,false);
                     if (optionalEnemy.isPresent()) {
                         //checks if spawn spot is valid
                         Gdx.app.debug("Building Manager", "Spawning an enemy at " + college.getName());
-                        gameScreen.getEntityManager().addNPC(optionalEnemy.get());
+                        gameInstance.getEntityManager().addNPC(optionalEnemy.get());
                     }
                 } else {
                     //Gdx.app.debug("BuildingManager", "Max entities @ "+college.getName());
@@ -155,7 +154,7 @@ public class BuildingManager {
     //TODO: Make generic method
     private void loadBuildings(Array<Building> loading) {
         for(Building building : loading) {
-            if (building.load(gameScreen.getPirateMap())) {
+            if (building.load(gameInstance.getPirateMap())) {
                 if(building instanceof College) {
                     colleges.add((College) building);
                 } else if (building instanceof Department) {
@@ -175,7 +174,7 @@ public class BuildingManager {
 //    //TODO: Make generic method
 //    private void loadColleges(Array<College> loading) {
 //        for(College college : loading) {
-//            if (college.load(gameScreen.getPirateMap())) {
+//            if (college.load(sailScreen.getPirateMap())) {
 //                    colleges.add(college);
 //                    Gdx.app.debug("BuildingManager", "Loaded " + college.getName());
 //                } else {
@@ -187,7 +186,7 @@ public class BuildingManager {
 //
 //    private void loadDepartments(Array<Department> loading) {
 //        for(Department department : loading) {
-//            if (department.load(gameScreen.getPirateMap())) {
+//            if (department.load(sailScreen.getPirateMap())) {
 //                    departments.add(department);
 //                    Gdx.app.debug("BuildingManager", "Loaded " + department.getName());
 //                } else {

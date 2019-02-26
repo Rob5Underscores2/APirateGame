@@ -5,12 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
-import uk.ac.york.sepr4.*;
-import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
 import uk.ac.york.sepr4.object.item.Reward;
+import uk.ac.york.sepr4.screen.SailScreen;
+import uk.ac.york.sepr4.utils.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class Player extends LivingEntity implements InputProcessor {
 
 
     public Player(Vector2 pos) {
-        super(TextureManager.PLAYER, pos);
+        super(FileManager.PLAYER, pos);
         //face up
         setAngle((float)Math.PI);
 
@@ -44,7 +44,7 @@ public class Player extends LivingEntity implements InputProcessor {
 
     @Override
     public void act(float deltaTime) {
-        if(!isDying() && !isDead() && !GameScreen.isPaused()) {
+        if(!isDying() && !isDead()) {
             float angle = getAngle();
             float angularSpeed = 0;
 	    //Changed for Assessment 3: improved responsiveness on turning functions
@@ -116,9 +116,6 @@ public class Player extends LivingEntity implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         // do nothing if paused
-        if (GameScreen.isPaused()) {
-            return false;
-        }
 
         if(keycode == Input.Keys.W) {
             setAccelerating(true);
@@ -141,9 +138,9 @@ public class Player extends LivingEntity implements InputProcessor {
             turningRight = true;
             return true;
         }
-        if(keycode == Input.Keys.Q) {
+        if(keycode == Input.Keys.M) {
             //minimap
-            GameScreen.getInstance().getOrthographicCamera().zoom = 3;
+            SailScreen.getInstance().getOrthographicCamera().zoom = 3;
             return true;
         }
 
@@ -174,17 +171,12 @@ public class Player extends LivingEntity implements InputProcessor {
             turningRight = false;
             return true;
         }
-        if(keycode == Input.Keys.Q) {
+        if(keycode == Input.Keys.M) {
             //minimap
-            GameScreen.getInstance().getOrthographicCamera().zoom = 1;
+            SailScreen.getInstance().getOrthographicCamera().zoom = 1;
             return true;
         }
         return false;
-    }
-    //Added for Assessment 3: enable events that move the player
-    public void movePlayer(Vector2 pos){
-        this.setX(pos.x);
-        this.setY(pos.y);
     }
 
     @Override

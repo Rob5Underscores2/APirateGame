@@ -1,9 +1,9 @@
 package uk.ac.york.sepr4.object.entity;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.utils.FileManager;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -32,9 +32,9 @@ public class NPCBuilder {
         NPCBoat npcBoat;
 
         if (isBoss) {
-            npcBoat = new NPCBoat(TextureManager.BOSS, pos, difficulty);
+            npcBoat = new NPCBoat(FileManager.BOSS, pos, difficulty);
         } else {
-            npcBoat = new NPCBoat(TextureManager.ENEMY, pos, difficulty);
+            npcBoat = new NPCBoat(FileManager.ENEMY, pos, difficulty);
         }
 
         npcBoat.setAngle((float) (2*Math.PI*random.nextDouble()));;

@@ -1,9 +1,8 @@
 package uk.ac.york.sepr4.utils;
 
 
-import uk.ac.york.sepr4.object.entity.Entity;
-
 import com.badlogic.gdx.utils.Array;
+import uk.ac.york.sepr4.object.entity.Entity;
 
 public class AIUtil {
 

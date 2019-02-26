@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
-import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.utils.AIUtil;
+import uk.ac.york.sepr4.utils.FileManager;
 
 import java.util.*;
 
@@ -125,17 +125,17 @@ public class AnimationManager {
             Map.Entry<LivingEntity, Float> entry = it.next();
             LivingEntity livingEntity = entry.getKey();
             Float deathTimer = entry.getValue();
-            livingEntity.setTexture(TextureManager.DEADENEMY);
+            livingEntity.setTexture(FileManager.DEADENEMY);
             livingEntity.setAlpha(1-(deathTimer/5));
             if (deathTimer < 1/6f) {
                 addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION1, 40, 40,1);
+                        livingEntity.getAngle(), FileManager.EXPLOSION1, 40, 40,1);
             } else if (deathTimer < 2/6f) {
                 addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION2, 40, 40, 1);
+                        livingEntity.getAngle(), FileManager.EXPLOSION2, 40, 40, 1);
             } else if (deathTimer < 1/2f){
                 addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION3, 40, 40,1);
+                        livingEntity.getAngle(), FileManager.EXPLOSION3, 40, 40,1);
             }
             if (deathTimer > 5){
                 livingEntity.setDead(true);
@@ -170,7 +170,7 @@ class CannonExplosion {
                 firingAngle + (float)Math.PI/2, 50),
                 AIUtil.getYwithAngleandDistance(lE.getCentre().y,
                         firingAngle + (float)Math.PI/2, 50),
-                firingAngle, TextureManager.firingFrame(frame),
+                firingAngle, FileManager.firingFrame(frame),
                 70, 50, 1);
         frame++;
     }
@@ -207,17 +207,17 @@ class WaterTrail {
 
             if (distance > 0.1) {
                 if (i < lTrails.size() / 4) {
-                    animationManager.addEffect(xM, yM, angleP, TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.1f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.1f);
+                    animationManager.addEffect(xM, yM, angleP, FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.1f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.1f);
                 } else if (i < lTrails.size() / 2) {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.2f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.2f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.2f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.2f);
                 } else if (i < 3 * lTrails.size() / 4) {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.3f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.3f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.3f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.3f);
                 } else {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.5f);
-                    animationManager.addEffect(xM2, yM2, angleP2, TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.5f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.5f);
+                    animationManager.addEffect(xM2, yM2, angleP2, FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.5f);
                 }
             }
         }

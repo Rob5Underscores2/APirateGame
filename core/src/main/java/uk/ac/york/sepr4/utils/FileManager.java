@@ -1,14 +1,17 @@
-package uk.ac.york.sepr4;
+package uk.ac.york.sepr4.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import lombok.Data;
 
 @Data
-public class TextureManager {
+public class FileManager {
 
 
-    private static final String path = "textures/";
+    private static final String path = "images/sprites/";
+
+    public static Texture menuScreenBG = new Texture(Gdx.files.internal("images/screen/menu.png"));
+
 
     public static Texture ENEMY = new Texture(Gdx.files.internal(path+"enemy.png"));
     public static Texture DEADENEMY = new Texture(Gdx.files.internal(path+"deadEnemy.png"));
@@ -75,13 +78,6 @@ public class TextureManager {
     public static Texture WENTWORTH_MANOWAR = new Texture(Gdx.files.internal(path+"wentworthmanowarasset.png"));
     public static Texture WENTWORTH_SLOOP = new Texture(Gdx.files.internal(path+"wentworthsloopasset.png"));
 
-//    public static Texture swimmingFrame(int number){
-//        if (number == 1){
-//            return new Texture(Gdx.files.internal(path+"crew (1).png"));
-//        } else {
-//            return new Texture(Gdx.files.internal(path+"crew (4).png"));
-//        }
-//    }
 
     public static Texture firingFrame(int number){
         return new Texture(Gdx.files.internal(path+"cannon/frame"+number+".png"));

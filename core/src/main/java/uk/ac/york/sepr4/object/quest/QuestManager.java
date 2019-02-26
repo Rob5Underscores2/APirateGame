@@ -16,7 +16,7 @@ public class QuestManager {
         this.entityManager = entityManager;
 
         Json json = new Json();
-        this.questList= json.fromJson(Array.class, Quest.class, Gdx.files.internal("quests.json"));
+        this.questList= json.fromJson(Array.class, Quest.class, Gdx.files.internal("data/quests.json"));
 
     }
 

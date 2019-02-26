@@ -14,7 +14,10 @@ import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 import uk.ac.york.sepr4.utils.ShapeUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 public class PirateMap {
 

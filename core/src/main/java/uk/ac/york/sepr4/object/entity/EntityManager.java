@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.projectile.ProjectileManager;
-import uk.ac.york.sepr4.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +23,15 @@ public class EntityManager {
     @Getter
     private Array<NPCBoat> npcList = new Array<>();
 
-    private GameScreen gameScreen;
+    private GameInstance gameInstance;
 
     @Getter
     private AnimationManager animationManager;
     @Getter
     private ProjectileManager projectileManager;
 
-    public EntityManager(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+    public EntityManager(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
 
         this.projectileManager = new ProjectileManager();
         this.animationManager = new AnimationManager(this);
@@ -39,7 +39,7 @@ public class EntityManager {
     
     public Player getOrCreatePlayer() {
         if(player == null) {
-            player = new Player(gameScreen.getPirateMap().getSpawnPoint());
+            player = new Player(gameInstance.getPirateMap().getSpawnPoint());
             animationManager.createWaterTrail(player);
         }
         return player;
@@ -64,12 +64,12 @@ public class EntityManager {
 
     public Optional<Building> getPlayerLocation() {
         Optional<Building> loc = Optional.empty();
-        for(College building : gameScreen.getBuildingManager().getColleges()) {
+        for(College building : gameInstance.getBuildingManager().getColleges()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
             }
         }
-        for(Department building : gameScreen.getBuildingManager().getDepartments()) {
+        for(Department building : gameInstance.getBuildingManager().getDepartments()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
                 loc = Optional.of(building);
             }

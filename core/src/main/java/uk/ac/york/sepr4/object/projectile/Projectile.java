@@ -2,9 +2,9 @@ package uk.ac.york.sepr4.object.projectile;
 
 import com.badlogic.gdx.Gdx;
 import lombok.Data;
-import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
+import uk.ac.york.sepr4.utils.FileManager;
 
 @Data
 public class Projectile extends Entity {
@@ -18,7 +18,7 @@ public class Projectile extends Entity {
     public Projectile(LivingEntity shooter, float speed, float angle) {
         //Take speed from the shooter so bullet has a speed relative to the shooter
         //TODO: Make the speed direction dependant (how much of the force is in the direction of the projectile)
-        super(TextureManager.CANNONBALL, shooter.getCentre());
+        super(FileManager.CANNONBALL, shooter.getCentre());
 
         this.shooter = shooter;
 
@@ -34,7 +34,7 @@ public class Projectile extends Entity {
      * @param damage Damage dealt on impact by projectile
      */
     public Projectile(LivingEntity shooter, float speed, float angle, double damage){
-         super(TextureManager.CANNONBALL, shooter.getCentre());
+         super(FileManager.CANNONBALL, shooter.getCentre());
 
         this.shooter = shooter;
 

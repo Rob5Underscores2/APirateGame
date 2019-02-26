@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
-import uk.ac.york.sepr4.GameScreen;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.utils.AIUtil;
 
 @Data
@@ -64,9 +65,7 @@ public abstract class LivingEntity extends Entity {
     @Override
     public void act(float deltaTime) {
         //Assessment 3 - do nothing if paused
-        if (GameScreen.isPaused()) {
-            return;
-        }
+
         setCurrentCooldown(getCurrentCooldown() + deltaTime);
 
         if (!this.isDying) {
@@ -115,7 +114,7 @@ public abstract class LivingEntity extends Entity {
      * @return true if cooldown sufficient and shot has been fired
      */
     public boolean fire(float angle, double damage) {
-        EntityManager entityManager = GameScreen.getInstance().getEntityManager();
+        EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
             if (currentCooldown >= reqCooldown) {
                 setCurrentCooldown(0f);
                 entityManager.getProjectileManager().spawnProjectile( this, getSpeed(), angle, damage);
@@ -134,7 +133,7 @@ public abstract class LivingEntity extends Entity {
       * @return true if cooldown sufficient and shot has been fired
       */
     public boolean tripleFire(float angle, double damage) {
-        EntityManager entityManager = GameScreen.getInstance().getEntityManager();
+        EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
         if (currentCooldown >= reqCooldown) {
             setCurrentCooldown(0f);
             entityManager.getProjectileManager().spawnProjectile(this, getSpeed(), angle, damage);

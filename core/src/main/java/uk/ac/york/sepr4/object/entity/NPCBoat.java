@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lombok.Data;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.projectile.Projectile;
-import uk.ac.york.sepr4.GameScreen;
+import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.utils.AIUtil;
+
 import java.util.Optional;
 import java.util.Random;
 
@@ -53,10 +55,6 @@ public class NPCBoat extends LivingEntity {
      * @param deltaTime time since last act
      */
     public void act(float deltaTime) {
-        // Assessment 3: do nothing if paused
-        if (GameScreen.isPaused()) {
-            return;
-        }
         //Clears arrays for later use
         Array<Float> forces = new Array<>();
         Array<Float> angles = new Array<>();
@@ -315,7 +313,7 @@ public class NPCBoat extends LivingEntity {
      * @return Array of livingEntities in range of NPC - itself
      */
     private Array<LivingEntity> getLivingEntitiesInRange() {
-        Array<LivingEntity> nearby = GameScreen.getInstance().getEntityManager().getLivingEntitiesInArea(getRangeArea());
+        Array<LivingEntity> nearby = GameInstance.INSTANCE.getEntityManager().getLivingEntitiesInArea(getRangeArea());
         if (nearby.contains(this, false)) {
             nearby.removeValue(this, false);
         }
@@ -328,7 +326,7 @@ public class NPCBoat extends LivingEntity {
      * @return Array of all projectiles in the range of the NPC
      */
     private Array<Projectile> getProjectilesInRange() {
-        Array<Projectile> nearby = GameScreen.getInstance().getEntityManager().getProjectileManager().getProjectileInArea(getRangeArea());
+        Array<Projectile> nearby = GameInstance.INSTANCE.getEntityManager().getProjectileManager().getProjectileInArea(getRangeArea());
         return nearby;
     }
 
@@ -382,7 +380,7 @@ public class NPCBoat extends LivingEntity {
      * @return the nearest target
      */
     private Optional<LivingEntity> getNearestTarget() {
-        Player player = GameScreen.getInstance().getEntityManager().getOrCreatePlayer();
+        Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
         Array<LivingEntity> nearby = getLivingEntitiesInRange();
         if (!areAllied(player)) {
             //not allied - target player

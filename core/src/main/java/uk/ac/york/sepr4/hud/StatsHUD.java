@@ -2,17 +2,20 @@ package uk.ac.york.sepr4.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import lombok.Getter;
-import uk.ac.york.sepr4.GameScreen;
-import uk.ac.york.sepr4.PirateGame;
-import uk.ac.york.sepr4.ScreenType;
+import uk.ac.york.sepr4.APirateGame;
+import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
@@ -21,12 +24,14 @@ import uk.ac.york.sepr4.object.entity.Player;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class HUD {
+public class SailHUD {
 
     private final TextButton btnMenu;
-    private GameScreen gameScreen;
+    private GameInstance gameInstance;
+    private Stage hudStage;
 
-    //Added for Assessment 3: Many labels and tables for the different features added in HUD
+
+    //Added for Assessment 3: Many labels and tables for the different features added in SailHUD
     private Label goldLabel, goldValueLabel, xpLabel, pausedLabel, xpValueLabel, locationLabel, captureStatus,
     healthLabel, healthvalueLable, gameoverLabel, inDerwentBeforeEndLabel, haliCollegeLabel, constCollegeLabel,
     jamesCollegeLabel, langCollegeLabel, derwentCollegeLabel, departmentPromptLabel, minigamePromptLabel;
@@ -35,14 +40,20 @@ public class HUD {
     private Table table, gameoverTable, inDerwentBeforeEndTable, collegeTable, departmentPromptTable, pausedTable, minigamePromptTable;
 
     /***
-     * Class responsible for storing and updating HUD variables.
+     * Class responsible for storing and updating SailHUD variables.
      * Creates table which is drawn to the stage!
-     * @param gameScreen instance of GameScreen from which to get HUD values.
+     * @param sailScreen instance of SailScreen from which to get SailHUD values.
      */
-    public HUD(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+    public StatsHUD(GameInstance gameInstance) {
+        this.gameInstance = gameInstance;
+        // Local widths and heights.
 
-        //define a table used to organize our hud's labels
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+
+        hudStage = new Stage(new FitViewport(w, h, new OrthographicCamera()));
+
+        //define a table used to organize our sailHud's labels
         table = new Table();
         //Top-Align table
         table.top();
@@ -70,7 +81,7 @@ public class HUD {
         btnMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                PirateGame.PIRATEGAME.switchScreen(ScreenType.MENU);
+                APirateGame.PIRATEGAME.switchScreen(ScreenType.MENU);
             }
         });
 
@@ -151,7 +162,7 @@ public class HUD {
      * Update label values - called during stage render
      */
     public void update() {
-        Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+        Player player = sailScreen.getEntityManager().getOrCreatePlayer();
 
         //balance and xp overheads
         goldValueLabel.setText(""+player.getBalance());
@@ -163,24 +174,24 @@ public class HUD {
 
         //location overhead
         boolean captured = false;
-        Optional<Building> loc = gameScreen.getEntityManager().getPlayerLocation();
+        Optional<Building> loc = sailScreen.getEntityManager().getPlayerLocation();
         if(loc.isPresent()) {
             locationLabel.setText(loc.get().getName().toUpperCase());
             if(loc.get() instanceof College) {
 		//Changed for Assessment 3: Check if all other colleges have been captured to gain access to Derwent
-                ArrayList<College> capturedCheck = (ArrayList<College>)gameScreen.getEntityManager().getOrCreatePlayer().getCaptured();
+                ArrayList<College> capturedCheck = (ArrayList<College>) sailScreen.getEntityManager().getOrCreatePlayer().getCaptured();
 
                 if (loc.get().getName().equals("Derwent College") && !(capturedCheck.size() >=4)){
-                    gameScreen.setInDerwentBeforeEnd(true);
-                    player.movePlayer(gameScreen.getPirateMap().getSpawnPoint());
+                    sailScreen.setInDerwentBeforeEnd(true);
+                    player.movePlayer(sailScreen.getPirateMap().getSpawnPoint());
                 }
-                if (gameScreen.getEntityManager().getOrCreatePlayer().getCaptured().contains(loc.get())) {
+                if (sailScreen.getEntityManager().getOrCreatePlayer().getCaptured().contains(loc.get())) {
                     captured = true;
 		    //Added for Assessment 3: Highlight captured colleges in pause screen
                     if (loc.get().getName().equals("Derwent College")){
                         locationLabel.setText("GAMEOVER");
-                        gameScreen.paused = true;
-                        gameScreen.setGameOver(true);
+                        sailScreen.paused = true;
+                        sailScreen.setGameOver(true);
                     }
                     if (loc.get().getName().equals("Halifax College")){
                         haliCollegeLabel.setStyle(new Label.LabelStyle(new BitmapFont(), Color.GREEN) );
@@ -203,10 +214,10 @@ public class HUD {
             }
 	    //Added for Assessment 3: allow player to enter department if near
             else if(loc.get() instanceof Department) {
-                gameScreen.setNearDepartment(true);
+                sailScreen.setNearDepartment(true);
             }
         } else {
-            gameScreen.setNearDepartment(false);
+            sailScreen.setNearDepartment(false);
             locationLabel.setText("OPEN SEAS");
         }
         if(captured) {
@@ -216,12 +227,12 @@ public class HUD {
         }
 
 	//Added for Assessment 3: Set the visibility conditions of each temporary prompt
-        departmentPromptTable.setVisible(gameScreen.getNearDepartment());
-        pausedTable.setVisible(GameScreen.isPaused() && !gameScreen.getNearDepartment() && !gameScreen.getGameOver());
-        collegeTable.setVisible(GameScreen.isPaused() && !gameScreen.getNearDepartment() && !gameScreen.getGameOver());
-        gameoverTable.setVisible(gameScreen.getGameOver());
-        minigamePromptTable.setVisible(gameScreen.isNearMinigame());
-        inDerwentBeforeEndTable.setVisible(gameScreen.isInDerwentBeforeEnd());
+        departmentPromptTable.setVisible(sailScreen.getNearDepartment());
+        pausedTable.setVisible(SailScreen.isPaused() && !sailScreen.getNearDepartment() && !sailScreen.getGameOver());
+        collegeTable.setVisible(SailScreen.isPaused() && !sailScreen.getNearDepartment() && !sailScreen.getGameOver());
+        gameoverTable.setVisible(sailScreen.getGameOver());
+        minigamePromptTable.setVisible(sailScreen.isNearMinigame());
+        inDerwentBeforeEndTable.setVisible(sailScreen.isInDerwentBeforeEnd());
     }
 
 }
