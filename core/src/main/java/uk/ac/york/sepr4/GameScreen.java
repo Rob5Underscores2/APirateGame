@@ -17,15 +17,20 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
+import lombok.Setter;
+import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.object.building.ShopUI;
 import uk.ac.york.sepr4.object.entity.*;
 import uk.ac.york.sepr4.object.PirateMap;
 import uk.ac.york.sepr4.object.building.BuildingManager;
+import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.hud.HUD;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.item.ItemManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
+import javax.naming.NameNotFoundException;
 
 /**
  * GameScreen is main game class. Holds data related to current player including the
@@ -41,13 +46,17 @@ public class GameScreen implements Screen, InputProcessor {
     private Stage stage;
     private Stage hudStage;
     private SpriteBatch batch;
+    public boolean paused;
+    private boolean gameOver = false;
+    @Getter @Setter
+    private boolean inDerwentBeforeEnd;
 
     @Getter
     private OrthographicCamera orthographicCamera;
 
     @Getter
     PirateMap pirateMap;
-    TiledMapRenderer tiledMapRenderer;
+    private TiledMapRenderer tiledMapRenderer;
 
     private ItemManager itemManager;
     @Getter
@@ -60,12 +69,19 @@ public class GameScreen implements Screen, InputProcessor {
     private InputMultiplexer inputMultiplexer;
 
     private HUD hud;
+    private ShopUI shopUI;
+    private boolean inDepartment;
+    @Getter @Setter
+
+    private boolean nearDepartment, nearMinigame;
+    private float timer = 0;
 
     private static GameScreen gameScreen;
 
     private ShapeRenderer shapeRenderer;
 
     public static boolean DEBUG = false;
+
 
     public static GameScreen getInstance() {
         return gameScreen;
@@ -118,20 +134,39 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Create HUD (display for xp, gold, etc..)
         this.hud = new HUD(this);
+        inDepartment = false;
+
         hudStage.addActor(this.hud.getTable());
+	// Added for assessment 3: HUD improvements
+        hudStage.addActor(this.hud.getDepartmentPromptTable());
+        hudStage.addActor(this.hud.getMinigamePromptTable());
+        hudStage.addActor(this.hud.getPausedTable());
+        hudStage.addActor(this.hud.getGameoverTable());
+        hudStage.addActor(this.hud.getInDerwentBeforeEndTable());
+        hudStage.addActor(this.hud.getCollegeTable());
 
         // Set input processor and focus
         inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(hudStage);
         inputMultiplexer.addProcessor(this);
         inputMultiplexer.addProcessor(entityManager.getOrCreatePlayer());
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        //create and spawnn player
+        //create and spawn player
         startGame();
+    }
+
+    //Added for assessment 3: pause function
+    public static boolean isPaused(){
+        if(getInstance() != null) {
+            return getInstance().paused;
+        }
+        return false;
     }
 
     private void startGame() {
         stage.addActor(entityManager.getOrCreatePlayer());
+
     }
 
     /**
@@ -174,6 +209,8 @@ public class GameScreen implements Screen, InputProcessor {
             if (pirateMap.isObjectsEnabled()) {
                 buildingManager.spawnCollegeEnemies(delta);
                 buildingManager.checkBossSpawn();
+                buildingManager.departmentPrompt();
+                buildingManager.minigamePrompt();
             }
 
             handleHealthBars();
@@ -204,8 +241,23 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.act(delta);
         stage.draw();
-        hudStage.act();
-        hudStage.draw();
+	//Added for assessment 3: enabled changes to HUD for entering shops
+        if(inDepartment) {
+            shopUI.getStage().act();
+            shopUI.getStage().draw();
+        } else {
+            hudStage.act();
+            hudStage.draw();
+        }
+	//Added for assessment 3: added message if player tries to fight Derwent without defeating the other colleges
+        if (inDerwentBeforeEnd) {
+            timer += delta;
+            if (timer > 5f) {
+
+                inDerwentBeforeEnd = false;
+                timer = 0f;
+            }
+        }
     }
 
     /**
@@ -226,7 +278,7 @@ public class GameScreen implements Screen, InputProcessor {
                 }
             }
         }
-        Array<Actor> toRemove = new Array<Actor>();
+        Array<Actor> toRemove = new Array<>();
         for (Actor actors : stage.getActors()) {
             if (actors instanceof HealthBar) {
                 HealthBar healthBar = (HealthBar) actors;
@@ -293,7 +345,10 @@ public class GameScreen implements Screen, InputProcessor {
                             if(livingEntity instanceof NPCBoat) {
                                 Gdx.app.debug("GameScreen", "NPCBoat died.");
                                 NPCBoat npcBoat = (NPCBoat) livingEntity;
-                                player.issueReward(itemManager.generateReward());
+                                Reward reward = itemManager.generateReward();
+                                reward.setGold(reward.getGold() + (int)npcBoat.getDifficulty());
+                                reward.setXp(reward.getXp() + (int)npcBoat.getDifficulty());
+                                player.issueReward(reward);
                                 //if dead NPC is a boss then player can capture its respective college
                                 if(npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
                                     player.capture(npcBoat.getAllied().get());
@@ -311,6 +366,42 @@ public class GameScreen implements Screen, InputProcessor {
         }
     }
 
+    public PirateGame getGame() {
+        return pirateGame;
+    }
+
+
+    //Added for assessment 3: Methods to enter and exit departments
+    /**
+     * Switch the interface to interact with a department
+     * @param name the name of the department
+     */
+    public void enterDepartment(String name) {
+        try {
+            this.shopUI = new ShopUI(this, name);
+        } catch (NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Gdx.input.setInputProcessor(shopUI.getStage());
+        inDepartment = true;
+        paused = true;
+    }
+
+    /**
+     * Exit department
+     * Should only be called when in a department
+     */
+    public void exitDepartment() {
+        shopUI.dispose();
+        Gdx.input.setInputProcessor(inputMultiplexer);
+        inDepartment = false;
+        paused = false;
+    }
+
+
+
+
+
     @Override
     public void resize(int width, int height) {
         orthographicCamera.setToOrtho(false, (float) width, (float) height);
@@ -320,8 +411,11 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void pause() {}
 
+    //Added for Assessment 3: resume method
     @Override
-    public void resume() {}
+    public void resume() {
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
 
     @Override
     public void hide() {
@@ -335,23 +429,62 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+   //Added for Assessment 3: code for pausing game
+        if (isPaused()) {
+            return false;
+        }
         if (button == Input.Buttons.LEFT) {
             Player player = entityManager.getOrCreatePlayer();
             Vector3 clickLoc = orthographicCamera.unproject(new Vector3(screenX, screenY, 0));
             float fireAngle = (float) (-Math.atan2(player.getCentre().x - clickLoc.x, player.getCentre().y - clickLoc.y));
             Gdx.app.debug("GameScreen", "Firing: Click at (rad) " + fireAngle);
-            if (!player.fire(fireAngle)) {
+	    //Added for Assessment 3: Allow player to use triple shot
+            if (player.isTripleShot()) {
+                if (player.tripleFire(fireAngle, player.getBulletDamage())) {
+                    Gdx.app.debug("GameScreen", "Firing: Error! (cooldown?)");
+                }
+            }
+            else if (player.fire(fireAngle, player.getBulletDamage())) {
                 Gdx.app.debug("GameScreen", "Firing: Error! (cooldown?)");
             }
             return true;
         }
         return false;
     }
-
-
-    // Stub methods for InputProcessor (unused) - must return false
+    //Added for Assessment 3: key listener for game events
     @Override
     public boolean keyDown(int keycode) {
+
+        if (keycode == Input.Keys.SPACE) {
+            if (gameScreen.getGameOver() != true) {
+                paused = !paused;
+                return true;
+            }
+        }
+
+        if (keycode == Input.Keys.E) {
+            if (nearDepartment) {
+                nearDepartment = false;
+                inDepartment = true;
+                enterDepartment(gameScreen.getEntityManager().getPlayerLocation().get().getName());
+                return true;
+            }
+            else if (nearMinigame) {
+                nearMinigame = false;
+                PirateGame pirateGame = GameScreen.getInstance().getGame();
+                pirateGame.switchScreen(ScreenType.MINIGAME);
+            }
+        }
+
+        if(keycode == Input.Keys.L){
+            // DEBUG code used to test minigame easily!
+            //pirateGame.switchScreen(ScreenType.MINIGAME);
+        }
+
+        if (keycode == Input.Keys.ESCAPE) {
+            Gdx.app.exit();
+        }
+
         return false;
     }
 
@@ -385,4 +518,17 @@ public class GameScreen implements Screen, InputProcessor {
         return false;
     }
 
+    //Added for Assessment 3: miscellaneous getters and setters
+    public boolean getNearDepartment() {
+        return nearDepartment;
+    }
+
+    public boolean getGameOver()    {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean newBool) {
+        gameOver = newBool;
+
+    }
 }

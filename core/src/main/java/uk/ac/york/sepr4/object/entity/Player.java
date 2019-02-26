@@ -5,21 +5,26 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
+import uk.ac.york.sepr4.*;
 import uk.ac.york.sepr4.TextureManager;
+import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
 import uk.ac.york.sepr4.object.item.Reward;
-import uk.ac.york.sepr4.GameScreen;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class Player extends LivingEntity implements InputProcessor {
 
-    private Integer balance = 0, xp = 0;
+    private Integer balance = 0, xp = 0, level = 1;
     private List<Item> inventory = new ArrayList<>();
 
     private List<College> captured = new ArrayList<>();
+    private boolean turningLeft, turningRight, tripleShot = false;
+    private double bulletDamage = 5;
+
 
     public Player(Vector2 pos) {
         super(TextureManager.PLAYER, pos);
@@ -30,16 +35,26 @@ public class Player extends LivingEntity implements InputProcessor {
         //setMaxHealth(1000.0);
         //setHealth(1000.0);
 
-        setMaxHealth(20.0+(0.5*(getLevel()-1)));
-        setMaxSpeed(100f+(5f*(getLevel()-1)));
-        setDamage(0.5+(0.1*(getLevel()-1)));
+	//Changed for Assessment 3: only default values instead of computations in the constructor
+        setMaxHealth(20.0);
+        setHealth(getMaxHealth());
+        setMaxSpeed(100f);
+        setDamage(0.5);
     }
 
     @Override
     public void act(float deltaTime) {
-        if(!isDying() && !isDead()) {
+        if(!isDying() && !isDead() && !GameScreen.isPaused()) {
             float angle = getAngle();
-            angle += ((getAngularSpeed() * deltaTime) * (getSpeed() / getMaxSpeed())) % (float) (2 * Math.PI);
+            float angularSpeed = 0;
+	    //Changed for Assessment 3: improved responsiveness on turning functions
+            if (turningLeft) {
+                angularSpeed += getTurningSpeed();
+            }
+            if (turningRight) {
+                angularSpeed -= getTurningSpeed();
+            }
+            angle += ((angularSpeed * deltaTime) * (getSpeed() / getMaxSpeed())) % (float) (2 * Math.PI);
             setAngle(angle);
             super.act(deltaTime);
         }
@@ -50,30 +65,22 @@ public class Player extends LivingEntity implements InputProcessor {
         Gdx.app.debug("Player", "Captured "+college.getName());
     }
 
+    //Changed for Assessment 3: removed unused functions returning level progress
+    /**
+     * Compute whether the player will level up and give rewards if true
+     * @return The level of the player
+     */
     public Integer getLevel() {
-        int i = 0, level = 0;
-        while(i<=xp){
-            i+=((level+1)*10);
-            level++;
+        if (xp >= (level+1)*10) {
+            level += 1;
+            xp = 0;
+            setMaxHealth(getMaxHealth() + 5);
+            setHealth(getMaxHealth());
+            updateHealthBar();
+            setMaxSpeed(getMaxSpeed() + 20);
+            setDamage(getDamage() + 0.1);
         }
         return level;
-    }
-
-    public Double getLevelProgress() {
-        if(xp==0){
-            return 0.0;
-        }
-        Integer level = getLevel();
-        return((double)(xp-getXpRequired(level-1))/(getXpRequired(level)-getXpRequired(level-1)));
-    }
-
-    public Integer getXpRequired(Integer level) {
-        Integer xpReq = 0;
-        for(int i=1; i<=level; i++) {
-            xpReq+=(i*10);
-
-        }
-        return xpReq;
     }
 
     public void issueReward(Reward reward) {
@@ -93,9 +100,26 @@ public class Player extends LivingEntity implements InputProcessor {
     }
 
 
+    //Added for Assessment 3: Allow interaction with shops
+    public boolean deduceBalance(int deduction) {
+        if(deduction <= balance) {
+            balance -= deduction;
+            return true;
+        }
+        return false;
+    }
+
+    public void updateHealthBar(){
+        setHealthBar(new HealthBar(this));
+    }
     //Methods below for taking keyboard input from player.
     @Override
     public boolean keyDown(int keycode) {
+        // do nothing if paused
+        if (GameScreen.isPaused()) {
+            return false;
+        }
+
         if(keycode == Input.Keys.W) {
             setAccelerating(true);
             return true;
@@ -107,15 +131,17 @@ public class Player extends LivingEntity implements InputProcessor {
         }
 
         if(keycode == Input.Keys.A) {
-            setAngularSpeed(getTurningSpeed());
+            // Assessmnent 3 - changed to make turning more responsive
+            turningLeft = true;
             return true;
         }
 
         if(keycode == Input.Keys.D) {
-            setAngularSpeed(-getTurningSpeed());
+            // Assessmnent 3 - changed to make turning more responsive
+            turningRight = true;
             return true;
         }
-        if(keycode == Input.Keys.M) {
+        if(keycode == Input.Keys.Q) {
             //minimap
             GameScreen.getInstance().getOrthographicCamera().zoom = 3;
             return true;
@@ -137,20 +163,28 @@ public class Player extends LivingEntity implements InputProcessor {
         }
 
         if(keycode == Input.Keys.A) {
-            setAngularSpeed(0);
+            // Assessmnent 3 - changed to make turning more responsive
+            turningLeft = false;
             return true;
         }
 
         if(keycode == Input.Keys.D) {
-            setAngularSpeed(0);
+            // Assessmnent 3 - changed to make turning more responsive
+            // TODO: unexpected behaviour when changing input managers
+            turningRight = false;
             return true;
         }
-        if(keycode == Input.Keys.M) {
+        if(keycode == Input.Keys.Q) {
             //minimap
             GameScreen.getInstance().getOrthographicCamera().zoom = 1;
             return true;
         }
         return false;
+    }
+    //Added for Assessment 3: enable events that move the player
+    public void movePlayer(Vector2 pos){
+        this.setX(pos.x);
+        this.setY(pos.y);
     }
 
     @Override

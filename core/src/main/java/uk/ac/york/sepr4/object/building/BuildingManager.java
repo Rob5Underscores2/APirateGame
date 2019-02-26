@@ -11,6 +11,7 @@ import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.GameScreen;
 import uk.ac.york.sepr4.object.entity.NPCBoat;
 
+import javax.naming.NameNotFoundException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -19,6 +20,7 @@ public class BuildingManager {
 
     private Array<College> colleges = new Array<>();
     private Array<Department> departments = new Array<>();
+    private MinigameBuilding minigame;
 
     private GameScreen gameScreen;
 
@@ -40,11 +42,40 @@ public class BuildingManager {
             Json json = new Json();
             loadBuildings(json.fromJson(Array.class, College.class, Gdx.files.internal("colleges.json")));
             loadBuildings(json.fromJson(Array.class, Department.class, Gdx.files.internal("departments.json")));
+            loadBuildings(json.fromJson(Array.class, MinigameBuilding.class, Gdx.files.internal("minigame.json")));
             Gdx.app.log("BuildingManager",
                     "Loaded "+colleges.size+" colleges and "+departments.size+" departments!");
 
         } else {
             Gdx.app.error("Building Manager", "Objects not enabled, not loading buildings!");
+        }
+    }
+
+    /**
+     * Added for Assessment 3: Added a text prompt to enter department when near
+     */
+    public void departmentPrompt() {
+        for (Department department : departments) {
+            Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+            if (department.getBuildingZone().contains(player.getRectBounds())) {
+                gameScreen.setNearDepartment(true);
+            }
+            else {
+                gameScreen.setNearDepartment(false);
+            }
+        }
+    }
+
+    /**
+     * Added for Assessment 3: Text prompt to access minigame
+     */
+    public void minigamePrompt(){
+        Player player = gameScreen.getEntityManager().getOrCreatePlayer();
+        if (minigame.getBuildingZone().contains(player.getRectBounds())) {
+            gameScreen.setNearMinigame(true);
+        }
+        else {
+            gameScreen.setNearMinigame(false);
         }
     }
 
@@ -81,17 +112,19 @@ public class BuildingManager {
         return Optional.empty();
     }
 
+    /**
+     * Generate an NPCBoat which has the appropriate position and difficulty for a college
+     * @param college College for which the NPCBoat is being generated
+     * @param boss Whether the generated npc is a boss
+     * @return       An NPCBoat with correct parameters
+     */
     private Optional<NPCBoat> generateCollegeNPC(College college, boolean boss) {
         Random random = new Random();
         if(random.nextDouble() <= college.getSpawnChance()){
             Optional<Vector2> pos = getValidRandomSpawn(college, 250f);
             if(pos.isPresent()) {
-                NPCBoat boat = new NPCBuilder()
-                        .generateRandomEnemy(
-                                pos.get(),
-                                college,
-                                boss ? college.getBossDifficulty() : college.getEnemyDifficulty(),
-                                boss);
+                NPCBoat boat = new NPCBuilder().generateRandomEnemy( pos.get(), college,
+                         boss ? college.getBossDifficulty().floatValue() : college.getEnemyDifficulty().floatValue(), boss);
                 return Optional.of(boat);
             }
         }
@@ -127,6 +160,8 @@ public class BuildingManager {
                     colleges.add((College) building);
                 } else if (building instanceof Department) {
                     departments.add((Department) building);
+                } else if (building instanceof MinigameBuilding) {
+                    minigame = (MinigameBuilding) building;
                 }
                 Gdx.app.debug("BuildingManager", "Loaded " + building.getName());
             } else {
