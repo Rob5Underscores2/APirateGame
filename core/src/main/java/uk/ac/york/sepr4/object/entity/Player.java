@@ -10,7 +10,7 @@ import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
-import uk.ac.york.sepr4.utils.FileManager;
+import uk.ac.york.sepr4.io.FileManager;
 
 import java.util.ArrayList;
 import java.util.List;

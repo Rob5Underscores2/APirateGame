@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.GameInstance;
-import uk.ac.york.sepr4.utils.FileManager;
+import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.utils.StyleManager;
 
 public class EndScreen extends PirateScreen {

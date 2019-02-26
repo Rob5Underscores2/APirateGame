@@ -2,7 +2,7 @@ package uk.ac.york.sepr4.object.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import uk.ac.york.sepr4.object.building.College;
-import uk.ac.york.sepr4.utils.FileManager;
+import uk.ac.york.sepr4.io.FileManager;
 
 import java.util.Optional;
 import java.util.Random;

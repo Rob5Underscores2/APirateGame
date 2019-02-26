@@ -1,10 +1,12 @@
-package uk.ac.york.sepr4;
+package uk.ac.york.sepr4.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.screen.NewMinigameScreen;
 import uk.ac.york.sepr4.screen.SailScreen;
 
 public class SailInputProcessor implements InputProcessor {
@@ -40,6 +42,7 @@ public class SailInputProcessor implements InputProcessor {
 //        }
 
         if(keycode == Input.Keys.L){
+            gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
             // DEBUG code used to test minigame easily!
             //APirateGame.switchScreen(ScreenType.MINIGAME);
         }

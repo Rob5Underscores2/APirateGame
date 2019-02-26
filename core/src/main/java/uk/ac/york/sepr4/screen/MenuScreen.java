@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.APirateGame;
 import uk.ac.york.sepr4.GameInstance;
@@ -49,17 +49,17 @@ public class MenuScreen implements Screen {
         table.add(exit).fillX().uniformX();
 
         // create button listeners
-        exit.addListener(new ChangeListener() {
+        exit.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
             }
         });
 
         //Changed for Assessment 3: Added a resume button to the menu
-        newGame.addListener(new ChangeListener() {
+        newGame.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 GameInstance gameInstance = new GameInstance(game);
                 gameInstance.start();
             }

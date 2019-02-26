@@ -22,7 +22,6 @@ import java.util.Random;
 public class MinigameScreen implements Screen, InputProcessor {
 
 	private GameInstance gameInstance;
-	private SailScreen sailScreen;
 	private Stage stage;
 	private String state = "menu";
 	private SpriteBatch spriteBatch;

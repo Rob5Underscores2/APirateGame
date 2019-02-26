@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import lombok.Data;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
-import uk.ac.york.sepr4.utils.FileManager;
+import uk.ac.york.sepr4.io.FileManager;
 
 @Data
 public class Projectile extends Entity {

@@ -9,10 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import lombok.Getter;
-import lombok.Setter;
 import uk.ac.york.sepr4.GameInstance;
-import uk.ac.york.sepr4.SailInputProcessor;
+import uk.ac.york.sepr4.io.SailInputProcessor;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
@@ -37,9 +35,6 @@ public class SailScreen extends PirateScreen {
 
     private GameInstance gameInstance;
 
-    @Getter @Setter
-    private float timer = 0;
-
     private static SailScreen sailScreen;
 
     private ShapeRenderer shapeRenderer;
@@ -52,10 +47,6 @@ public class SailScreen extends PirateScreen {
 
     /**
      * SailScreen Constructor
-     * <p>
-     * Sets base game parameters, sets up camera, map, view port and stage(s).
-     * Initializes Item, Entity, Building and Quest managers and InputMultiplexer.
-     * <p>
      * Adds the player as an actor to the stage.
      *
      * @param gameInstance
@@ -121,7 +112,6 @@ public class SailScreen extends PirateScreen {
         }
 
         handleHealthBars();
-
 
         checkCollisions();
 

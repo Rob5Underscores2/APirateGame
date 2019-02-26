@@ -1,4 +1,4 @@
-package uk.ac.york.sepr4.utils;
+package uk.ac.york.sepr4.io;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,6 +33,25 @@ public class FileManager {
 
     public static Texture MIDDLEBOATTRAIL1 = new Texture(Gdx.files.internal(path+"Middleboattrail.png"));
 
+    public static Texture firingFrame(int number){
+        return new Texture(Gdx.files.internal(path+"cannon/frame"+number+".png"));
+    }
+
+
+    private static final String minigamePath = "images/minigame/";
+    public static Texture MINIGAME_PLAYER_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered.png"));
+    public static Texture MINIGAME_PLAYER_2 = new Texture(Gdx.files.internal(minigamePath+"pirate_shooting.png"));
+    public static Texture MINIGAME_ENEMY_EASY_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered_right_easy.png"));
+    public static Texture MINIGAME_ENEMY_EASY_2 = new Texture(Gdx.files.internal(minigamePath+"pirate_shooting_right_easy.png"));
+    public static Texture MINIGAME_ENEMY_MED_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered_right_medium.png"));
+    public static Texture MINIGAME_ENEMY_MED_2 = new Texture(Gdx.files.internal(minigamePath+"pirate_shooting_right_medium.png"));
+    public static Texture MINIGAME_ENEMY_HARD_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered_right_hard.png"));
+    public static Texture MINIGAME_ENEMY_HARD_2 = new Texture(Gdx.files.internal(minigamePath+"pirate_shooting_right_hard.png"));
+    public static Texture MINIGAME_ENEMY_VHARD_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered_right_veryhard.png"));
+    public static Texture MINIGAME_ENEMY_VHARD_2 = new Texture(Gdx.files.internal(minigamePath+"pirate_shooting_right_veryhard.png"));
+
+
+    //Texture Archive
     public static Texture ALCUIN_CORVETTE = new Texture(Gdx.files.internal(path+"alcuincorvetteasset.png"));
     public static Texture ALCUIN_FRIGATE = new Texture(Gdx.files.internal(path+"alcuinfrigateasset.png"));
     public static Texture ALCUIN_MANOWAR = new Texture(Gdx.files.internal(path+"alcuinmanowarasset.png"));
@@ -77,13 +96,4 @@ public class FileManager {
     public static Texture WENTWORTH_FRIGATE = new Texture(Gdx.files.internal(path+"wentworthfrigateasset.png"));
     public static Texture WENTWORTH_MANOWAR = new Texture(Gdx.files.internal(path+"wentworthmanowarasset.png"));
     public static Texture WENTWORTH_SLOOP = new Texture(Gdx.files.internal(path+"wentworthsloopasset.png"));
-
-
-    public static Texture firingFrame(int number){
-        return new Texture(Gdx.files.internal(path+"cannon/frame"+number+".png"));
-    }
-
-
-
-
 }
