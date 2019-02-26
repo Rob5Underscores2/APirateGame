@@ -18,7 +18,6 @@ public class StatsHUD {
     @Getter
     private Stage stage;
 
-
     //Added for Assessment 3: Many labels and tables for the different features added in SailHUD
     private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel;
 
@@ -55,14 +54,16 @@ public class StatsHUD {
 
         locationLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.MAGENTA));
 
-
         table.add(goldLabel).expandX().padTop(5);
         table.add(locationLabel).expandX().padTop(5);
         table.add(xpLabel).expandX().padTop(5);
         table.row();
         table.add(goldValueLabel).expandX();
+        table.add();
         table.add(xpValueLabel).expandX();
         table.row();
+
+        stage.addActor(table);
 
     }
 

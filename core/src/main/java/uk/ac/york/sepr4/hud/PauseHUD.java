@@ -37,7 +37,6 @@ public class PauseHUD {
 
         stage = new Stage(new FitViewport(w, h, new OrthographicCamera()));
 
-
         createTable();
         createObjectiveTable();
 

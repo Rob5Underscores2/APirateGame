@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import lombok.Getter;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
+import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
 import uk.ac.york.sepr4.screen.SailScreen;
@@ -26,10 +28,10 @@ public class MessageHUD {
 
 
     //Added for Assessment 3: Many labels and tables for the different features added in SailHUD
-    private Label inDerwentBeforeEndLabel, departmentPromptLabel, minigamePromptLabel;
+    private Label locationPromptLabel;
 
     @Getter
-    private Table table, inDerwentBeforeEndTable, departmentPromptTable, minigamePromptTable;
+    private Table table, inDerwentBeforeEndTable, locationPrompt, minigamePromptTable;
 
     /***
      * Class responsible for storing and updating SailHUD variables.
@@ -52,27 +54,16 @@ public class MessageHUD {
         //define a table used to organize our sailHud's labels
         table = new Table();
         //Top-Align table
-        table.top();
+        table.bottom();
         //make the table fill the entire stage
         table.setFillParent(true);
 
         // Assessment 3: Add the department prompt
-        departmentPromptLabel = new Label("E to enter Department", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        departmentPromptTable = new Table();
-        departmentPromptTable.center();
-        departmentPromptTable.setFillParent(true);
-        departmentPromptTable.add(departmentPromptLabel).padBottom(100).expandX();
+        locationPromptLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        table.add(locationPromptLabel).padBottom(Value.percentHeight(0.05f, table)).expandX();
 
-        // Assessment 3: Minigame screen
-        minigamePromptLabel = new Label("E to enter Minigame", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        minigamePromptTable = new Table();
-        minigamePromptTable.center();
-        minigamePromptTable.setFillParent(true);
-        minigamePromptTable.add(minigamePromptLabel).padBottom(100).expand();
 
         stage.addActor(table);
-        stage.addActor(departmentPromptTable);
-        stage.addActor(minigamePromptTable);
     }
 
     /***
@@ -81,14 +72,11 @@ public class MessageHUD {
     public void update() {
         //location overhead
         Optional<Building> loc = gameInstance.getEntityManager().getPlayerLocation();
-        departmentPromptTable.setVisible(false);
-        minigamePromptLabel.setVisible(false);
+        locationPromptLabel.setText("");
         if (loc.isPresent()) {
             Building building = loc.get();
-            if (building instanceof Department) {
-                departmentPromptTable.setVisible(true);
-            } else if (building instanceof MinigameBuilding) {
-                minigamePromptLabel.setVisible(true);
+            if(!(building instanceof College)) {
+                locationPromptLabel.setText("Press E to enter " + building.getName());
             }
         }
 
