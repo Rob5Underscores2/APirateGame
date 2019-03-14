@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Array;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.object.item.Reward;
+import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.utils.AIUtil;
@@ -437,6 +439,35 @@ public class NPCBoat extends LivingEntity {
                 setAngularSpeed(getTurningSpeed());
             }
         }
+    }
+
+    /***
+     * Override
+     * @param projectile which damaged LivingEntity
+     * @return true if NPCboat still alive
+     */
+    @Override
+    public boolean damage(Projectile projectile) {
+        if(projectile.getShooter() instanceof NPCBoat) {
+            //if shooter is NPCBoat, dont damage (NPCs shouldnt be able to damage eachother)
+            return true;
+        }
+        if(!super.damage(projectile)) {
+            //is dead
+            Gdx.app.debug("NPCBoat", "Issuing reward to player!");
+
+            Player player = (Player) projectile.getShooter();
+            Reward reward = RewardManager.generateReward((int) difficulty);
+            player.issueReward(reward);
+
+            if(isBoss && getAllied().isPresent()) {
+                Gdx.app.debug("NPCBoat", "Boss defeated - capturing allied college!");
+                player.capture(getAllied().get());
+            }
+
+            return false;
+        }
+        return true;
     }
 
 }

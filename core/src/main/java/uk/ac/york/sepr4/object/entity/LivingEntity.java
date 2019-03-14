@@ -1,11 +1,13 @@
 package uk.ac.york.sepr4.object.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.utils.AIUtil;
 
@@ -95,13 +97,14 @@ public abstract class LivingEntity extends Entity {
 
     /***
      * Called to inflict damage on LivingEntity
-     * @param damage amount of damage to inflict
+     * @param projectile which damaged LivingEntity
      * @return true if LivingEntity alive
      */
-    public boolean damage(Double damage) {
-        this.health = this.health - damage;
+    public boolean damage(Projectile projectile) {
+        this.health = this.health - projectile.getDamage();
         if (this.health <= 0) {
             kill(false);
+            Gdx.app.debug("LE", "LE died.");
             return false;
         }
         return true;

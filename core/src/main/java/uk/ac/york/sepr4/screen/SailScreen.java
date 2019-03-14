@@ -17,7 +17,7 @@ import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.NPCBoat;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.object.item.ItemManager;
+import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.object.quest.QuestManager;
@@ -25,7 +25,7 @@ import uk.ac.york.sepr4.utils.AIUtil;
 
 /**
  * SailScreen is main game class. Holds data related to current player including the
- * {@link BuildingManager}, {@link ItemManager},
+ * {@link BuildingManager}, {@link RewardManager},
  * {@link QuestManager} and {@link EntityManager}
  * <p>
  * Responds to keyboard and mouse input by the player. InputMultiplexer used to combine input processing in both
@@ -199,11 +199,13 @@ public class SailScreen extends PirateScreen {
             //TODO: still a bit buggy
             for (LivingEntity lE2 : entityManager.getLivingEntities()) {
                 if (!lE.equals(lE2)) {
-                    if (lE.getRectBounds().overlaps(lE2.getRectBounds())) {
-                        if (lE.getColliedWithBoat() == 0) {
-                            lE.collide(true, AIUtil.normalizeAngle((float) (lE.getAngleTowardsEntity(lE2) - Math.PI)));
+                    if(!lE.isDying() && !lE2.isDying()) {
+                        if (lE.getRectBounds().overlaps(lE2.getRectBounds())) {
+                            if (lE.getColliedWithBoat() == 0) {
+                                lE.collide(true, AIUtil.normalizeAngle((float) (lE.getAngleTowardsEntity(lE2) - Math.PI)));
+                            }
+                            //Gdx.app.log("gs", ""+lE.getColliedWithBoat());
                         }
-                        //Gdx.app.log("gs", ""+lE.getColliedWithBoat());
                     }
                 }
                 if (lE.getColliedWithBoat() >= 1) {
@@ -215,7 +217,6 @@ public class SailScreen extends PirateScreen {
 
     private void checkProjectileCollisions() {
         EntityManager entityManager = gameInstance.getEntityManager();
-        Player player = entityManager.getOrCreatePlayer();
         for (Projectile projectile : entityManager.getProjectileManager().getProjectileList()) {
             if(gameInstance.getPirateMap().isColliding(projectile.getRectBounds())) {
                 projectile.setActive(false);
@@ -226,23 +227,7 @@ public class SailScreen extends PirateScreen {
                 if (projectile.getShooter() != livingEntity && projectile.getRectBounds().overlaps(livingEntity.getRectBounds())) {
                     //if bullet overlaps player and shooter not player
                     if (!(livingEntity.isDying() || livingEntity.isDead())) {
-                        if (!livingEntity.damage(projectile.getDamage())) {
-                            //is dead
-                            if (livingEntity instanceof NPCBoat) {
-                                Gdx.app.debug("SailScreen", "NPCBoat died.");
-                                NPCBoat npcBoat = (NPCBoat) livingEntity;
-                                Reward reward = gameInstance.getItemManager().generateReward();
-                                reward.setGold(reward.getGold() + (int) npcBoat.getDifficulty());
-                                reward.setXp(reward.getXp() + (int) npcBoat.getDifficulty());
-                                player.issueReward(reward);
-                                //if dead NPC is a boss then player can capture its respective college
-                                if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
-                                    player.capture(npcBoat.getAllied().get());
-                                }
-                            } else {
-                                Gdx.app.debug("SailScreen", "Player died.");
-                            }
-                        }
+                        livingEntity.damage(projectile);
                         Gdx.app.debug("SailScreen", "LivingEntity damaged by projectile.");
                         //kill projectile
                         projectile.setActive(false);
