@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import uk.ac.york.sepr4.GameInstance;
-import uk.ac.york.sepr4.io.SailInputProcessor;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.io.SailInputProcessor;
 import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
@@ -57,7 +57,7 @@ public class SailScreen extends PirateScreen {
         sailScreen = this;
 
         // Debug options (extra logging, collision shape renderer (viewing tile object map))
-        if(gameInstance.getGame().DEBUG) {
+        if (gameInstance.getGame().DEBUG) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
             shapeRenderer = new ShapeRenderer();
         }
@@ -97,12 +97,12 @@ public class SailScreen extends PirateScreen {
             return;
         }
 
-        if(!player.isDying()) {
+        if (!player.isDying()) {
             //spawns/despawns entities, handles animations and projectiles
             entityManager.handleStageEntities(getStage(), delta);
         } else {
             //when the player is dying - only process animations
-            entityManager.getAnimationManager().handleEffects(getStage(),delta);
+            entityManager.getAnimationManager().handleEffects(getStage(), delta);
         }
         if (gameInstance.getPirateMap().isObjectsEnabled()) {
             gameInstance.getBuildingManager().spawnCollegeEnemies(delta);
@@ -184,29 +184,29 @@ public class SailScreen extends PirateScreen {
         EntityManager entityManager = gameInstance.getEntityManager();
         //player/map collision check
         //TODO: Improve to make player a polygon
-        for(LivingEntity lE : entityManager.getLivingEntities()) {
+        for (LivingEntity lE : entityManager.getLivingEntities()) {
             //Between entity and map
-            if(gameInstance.getPirateMap().isColliding(lE.getRectBounds())) {
+            if (gameInstance.getPirateMap().isColliding(lE.getRectBounds())) {
                 if (lE.getCollidedWithIsland() == 0) {
                     lE.collide(false, 0f);
                 }
             }
-            if(lE.getCollidedWithIsland() >= 1) {
+            if (lE.getCollidedWithIsland() >= 1) {
                 lE.setCollidedWithIsland(lE.getCollidedWithIsland() - 1);
             }
 
             //between living entities themselves
             //TODO: still a bit buggy
-            for(LivingEntity lE2 : entityManager.getLivingEntities()) {
-                if(!lE.equals(lE2)) {
-                    if(lE.getRectBounds().overlaps(lE2.getRectBounds())) {
-                        if(lE.getColliedWithBoat() == 0) {
-                            lE.collide(true, AIUtil.normalizeAngle((float)(lE.getAngleTowardsEntity(lE2) - Math.PI)));
+            for (LivingEntity lE2 : entityManager.getLivingEntities()) {
+                if (!lE.equals(lE2)) {
+                    if (lE.getRectBounds().overlaps(lE2.getRectBounds())) {
+                        if (lE.getColliedWithBoat() == 0) {
+                            lE.collide(true, AIUtil.normalizeAngle((float) (lE.getAngleTowardsEntity(lE2) - Math.PI)));
                         }
                         //Gdx.app.log("gs", ""+lE.getColliedWithBoat());
                     }
                 }
-                if(lE.getColliedWithBoat() >= 1) {
+                if (lE.getColliedWithBoat() >= 1) {
                     lE.setColliedWithBoat(lE.getColliedWithBoat() - 1);
                 }
             }
@@ -216,23 +216,27 @@ public class SailScreen extends PirateScreen {
     private void checkProjectileCollisions() {
         EntityManager entityManager = gameInstance.getEntityManager();
         Player player = entityManager.getOrCreatePlayer();
+        for (Projectile projectile : entityManager.getProjectileManager().getProjectileList()) {
+            if(gameInstance.getPirateMap().isColliding(projectile.getRectBounds())) {
+                projectile.setActive(false);
+                return;
+            }
 
-        for (LivingEntity livingEntity : entityManager.getLivingEntities()) {
-            for (Projectile projectile : entityManager.getProjectileManager().getProjectileList()) {
+            for (LivingEntity livingEntity : entityManager.getLivingEntities()) {
                 if (projectile.getShooter() != livingEntity && projectile.getRectBounds().overlaps(livingEntity.getRectBounds())) {
                     //if bullet overlaps player and shooter not player
                     if (!(livingEntity.isDying() || livingEntity.isDead())) {
                         if (!livingEntity.damage(projectile.getDamage())) {
                             //is dead
-                            if(livingEntity instanceof NPCBoat) {
+                            if (livingEntity instanceof NPCBoat) {
                                 Gdx.app.debug("SailScreen", "NPCBoat died.");
                                 NPCBoat npcBoat = (NPCBoat) livingEntity;
                                 Reward reward = gameInstance.getItemManager().generateReward();
-                                reward.setGold(reward.getGold() + (int)npcBoat.getDifficulty());
-                                reward.setXp(reward.getXp() + (int)npcBoat.getDifficulty());
+                                reward.setGold(reward.getGold() + (int) npcBoat.getDifficulty());
+                                reward.setXp(reward.getXp() + (int) npcBoat.getDifficulty());
                                 player.issueReward(reward);
                                 //if dead NPC is a boss then player can capture its respective college
-                                if(npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
+                                if (npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
                                     player.capture(npcBoat.getAllied().get());
                                 }
                             } else {

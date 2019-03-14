@@ -60,6 +60,7 @@ public class MenuScreen implements Screen {
         newGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.debug("MenuScreen", "NEW GAME CLICK");
                 GameInstance gameInstance = new GameInstance(game);
                 gameInstance.start();
             }
@@ -69,7 +70,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

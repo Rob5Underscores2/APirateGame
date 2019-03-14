@@ -9,8 +9,7 @@ import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.screen.NewMinigameScreen;
-import uk.ac.york.sepr4.screen.SailScreen;
+import uk.ac.york.sepr4.screen.MinigameScreen;
 
 import java.util.Optional;
 
@@ -38,14 +37,14 @@ public class SailInputProcessor implements InputProcessor {
                 if(building instanceof Department) {
 
                 } else if (building instanceof MinigameBuilding) {
-                    gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
+                    gameInstance.fadeSwitchScreen(new MinigameScreen(gameInstance));
                 }
             }
         }
 
         if(keycode == Input.Keys.L){
             // DEBUG code used to test minigame easily!
-            gameInstance.fadeSwitchScreen(new NewMinigameScreen(gameInstance));
+            gameInstance.fadeSwitchScreen(new MinigameScreen(gameInstance));
         }
 
         if (keycode == Input.Keys.ESCAPE) {

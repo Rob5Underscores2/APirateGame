@@ -2,29 +2,29 @@ package uk.ac.york.sepr4.io;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import uk.ac.york.sepr4.screen.NewMinigameScreen;
+import uk.ac.york.sepr4.screen.MinigameScreen;
 
 public class MinigameInputProcessor implements InputProcessor {
 
-    private NewMinigameScreen newMinigameScreen;
+    private MinigameScreen minigameScreen;
 
-    public MinigameInputProcessor(NewMinigameScreen newMinigameScreen) {
-        this.newMinigameScreen = newMinigameScreen;
+    public MinigameInputProcessor(MinigameScreen minigameScreen) {
+        this.minigameScreen = minigameScreen;
     }
 
     @Override
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.SPACE) {
             //start game if difficulty set but game not started
-            if (newMinigameScreen.getDifficulty() != null && !newMinigameScreen.isGameStarted()) {
-                newMinigameScreen.setGameStarted(true);
+            if (minigameScreen.getDifficulty() != null && !minigameScreen.isGameStarted()) {
+                minigameScreen.setGameStarted(true);
                 return true;
             }
         }
         if(keycode == Input.Keys.Z) {
-            if(newMinigameScreen.isGameStarted()) {
+            if(minigameScreen.isGameStarted()) {
                 //can shoot - game is started
-                newMinigameScreen.playerShoot();
+                minigameScreen.playerShoot();
             }
         }
         return false;

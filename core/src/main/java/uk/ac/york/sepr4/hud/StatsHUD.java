@@ -80,7 +80,6 @@ public class StatsHUD {
         table.add();
         table.add(xpValueLabel).expandX();
         table.row();
-        table.debug();
         stage.addActor(table);
 
     }

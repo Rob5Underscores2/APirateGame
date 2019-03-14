@@ -1,516 +1,220 @@
 package uk.ac.york.sepr4.screen;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import lombok.Getter;
+import lombok.Setter;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.io.FileManager;
+import uk.ac.york.sepr4.io.MinigameInputProcessor;
 import uk.ac.york.sepr4.object.entity.Player;
-
+import uk.ac.york.sepr4.utils.StyleManager;
 import java.util.Random;
 
-
-/**
- * Added for assessment 3, manages instances of the minigame.
- */
-public class MinigameScreen implements Screen, InputProcessor {
-
-	private GameInstance gameInstance;
-	private Stage stage;
-	private String state = "menu";
-	private SpriteBatch spriteBatch;
-	private InputMultiplexer inputMultiplexer;
-
-	//minigame variables
-	private boolean playerAlive = true;
-	private boolean enemyAlive = true;
-	private boolean playerWon = false;
-	private boolean playerDisqualified = false;
-	private boolean gameStarted = false;
-	private float countdown;
-	private float enemyShotCountdown;
-	private String difficulty; //easy, medium, hard, very hard
-
-	public MinigameScreen(GameInstance gameInstance){
-		this.gameInstance = gameInstance;
-		this.spriteBatch = new SpriteBatch();
-
-		// create stage and set it as input processor
-		stage = new Stage(new ScreenViewport());
-
-		// use input multiplexer to enable scene2d inputs and keyboard inputs at the same time
-		inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(stage);
-		inputMultiplexer.addProcessor(this);
-
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
-
-	@Override
-	public void show(){
-
-		showMenu();
-
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
-
-	/**
-	 * Display the minigame's main menu.
-	 */
-	private void showMenu(){
-		// clear existing UI, initialise scene2d objects
-		stage.clear();
-		Table table = new Table();
-		table.setFillParent(true);
-		stage.addActor(table);
-		Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
-
-		// instantiate labels and buttons
-		Label minigameText = new Label("How difficult do you want your minigame to be? Higher difficulty means higher rewards!", skin);
-		minigameText.setColor(0f, 0f, 0f, 1f);
-		Label instructionText = new Label("Wait for the signal, then use the Z key to shoot before your opponent does.", skin);
-		instructionText.setColor(0f, 0f, 0f, 1f);
-
-		TextButton quitMinigame = new TextButton("Go back to game", skin);
-		TextButton easyMinigame = new TextButton("Easy", skin);
-		Label easyText = new Label(" (1 gold)", skin);
-		easyText.setColor(0f, 0f, 0f, 1f);
-		TextButton mediumMinigame = new TextButton("Medium", skin);
-		Label mediumText = new Label(" (10 gold)", skin);
-		mediumText.setColor(0f, 0f, 0f, 1f);
-		TextButton hardMinigame = new TextButton("Hard", skin);
-		Label hardText = new Label(" (20 gold)", skin);
-		hardText.setColor(0f, 0f, 0f, 1f);
-		TextButton veryhardMinigame = new TextButton("Very Hard", skin);
-		Label veryhardText = new Label(" (50 gold)", skin);
-		veryhardText.setColor(0f, 0f, 0f, 1f);
-
-		// used to display player balance and later to enable/disable minigame buttons
-		Player player = gameInstance.getEntityManager().getOrCreatePlayer();
-		Integer money = player.getBalance();
-
-		Label currentBalance = new Label("Balance: " + money.toString(), skin);
-		currentBalance.setColor(0f, 0f, 0f, 1f);
-
-		// declare UI layout
-		table.add(minigameText).fillX().uniformX();
-		table.row().pad(20, 0, 0, 0);
-		table.add(currentBalance);
-		table.row().pad(20, 0, 0, 0);
-		table.add(easyMinigame).fillX().uniformX();
-		table.add(easyText);
-		table.row();
-		table.add(mediumMinigame).fillX().uniformX();
-		table.add(mediumText);
-		table.row();
-		table.add(hardMinigame).fillX().uniformX();
-		table.add(hardText);
-		table.row();
-		table.add(veryhardMinigame).fillX().uniformX();
-		table.add(veryhardText);
-		table.row().pad(20, 0, 10, 0);
-		table.add(quitMinigame).fillX().uniformX();
-		table.row().pad(20,0,0,0);
-		table.add(instructionText).fillX().uniformX();
-		table.row();
-
-		// declare button functionality based on current balance
-		quitMinigame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				gameInstance.fadeSwitchScreen(gameInstance.getSailScreen());
-			}
-		});
-
-
-		easyMinigame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				difficulty = "easy";
-				player.deduceBalance(1);
-				setMinigameStateGame();
-			}
-		});
-
-		// disable button if player doesn't have enough money
-		if (money < 1){
-			easyMinigame.setTouchable(Touchable.disabled);
-		}
-
-		mediumMinigame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				difficulty = "medium";
-				player.deduceBalance(10);
-				setMinigameStateGame();
-			}
-		});
-
-		if(money < 10){
-			mediumMinigame.setTouchable(Touchable.disabled);
-		}
-
-		hardMinigame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				difficulty = "hard";
-				player.deduceBalance(20);
-				setMinigameStateGame();
-			}
-		});
-
-		if(money < 20){
-			hardMinigame.setTouchable(Touchable.disabled);
-		}
-
-		veryhardMinigame.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				difficulty = "very hard";
-				player.deduceBalance(50);
-				setMinigameStateGame();
-			}
-		});
-
-		if(money < 50){
-			veryhardMinigame.setTouchable(Touchable.disabled);
-		}
-	}
-
-	@Override
-	public void render(float delta) {
-		// clear the screen ready for next set of images to be drawn
-		Gdx.gl.glClearColor(1f, 1f, 1f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// renders player and enemy sprites on screen once the minigame is started
-		if(state.equals("game")){
-			// displays game interface when the minigame is started
-			showGame();
-
-			// counts down time from "Ready..." to "FIRE!"
-			if(this.countdown > 0){
-				this.countdown -= Gdx.graphics.getDeltaTime();
-			}
-
-			// if the game has started, counts down enemy's shot time
-			if (gameStarted){
-				if(enemyShotCountdown > 0){
-					enemyShotCountdown -= Gdx.graphics.getDeltaTime();
-				} else {
-					if (!playerDisqualified){
-						handleShot("enemy");
-					}
-				}
-			}
-
-			// selects sprite for player and enemy depending on game state and difficulty
-			Texture player;
-			Texture enemy;
-			if (playerAlive  && !enemyAlive) {
-				player = new Texture(Gdx.files.internal("shootpirate/pirate_shooting.png"));
-				enemy = new Texture(Gdx.files.internal("shootpirate/pirate_defeated.png"));
-			} else if (playerAlive && enemyAlive){
-				player = new Texture(Gdx.files.internal("shootpirate/pirate_holstered.png"));
-
-				if(difficulty.equals("easy")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_easy.png"));
-				} else if(difficulty.equals("medium")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_medium.png"));
-				} else if(difficulty.equals("very hard")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_veryhard.png"));
-				} else {
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right.png"));
-				}
-
-			} else if (!playerAlive && enemyAlive){
-				player = new Texture(Gdx.files.internal("shootpirate/pirate_defeated.png"));
-
-				if(difficulty.equals("easy")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_shooting_right_easy.png"));
-				} else if (difficulty.equals("medium")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_shooting_right_medium.png"));
-				} else if (difficulty.equals("very hard")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_shooting_right_veryhard.png"));
-				} else {
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_shooting_right.png"));
-				}
-
-			} else {
-				// failsafe condition to prevent null pointer exception
-				player = new Texture(Gdx.files.internal("shootpirate/pirate_holstered.png"));
-
-				if(difficulty.equals("easy")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_easy.png"));
-				} else if(difficulty.equals("medium")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_medium.png"));
-				} else if(difficulty.equals("very hard")){
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right_veryhard.png"));
-				} else {
-					enemy = new Texture(Gdx.files.internal("shootpirate/pirate_holstered_right.png"));
-				}
-			}
-
-			// render sprites
-			float w = Gdx.graphics.getWidth();
-			float h = Gdx.graphics.getHeight();
-			spriteBatch.begin();
-			spriteBatch.draw(player, w*0.1f, h-player.getHeight()-(h*0.3f));
-			spriteBatch.draw(enemy, w-enemy.getWidth()-(w*0.1f), h-enemy.getHeight()-(h*0.3f));
-			spriteBatch.end();
-		}
-
-		// tell our stage to do actions and draw itself
-		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-		stage.draw();
-	}
-
-	/**
-	 * Used to display the scene2d elements of the game part of the minigame, like the "Ready..." and "FIRE!" text.
-	 */
-	private void showGame(){
-		stage.clear();
-		Table table = new Table();
-		table.setFillParent(true);
-		stage.addActor(table);
-		Skin skin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
-
-		// used to handle which text is displayed when
-		if(!gameStarted){
-			// displayed after the game is started, but before the player is ready
-			Label readyText = new Label("Press SPACE when you're ready! Press Z to shoot!", skin);
-			readyText.setColor(0, 0, 0, 1);
-
-			table.add(readyText);
-		} else {
-			if(!playerWon && !playerDisqualified && playerAlive){
-				// displayed during the countdown before the minigame has ended
-				if(countdown > 0){
-					Label readyText = new Label("Ready...", skin);
-					readyText.setColor(0, 0, 0, 1);
-
-					table.add(readyText);
-				} else {
-					Texture fireTextTexture;
-					fireTextTexture = new Texture(Gdx.files.internal("shootpirate/fire_text_white.png"));
-
-					Image fireText;
-					fireText = new Image(fireTextTexture);
-					fireText.setColor(1, 0, 0, 1);
-
-
-					table.add(fireText);
-				}
-			} else if (playerDisqualified){
-				// displayed when the player fires prematurely
-				Label dqText = new Label("You shot early! Disqualified!", skin);
-				dqText.setColor(0, 0, 0, 1);
-
-				Label menuText = new Label("Press SPACE to go back to the menu.", skin);
-				menuText.setColor(0, 0, 0, 1);
-
-				table.add(dqText);
-				table.row();
-				table.add(menuText);
-			} else if (playerWon){
-				// displayed when the player wins
-				Label winText = new Label("You win! Press SPACE to go back to the menu.", skin);
-				winText.setColor(0, 0, 0, 1);
-
-				table.add(winText);
-			} else if (!playerAlive){
-				// displayed when the player loses
-				Label loseText = new Label("You lose! Press SPACE to go back to the menu.", skin);
-				loseText.setColor(0, 0, 0, 1);
-
-				table.add(loseText);
-			}
-		}
-	}
-
-	/**
-	 * Displays the minigame menu screen.
-	 */
-	public void setMinigameStateMenu(){
-		this.state = "menu";
-		stage.clear();
-		gameStarted = false;
-		showMenu();
-	}
-
-	/**
-	 * Displays the minigame game screen and starts an instance of a game.
-	 */
-	public void setMinigameStateGame(){
-		this.state = "game";
-		this.playerAlive = true;
-		this.enemyAlive = true;
-		this.playerDisqualified = false;
-		this.playerWon = false;
-		stage.clear();
-		showGame();
-	}
-
-	@Override
-	public boolean keyDown(int keycode){
-		if(!gameStarted){
-			// if the game hasn't been started, space starts the game
-			if(keycode == Input.Keys.SPACE){
-				startGame();
-			}
-		}
-		else
-		{
-			if(keycode == Input.Keys.Z){
-				if(!playerWon && !playerDisqualified && playerAlive) {
-					// allow the player to shoot if they have not yet lost or already won
-					handleShot("player");
-				}
-			}
-			// if the game has been started, space takes the player back to the minigame menu
-			if(keycode == Input.Keys.SPACE){
-				if(!playerAlive || !enemyAlive || playerDisqualified){
-					setMinigameStateMenu();
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Method used to resolve shooting.
-	 * @param shooter Has to be a string, "player" or "enemy". Other arguments do nothing.
-	 */
-	private void handleShot(String shooter){
-		if(shooter.equals("player")){
-			// Disqualify the player if they fire before the signal, have them win otherwise.
-			if(countdown > 0) {
-				playerDisqualified = true;
-			} else {
-				playerWon = true;
-				enemyAlive = false;
-				giveReward();
-			}
-		} else if (shooter.equals("enemy")){
-			if(enemyAlive){
-				playerAlive = false;
-			}
-		}
-
-	}
-
-	/**
-	 * Gives the player a reward based on the difficulty of the minigame they selected.
-	 * Has to be called AFTER the difficulty variable has been set.
-	 */
-	private void giveReward(){
-		Player player = gameInstance.getEntityManager().getOrCreatePlayer();
-
-		switch(difficulty){
-			case "easy":
-				player.addBalance(2);
-				break;
-			case "medium":
-				player.addBalance(50);
-				break;
-			case "hard":
-				player.addBalance(200);
-				break;
-			case "very hard":
-				player.addBalance(500);
-				break;
-		}
-	}
-
-	/**
-	 * Prepares a minigame by generating a countdown timer and the timer for the enemy's reaction.
-	 */
-	private void startGame(){
-		gameStarted = true;
-		Random randomiser = new Random();
-		countdown = randomiser.nextInt(4)+1;
-
-		switch(difficulty){
-			case "easy":
-				enemyShotCountdown = countdown+20;
-				break;
-			case "medium":
-				enemyShotCountdown = countdown+0.3f;
-				break;
-			case "hard":
-				enemyShotCountdown = countdown+0.26f;
-				break;
-			case "very hard":
-				enemyShotCountdown = countdown+0.23f;
-				break;
-		}
-	}
-
-	@Override
-	public boolean touchDown (int screenX, int screenY, int pointer, int button){return false;}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// change the stage's viewport when teh screen size is changed
-		stage.getViewport().update(width, height, true);
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-		inputMultiplexer.addProcessor(stage);
-		inputMultiplexer.addProcessor(this);
-
-		Gdx.input.setInputProcessor(inputMultiplexer);
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
-	@Override
-	public void dispose() {
-		stage.dispose();
-	}
+public class MinigameScreen extends PirateScreen {
+
+    private Table table, gameTable;
+    @Getter
+    private MinigameDifficulty difficulty;
+    @Getter @Setter
+    private boolean gameStarted = false, gameOver = false;
+
+    private float enemyShootTimer, startCountdown;
+
+    private Label gameText;
+    private Image playerImage, enemyImage;
+
+    public MinigameScreen(GameInstance gameInstance) {
+        super(gameInstance, new Stage(new ScreenViewport()), FileManager.menuScreenBG);
+
+        getInputMultiplexer().addProcessor(new MinigameInputProcessor(this));
+
+        setEnableStatsHUD(true);
+
+        createMenu();
+        displayMenu();
+    }
+
+    @Override
+    public void renderInner(float delta) {
+        if(gameOver) {
+            setGameStarted(false);
+            startCountdown+=delta;
+            if(startCountdown>3f) {
+                resetGame();
+            }
+        }
+        if(difficulty != null && gameStarted) {
+            //minigame being played
+            startCountdown -= delta;
+            enemyShootTimer -= delta;
+            if (startCountdown <= 0) {
+                    gameText.setText("SHOOT! (Z)");
+                    gameText.setColor(Color.RED);
+                    if (enemyShootTimer <= 0) {
+                        enemyShoot();
+                    }
+                }
+        }
+
+    }
+
+    private void enemyShoot() {
+        gameText.setText("You Lost!");
+        setGameOver(true);
+    }
+
+    public void playerShoot() {
+        if(startCountdown > 0) {
+            //shot too early - loose!
+            resetGame();
+        } else {
+            giveReward();
+            gameText.setText("You Won!");
+            setGameOver(true);
+        }
+    }
+
+    private void resetGame() {
+        difficulty = null;
+        startCountdown = 0;
+        enemyShootTimer = 0;
+        gameTable = null;
+        setGameStarted(false);
+        setGameOver(false);
+        displayMenu();
+    }
+
+    private void giveReward() {
+        getGameInstance().getEntityManager().getOrCreatePlayer().addBalance(difficulty.getReward());
+    }
+
+    private void createMenu() {
+        table = new Table();
+        table.top();
+        table.setFillParent(true);
+
+        Label minigameText = new Label("How difficult do you want your minigame to be? Higher difficulty means higher rewards!", StyleManager.generateLabelStyle(35, Color.GRAY));
+        Label instructionText = new Label("Wait for the signal, then use the Z key to shoot before your opponent does.", StyleManager.generateLabelStyle(25, Color.GRAY));
+
+        TextButton quitMinigame = new TextButton("Exit Minigame", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+        quitMinigame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                getGameInstance().fadeSwitchScreen(getGameInstance().getSailScreen(), true);
+            }
+        });
+        TextButton easyMinigame = new TextButton("Easy (1 gold)", StyleManager.generateTBStyle(25, Color.GREEN, Color.GRAY));
+        easyMinigame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                startGame(MinigameDifficulty.EASY);
+            }
+        });
+        TextButton medMinigame = new TextButton("Medium (10 gold)", StyleManager.generateTBStyle(25, Color.YELLOW, Color.GRAY));
+        medMinigame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                startGame(MinigameDifficulty.MEDIUM);
+            }
+        });
+        TextButton hardMinigame = new TextButton("Hard (20 gold)", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+        hardMinigame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                startGame(MinigameDifficulty.HARD);
+            }
+        });
+        TextButton veryHardMinigame = new TextButton("Very Hard (50 gold)", StyleManager.generateTBStyle(25, Color.BLACK, Color.GRAY));
+        veryHardMinigame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                startGame(MinigameDifficulty.VERY_HARD);
+            }
+        });
+
+        table.add(minigameText).padTop(Value.percentHeight(0.05f, table)).expandX();
+        table.row();
+        table.add(instructionText).padTop(Value.percentHeight(0.02f, table));
+        table.row();
+        table.add(easyMinigame);
+        table.row();
+        table.add(medMinigame);
+        table.row();
+        table.add(hardMinigame);
+        table.row();
+        table.add(veryHardMinigame);
+        table.row();
+        table.add(quitMinigame).padTop(Value.percentHeight(0.02f, table));
+
+    }
+
+    private void displayMenu() {
+        getStage().clear();
+        getStage().addActor(table);
+    }
+
+    private void startGame(MinigameDifficulty difficulty) {
+        Player player = getGameInstance().getEntityManager().getOrCreatePlayer();
+        if(player.getBalance() >= difficulty.getCost()) {
+            player.deduceBalance(difficulty.getCost());
+            setCountdowns(difficulty);
+            this.difficulty = difficulty;
+            getStage().clear();
+            createGameUI(difficulty);
+        } else {
+            //TODO: SET MESSAGE CANT AFFORD
+        }
+    }
+
+    private void createGameUI(MinigameDifficulty difficulty) {
+        gameTable = new Table();
+        gameTable.top();
+        gameTable.setFillParent(true);
+        gameText = new Label("Press SPACE when you're ready! Press Z to shoot!", StyleManager.generateLabelStyle(30, Color.GRAY));
+
+        playerImage = new Image(FileManager.MINIGAME_PLAYER_1);
+        enemyImage = new Image(difficulty.getEnemyHolstered());
+
+        gameTable.add(playerImage).expandX().padTop(Value.percentHeight(0.20f, gameTable));
+        gameTable.add();
+        gameTable.add(enemyImage).expandX().padTop(Value.percentHeight(0.20f, gameTable));
+        gameTable.row();
+        gameTable.add();
+        gameTable.add(gameText).expandX().padTop(Value.percentHeight(0.05f, gameTable));
+
+        getStage().addActor(gameTable);
+    }
+
+    private void setCountdowns(MinigameDifficulty minigameDifficulty) {
+        Random random = new Random();
+        startCountdown = random.nextInt(3)+1;
+        enemyShootTimer = startCountdown+minigameDifficulty.getCountdown();
+    }
+}
+
+
+@Getter
+enum MinigameDifficulty {
+    EASY(FileManager.MINIGAME_ENEMY_EASY_1,FileManager.MINIGAME_ENEMY_EASY_2,1, 2,0.5f),
+    MEDIUM(FileManager.MINIGAME_ENEMY_MED_1,FileManager.MINIGAME_ENEMY_MED_2,10, 50,0.3f),
+    HARD(FileManager.MINIGAME_ENEMY_HARD_1,FileManager.MINIGAME_ENEMY_HARD_2,20, 200,0.26f),
+    VERY_HARD(FileManager.MINIGAME_ENEMY_VHARD_1,FileManager.MINIGAME_ENEMY_VHARD_2,50, 500,0.23f);
+
+    private Texture enemyHolstered, enemyShooting;
+    private Integer cost, reward;
+    private float countdown;
+
+    MinigameDifficulty(Texture enemyHolstered, Texture enemyShooting, Integer cost, Integer reward, float countdown) {
+        this.enemyHolstered = enemyHolstered;
+        this.enemyShooting = enemyShooting;
+        this.cost = cost;
+        this.reward = reward;
+        this.countdown = countdown;
+    }
 }
