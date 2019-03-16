@@ -114,9 +114,9 @@ public class SailScreen extends PirateScreen {
         checkCollisions();
 
         // Update camera and focus on player.
-        getOrthographicCamera().position.set(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f, 0);
-        getOrthographicCamera().update();
         getBatch().setProjectionMatrix(getOrthographicCamera().combined);
+        getOrthographicCamera().update();
+        getOrthographicCamera().position.set(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f, 0);
         gameInstance.getTiledMapRenderer().setView(getOrthographicCamera());
         gameInstance.getTiledMapRenderer().render();
 

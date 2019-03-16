@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
@@ -24,6 +25,7 @@ public class Player extends LivingEntity implements InputProcessor {
     private List<College> captured = new ArrayList<>();
     private boolean turningLeft, turningRight, tripleShot = false;
     private double bulletDamage = 5;
+    private int num  = 1;
 
 
     public Player(Vector2 pos) {
@@ -44,6 +46,11 @@ public class Player extends LivingEntity implements InputProcessor {
 
     @Override
     public void act(float deltaTime) {
+        num += 1;
+        GameInstance.INSTANCE.getEntityManager().getAnimationManager().addEffect(getCentre().x, getCentre().y, getAngle(), FileManager.fire_on_boat(num), (int)getWidth() ,(int)getHeight() , 1);
+        if (num > 16){
+            num = 0;
+        }
         if(!isDying() && !isDead()) {
             float angle = getAngle();
             float angularSpeed = 0;

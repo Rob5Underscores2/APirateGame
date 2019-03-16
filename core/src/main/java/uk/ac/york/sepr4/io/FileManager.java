@@ -37,6 +37,10 @@ public class FileManager {
         return new Texture(Gdx.files.internal(path+"cannon/frame"+number+".png"));
     }
 
+    public static Texture fire_on_boat(int number){
+        return new Texture(Gdx.files.internal(path+"fire_on_boat/frame"+number+".png"));
+    }
+
 
     private static final String minigamePath = "images/minigame/";
     public static Texture MINIGAME_PLAYER_1 = new Texture(Gdx.files.internal(minigamePath+"pirate_holstered.png"));
