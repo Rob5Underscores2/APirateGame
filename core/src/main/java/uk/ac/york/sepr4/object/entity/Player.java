@@ -12,7 +12,6 @@ import uk.ac.york.sepr4.object.item.Item;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.io.FileManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class Player extends LivingEntity implements InputProcessor {
 
     private Integer balance = 0, xp = 0, level = 1;
     private List<Item> inventory = new ArrayList<>();
-
     private List<College> captured = new ArrayList<>();
     private boolean turningLeft, turningRight, tripleShot = false;
     private double bulletDamage = 5;
@@ -37,24 +35,21 @@ public class Player extends LivingEntity implements InputProcessor {
         //setMaxHealth(1000.0);
         //setHealth(1000.0);
 
-	//Changed for Assessment 3: only default values instead of computations in the constructor
+        //Changed for Assessment 3: only default values instead of computations in the constructor
         setMaxHealth(20.0);
         setHealth(getMaxHealth());
         setMaxSpeed(100f);
         setDamage(0.5);
+
+        setOnFire(true);
     }
 
     @Override
     public void act(float deltaTime) {
-        num += 1;
-        GameInstance.INSTANCE.getEntityManager().getAnimationManager().addEffect(getCentre().x, getCentre().y, getAngle(), FileManager.fire_on_boat(num), (int)getWidth() ,(int)getHeight() , 1);
-        if (num > 16){
-            num = 0;
-        }
         if(!isDying() && !isDead()) {
             float angle = getAngle();
             float angularSpeed = 0;
-	    //Changed for Assessment 3: improved responsiveness on turning functions
+            //Changed for Assessment 3: improved responsiveness on turning functions
             if (turningLeft) {
                 angularSpeed += getTurningSpeed();
             }

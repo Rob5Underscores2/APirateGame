@@ -18,6 +18,7 @@ public class AnimationManager {
     //For cleanup
     private Array<Entity> lastFrameEffects = new Array<>(); //Needed for clean up
     private HashMap<LivingEntity, Float> deathAnimations = new HashMap<>();
+    private HashMap<LivingEntity, Integer> boatFireAnimation = new HashMap<>();
 
     //Death Animations
     private Array<Entity> effects = new Array<>();
@@ -50,6 +51,7 @@ public class AnimationManager {
         handleDeathAnimations(delta);
         updateWaterTrails();
         updateFiringAnimations();
+       // updateBoatFire();
         stage.getActors().removeAll(this.lastFrameEffects, true);
 
         for (Entity effect : effects) {
@@ -74,6 +76,50 @@ public class AnimationManager {
             } else {
                 cannonExplosion.spawnEffects(this);
             }
+        }
+    }
+
+    //for boat fire animation
+    private void updateBoatFire() {
+        for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
+            if(livingEntity.isOnFire()) {
+                if(!boatFireAnimation.containsKey(livingEntity)) {
+                    Gdx.app.log("am", "fire new");
+
+                    boatFireAnimation.put(livingEntity, 1);
+                } else {
+                    Integer frame = boatFireAnimation.get(livingEntity);
+                    if(frame >= 17) {
+                        Gdx.app.log("am", "fire reset");
+                        frame = 1;
+                    } else {
+                        frame++;
+                    }
+                    Gdx.app.log("am", "fire inc");
+
+                    boatFireAnimation.replace(livingEntity, frame);
+                }
+            } else {
+
+                //remove if animating and boat is no longer on fire
+                if(boatFireAnimation.containsKey(livingEntity)) {
+                    Gdx.app.log("am", "fire off");
+                    boatFireAnimation.remove(livingEntity);
+                }
+            }
+        }
+
+        for(LivingEntity livingEntity : boatFireAnimation.keySet()) {
+            Integer frame = boatFireAnimation.get(livingEntity);
+
+            Gdx.app.log("am", "fire "+frame);
+            addEffect(livingEntity.getCentre().x,
+                    livingEntity.getCentre().y,
+                    livingEntity.getAngle(),
+                    FileManager.fire_on_boat(frame),
+                    (int)livingEntity.getWidth(),
+                    (int)livingEntity.getHeight(),
+                    1);
         }
     }
 

@@ -24,4 +24,24 @@ public class ShapeUtil {
         return false;
     }
 
+    public static double distance(Polygon poly1, Polygon poly2) {
+        //some arbitrarily large number
+        double minDist = 1000000;
+
+        for(int i=0;i<poly1.getTransformedVertices().length;i+=2) {
+            float p1x = poly1.getTransformedVertices()[i];
+            float p1y = poly1.getTransformedVertices()[i + 1];
+            for (int i2 = 0; i2 < poly1.getTransformedVertices().length; i2 += 2) {
+                float p2x = poly1.getTransformedVertices()[i2];
+                float p2y = poly1.getTransformedVertices()[i2 + 1];
+
+                double dist = Math.sqrt(Math.pow((p1x-p2x), 2) + Math.pow((p1y-p2y), 2));
+                if(dist < minDist) {
+                    minDist = dist;
+                }
+            }
+        }
+        return minDist;
+    }
+
 }
