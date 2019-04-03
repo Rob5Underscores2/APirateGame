@@ -2,7 +2,7 @@
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
     "name": "Computer Science",
-    "mapObjectStr": "computer science"
+    "mapObjectStr": "compsci"
   },
   {
     "class": "uk.ac.york.sepr4.object.building.Department",

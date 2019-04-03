@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 public class StyleManager {
 
     public static final FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/PirataOne-Regular.ttf"));
+            new FreeTypeFontGenerator(Gdx.files.internal("font/PiecesOfEight.ttf"));
 
     /***
      * Generates a BitmapFont of specified size and colour.

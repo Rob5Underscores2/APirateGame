@@ -135,13 +135,13 @@ public class Player extends LivingEntity implements InputProcessor {
         }
 
         if(keycode == Input.Keys.A) {
-            // Assessmnent 3 - changed to make turning more responsive
+            // Assessment 3 - changed to make turning more responsive
             turningLeft = true;
             return true;
         }
 
         if(keycode == Input.Keys.D) {
-            // Assessmnent 3 - changed to make turning more responsive
+            // Assessment 3 - changed to make turning more responsive
             turningRight = true;
             return true;
         }
@@ -167,7 +167,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
 
         if(keycode == Input.Keys.A) {
-            // Assessmnent 3 - changed to make turning more responsive
+            // Assessment 3 - changed to make turning more responsive
             turningLeft = false;
             return true;
         }
