@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
+import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 
 import java.util.Optional;
 import java.util.Random;

@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
-import uk.ac.york.sepr4.object.entity.NPCBuilder;
+import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
+import uk.ac.york.sepr4.object.entity.npc.NPCBuilder;
 import uk.ac.york.sepr4.object.entity.Player;
 
 import java.util.Optional;

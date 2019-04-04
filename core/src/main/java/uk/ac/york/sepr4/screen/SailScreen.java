@@ -15,10 +15,8 @@ import uk.ac.york.sepr4.io.SailInputProcessor;
 import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
-import uk.ac.york.sepr4.object.entity.NPCBoat;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.item.RewardManager;
-import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
@@ -152,7 +150,7 @@ public class SailScreen extends PirateScreen {
             }
         }
 
-        for (uk.ac.york.sepr4.object.entity.NPCBoat NPCBoat : gameInstance.getEntityManager().getNpcList()) {
+        for (uk.ac.york.sepr4.object.entity.npc.NPCBoat NPCBoat : gameInstance.getEntityManager().getNpcList()) {
             if (NPCBoat.getHealth() < NPCBoat.getMaxHealth()) {
                 if (!getStage().getActors().contains(NPCBoat.getHealthBar(), true)) {
                     getStage().addActor(NPCBoat.getHealthBar());

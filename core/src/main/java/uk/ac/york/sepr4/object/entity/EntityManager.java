@@ -10,6 +10,7 @@ import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
+import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 import uk.ac.york.sepr4.object.projectile.ProjectileManager;
 
 import java.util.ArrayList;

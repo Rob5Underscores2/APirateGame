@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
+import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 import uk.ac.york.sepr4.utils.AIUtil;
 import uk.ac.york.sepr4.io.FileManager;
 

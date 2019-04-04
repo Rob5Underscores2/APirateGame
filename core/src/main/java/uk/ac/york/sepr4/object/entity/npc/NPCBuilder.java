@@ -1,4 +1,4 @@
-package uk.ac.york.sepr4.object.entity;
+package uk.ac.york.sepr4.object.entity.npc;
 
 import com.badlogic.gdx.math.Vector2;
 import uk.ac.york.sepr4.object.building.College;
