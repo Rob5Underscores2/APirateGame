@@ -11,7 +11,7 @@ import uk.ac.york.sepr4.hud.PauseHUD;
 import uk.ac.york.sepr4.hud.StatsHUD;
 import uk.ac.york.sepr4.object.PirateMap;
 import uk.ac.york.sepr4.object.building.BuildingManager;
-import uk.ac.york.sepr4.object.building.ShopUI;
+import uk.ac.york.sepr4.object.crew.CrewBank;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.quest.QuestManager;
@@ -29,6 +29,7 @@ public class GameInstance {
     private PirateMap pirateMap;
     private TiledMapRenderer tiledMapRenderer;
 
+    private CrewBank crewBank;
     private RewardManager itemManager;
     private EntityManager entityManager;
     private QuestManager questManager;
@@ -37,8 +38,6 @@ public class GameInstance {
     private StatsHUD statsHUD;
     private MessageHUD messageHUD;
     private PauseHUD pauseHUD;
-
-    private ShopUI shopUI;
 
     private boolean paused = false;
 
@@ -51,6 +50,7 @@ public class GameInstance {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(pirateMap.getTiledMap(), 1 / 2f);
 
         // Initialize game managers
+        this.crewBank = new CrewBank();
         this.itemManager = new RewardManager();
         this.entityManager = new EntityManager(this);
         this.questManager = new QuestManager(entityManager);

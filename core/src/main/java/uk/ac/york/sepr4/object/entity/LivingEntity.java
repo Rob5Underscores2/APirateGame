@@ -126,23 +126,4 @@ public abstract class LivingEntity extends Entity {
 
         return false;
     }
-
-    //Added for Assessment 3: tripleFire method to enable the triple fire upgrade for the player
-    /***
-      * Make a LivingEntity fire 3 bullets
-      * @param angle angle at which to fire
-      * @param damage damage the bullet will deal
-      * @return true if cooldown sufficient and shot has been fired
-      */
-    public boolean tripleFire(float angle, double damage) {
-        EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
-        if (currentCooldown >= reqCooldown) {
-            setCurrentCooldown(0f);
-            entityManager.getProjectileManager().spawnProjectile(this, getSpeed(), angle, damage);
-            entityManager.getProjectileManager().spawnProjectile(this, getSpeed(), angle + 0.15f, damage);
-            entityManager.getProjectileManager().spawnProjectile(this, getSpeed(), angle - 0.15f, damage);
-            return true;
-        }
-        return false;
-    }
 }

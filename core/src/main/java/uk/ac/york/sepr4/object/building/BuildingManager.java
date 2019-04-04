@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 import uk.ac.york.sepr4.object.entity.npc.NPCBuilder;
 import uk.ac.york.sepr4.object.entity.Player;
@@ -130,7 +131,15 @@ public class BuildingManager {
                 if(building instanceof College) {
                     colleges.add((College) building);
                 } else if (building instanceof Department) {
-                    departments.add((Department) building);
+                    Department department = (Department) building;
+                    Optional<CrewMember> optionalCrewMember =
+                            gameInstance.getCrewBank().getCrewFromID(department.getCrewMemberId());
+                    if(optionalCrewMember.isPresent()) {
+                        department.setCrewMember(optionalCrewMember.get());
+                        departments.add(department);
+                    } else {
+                        Gdx.app.error("BuildingManager", "Failed to load " + building.getName() + ": Crew Member ID not valid!");
+                    }
                 } else if (building instanceof MinigameBuilding) {
                     taverns.add((MinigameBuilding) building);
                 }

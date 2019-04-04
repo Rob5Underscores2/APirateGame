@@ -2,16 +2,22 @@
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
     "name": "Computer Science",
-    "mapObjectStr": "compsci"
+    "mapObjectStr": "compsci",
+    "healCost": 5,
+    "crewMemberId": 1
   },
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
     "name": "Physics",
-    "mapObjectStr": "physics"
+    "mapObjectStr": "physics",
+    "healCost": 4,
+    "crewMemberId": 2
   },
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
     "name": "Biology",
-    "mapObjectStr": "biology"
+    "mapObjectStr": "biology",
+    "healCost": 3,
+    "crewMemberId": 3
   }
 ]

@@ -1,17 +1,12 @@
 package uk.ac.york.sepr4.object.item;
 
-import com.badlogic.gdx.utils.Array;
 import lombok.Data;
-
 import java.util.Random;
 
 @Data
 public class RewardManager {
 
-    private Array<Item> items;
-
     private static Integer baseXP = 10, baseGold = 100;
-
 
     public static Reward generateReward(Integer difficulty) {
         Reward reward = generateReward();

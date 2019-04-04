@@ -10,18 +10,12 @@ public class Reward {
 
     private Integer xp;
     private Integer gold;
-    private List<Item> items;
 
     public Reward() {}
 
     public Reward(Integer xp, Integer gold) {
         this.xp = xp;
         this.gold = gold;
-        this.items = new ArrayList<>();
-    }
-
-    public void addItem(Item item) {
-        this.items.add(item);
     }
 
 }

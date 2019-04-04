@@ -8,7 +8,9 @@ import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
+import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.screen.DepartmentScreen;
 import uk.ac.york.sepr4.screen.MinigameScreen;
 
 import java.util.Optional;
@@ -35,9 +37,25 @@ public class SailInputProcessor implements InputProcessor {
             if(optionalBuilding.isPresent()) {
                 Building building = optionalBuilding.get();
                 if(building instanceof Department) {
-
+                    gameInstance.fadeSwitchScreen(new DepartmentScreen(gameInstance, (Department) building));
+                    return true;
                 } else if (building instanceof MinigameBuilding) {
                     gameInstance.fadeSwitchScreen(new MinigameScreen(gameInstance));
+                    return true;
+                }
+            }
+        }
+
+        if(gameInstance.getCrewBank().getCrewKeys().contains(Input.Keys.toString(keycode))) {
+            Optional<CrewMember> crewMember = gameInstance.getCrewBank().getCrewFromKey(Input.Keys.toString(keycode));
+            if(crewMember.isPresent()) {
+                CrewMember crewMember1 = crewMember.get();
+                if(gameInstance.getEntityManager().getOrCreatePlayer().getCrewMembers().contains(crewMember1)) {
+                    if(!crewMember.get().fire()) {
+                        Gdx.app.debug("SIP", "CrewMember: ON COOL DOWN!");
+                    }
+                } else {
+                    Gdx.app.debug("SIP", "CrewMember: NOT UNLOCKED!");
                 }
             }
         }
@@ -45,6 +63,7 @@ public class SailInputProcessor implements InputProcessor {
         if(keycode == Input.Keys.L){
             // DEBUG code used to test minigame easily!
             gameInstance.fadeSwitchScreen(new MinigameScreen(gameInstance));
+            return true;
         }
 
         if (keycode == Input.Keys.ESCAPE) {
@@ -76,12 +95,7 @@ public class SailInputProcessor implements InputProcessor {
             float fireAngle = (float) (-Math.atan2(player.getCentre().x - clickLoc.x, player.getCentre().y - clickLoc.y));
             Gdx.app.debug("SailScreen", "Firing: Click at (rad) " + fireAngle);
             //Added for Assessment 3: Allow player to use triple shot
-            if (player.isTripleShot()) {
-                if (player.tripleFire(fireAngle, player.getBulletDamage())) {
-                    Gdx.app.debug("SailScreen", "Firing: Error! (cooldown?)");
-                }
-            }
-            else if (player.fire(fireAngle, player.getBulletDamage())) {
+            if (!player.fire(fireAngle, player.getDamage())) {
                 Gdx.app.debug("SailScreen", "Firing: Error! (cooldown?)");
             }
             return true;

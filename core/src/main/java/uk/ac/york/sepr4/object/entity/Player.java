@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
-import uk.ac.york.sepr4.object.item.Item;
+import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.io.FileManager;
@@ -18,11 +18,10 @@ import java.util.List;
 public class Player extends LivingEntity implements InputProcessor {
 
     private Integer balance = 0, xp = 0, level = 1;
-    private List<Item> inventory = new ArrayList<>();
     private List<College> captured = new ArrayList<>();
-    private boolean turningLeft, turningRight, tripleShot = false;
-    private double bulletDamage = 5;
+    private boolean turningLeft, turningRight;
 
+    private List<CrewMember> crewMembers = new ArrayList<>();
 
     public Player(Vector2 pos) {
         super(FileManager.PLAYER, pos);
@@ -50,8 +49,13 @@ public class Player extends LivingEntity implements InputProcessor {
             }
             angle += ((angularSpeed * deltaTime) * (getSpeed() / getMaxSpeed())) % (float) (2 * Math.PI);
             setAngle(angle);
+            decrementCrewCooldown(deltaTime);
             super.act(deltaTime);
         }
+    }
+
+    public void decrementCrewCooldown(float delta) {
+        crewMembers.forEach(crewMember -> crewMember.decrementCooldown(delta));
     }
 
     public void capture(College college) {
@@ -80,7 +84,6 @@ public class Player extends LivingEntity implements InputProcessor {
     public void issueReward(Reward reward) {
         addBalance(reward.getGold());
         addXP(reward.getXp());
-        addItems(reward.getItems());
     }
 
     public void addBalance(Integer val) {
@@ -88,9 +91,6 @@ public class Player extends LivingEntity implements InputProcessor {
     }
     public void addXP(Integer val) {
         xp+=val;
-    }
-    public void addItems(List<Item> items) {
-        inventory.addAll(items);
     }
 
 

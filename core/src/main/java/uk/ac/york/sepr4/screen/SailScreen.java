@@ -130,13 +130,6 @@ public class SailScreen extends PirateScreen {
             }
             shapeRenderer.end();
         }
-
-
-        //Added for assessment 3: enabled changes to SailHUD for entering shops
-//        if(inDepartment) {
-//            gameInstance.getShopUI().getStage().act();
-//            gameInstance.getShopUI().getStage().draw();
-//        }
     }
 
     /**
@@ -234,32 +227,5 @@ public class SailScreen extends PirateScreen {
                 }
             }
         }
-    }
-
-
-    //Added for assessment 3: Methods to enter and exit departments
-    /**
-     * Switch the interface to interact with a department
-     * @param name the name of the department
-     */
-//    public void enterDepartment(String name) {
-//        try {
-//            //this.shopUI = new ShopUI(this, name);
-//        } catch (NameNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//        //Gdx.input.setInputProcessor(shopUI.getStage());
-//        inDepartment = true;
-//        paused = true;
-//    }
-
-    /**
-     * Exit department
-     * Should only be called when in a department
-     */
-    public void exitDepartment() {
-        //shopUI.dispose();
-        //inDepartment = false;
-        //paused = false;
     }
 }
