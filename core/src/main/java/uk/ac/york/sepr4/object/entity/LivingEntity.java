@@ -15,8 +15,8 @@ public abstract class LivingEntity extends Entity {
 
     private Double health = 20.0, maxHealth = 20.0, damage = 5.0;
     private boolean isAccelerating, isBraking, isDead, isDying, onFire;
-    private float turningSpeed = 2.3f;
-    private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 100f, angularSpeed = 0f, acceleration = 40f;
+    private float turningSpeed = 2f;
+    private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 150f, angularSpeed = 0f, acceleration = 40f;
 
     //TODO: Better ways to monitor this
     private int collidedWithIsland = 0, colliedWithBoat = 0;
@@ -86,7 +86,7 @@ public abstract class LivingEntity extends Entity {
                 }
             } else {
                 if (speed > 0) {
-                    speed -= 20f * deltaTime;
+                    speed -= 30f * deltaTime;
                 }
             }
             setSpeed(speed);

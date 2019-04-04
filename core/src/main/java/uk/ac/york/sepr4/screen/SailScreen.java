@@ -62,6 +62,7 @@ public class SailScreen extends PirateScreen {
             shapeRenderer = new ShapeRenderer();
         }
 
+        getOrthographicCamera().zoom = 1.5f;
 
         //Set input processor and focus
         getInputMultiplexer().addProcessor(gameInstance.getEntityManager().getOrCreatePlayer());

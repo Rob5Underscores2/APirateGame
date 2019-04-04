@@ -9,8 +9,7 @@ import java.util.Random;
 
 public class NPCBuilder {
 
-    private float speed = 0f, maxSpeed = 100f, range = 500f, accuracy = 0.5f, idealDistFromTarget = 250f,
-            gradientFromNormalDist = 50f, reqCooldown = 0.8f;
+    private float speed = 0f, maxSpeed = 100f, range = 500f, accuracy = 0.5f, reqCooldown = 0.8f;
     private Double health = 15.0, maxHealth = 15.0, damage = 5.0;
     private Integer turningSpeed = 2;
 
@@ -41,8 +40,6 @@ public class NPCBuilder {
         npcBoat.setAccuracy(accuracy + difficulty/50);
         npcBoat.setMaxSpeed(difficulty+maxSpeed);
         npcBoat.setRange(range);
-        npcBoat.setIdealDistFromTarget(idealDistFromTarget);
-        npcBoat.setGradientForNormalDist(gradientFromNormalDist);
         npcBoat.setMaxHealth(difficulty + maxHealth);
         npcBoat.setHealth(npcBoat.getMaxHealth());
         npcBoat.setTurningSpeed(Math.round(difficulty/50)+turningSpeed);

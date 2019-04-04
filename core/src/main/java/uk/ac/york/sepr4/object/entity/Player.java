@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
-import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.item.Item;
@@ -23,7 +22,6 @@ public class Player extends LivingEntity implements InputProcessor {
     private List<College> captured = new ArrayList<>();
     private boolean turningLeft, turningRight, tripleShot = false;
     private double bulletDamage = 5;
-    private int num  = 1;
 
 
     public Player(Vector2 pos) {
@@ -34,12 +32,6 @@ public class Player extends LivingEntity implements InputProcessor {
         //testing
         //setMaxHealth(1000.0);
         //setHealth(1000.0);
-
-        //Changed for Assessment 3: only default values instead of computations in the constructor
-        setMaxHealth(20.0);
-        setHealth(getMaxHealth());
-        setMaxSpeed(100f);
-        setDamage(0.5);
 
         setOnFire(true);
     }
@@ -175,7 +167,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
         if(keycode == Input.Keys.M) {
             //minimap
-            SailScreen.getInstance().getOrthographicCamera().zoom = 1;
+            SailScreen.getInstance().getOrthographicCamera().zoom = 1.5f;
             return true;
         }
         return false;
