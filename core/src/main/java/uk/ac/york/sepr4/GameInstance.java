@@ -62,8 +62,6 @@ public class GameInstance {
         this.pauseHUD = new PauseHUD(this);
 
         sailScreen = new SailScreen(this);
-
-        start();
     }
 
     public void start() {

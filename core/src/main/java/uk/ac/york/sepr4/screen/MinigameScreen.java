@@ -14,6 +14,7 @@ import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.io.MinigameInputProcessor;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.utils.StyleManager;
+
 import java.util.Random;
 
 public class MinigameScreen extends PirateScreen {

@@ -5,14 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
-import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
+import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.building.College;
-import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
-import uk.ac.york.sepr4.io.FileManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -2,9 +2,6 @@ package uk.ac.york.sepr4.object.item;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 public class Reward {
 

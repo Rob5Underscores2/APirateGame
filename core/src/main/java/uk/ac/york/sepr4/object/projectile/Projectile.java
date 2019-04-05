@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import lombok.Data;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
-import uk.ac.york.sepr4.io.FileManager;
 
 @Data
 public class Projectile extends Entity {

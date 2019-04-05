@@ -1,8 +1,8 @@
 package uk.ac.york.sepr4.object.entity.npc;
 
 import com.badlogic.gdx.math.Vector2;
-import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.io.FileManager;
+import uk.ac.york.sepr4.object.building.College;
 
 import java.util.Optional;
 import java.util.Random;

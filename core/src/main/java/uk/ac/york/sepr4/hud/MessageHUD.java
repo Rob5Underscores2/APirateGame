@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import lombok.Getter;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
-import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
+import uk.ac.york.sepr4.utils.StyleManager;
 
 import java.util.Optional;
 
@@ -33,9 +33,9 @@ public class MessageHUD {
     private Table table;
 
     /***
-     * Class responsible for storing and updating SailHUD variables.
+     * Class responsible for storing and updating MessageHUD variables.
      * Creates table which is drawn to the stage!
-     * @param sailScreen instance of SailScreen from which to get SailHUD values.
+     * @param gameInstance from which to get MessageHUD variables.
      */
     public MessageHUD(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
@@ -58,7 +58,7 @@ public class MessageHUD {
         table.setFillParent(true);
 
         // Assessment 3: Add the department prompt
-        locationPromptLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        locationPromptLabel = new Label("", StyleManager.generateLabelStyle(20, Color.BLACK));
         table.add(locationPromptLabel).padBottom(Value.percentHeight(0.05f, table)).expandX();
 
 

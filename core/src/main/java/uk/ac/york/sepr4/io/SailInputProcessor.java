@@ -8,7 +8,6 @@ import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.object.building.Building;
 import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.building.MinigameBuilding;
-import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.screen.DepartmentScreen;
 import uk.ac.york.sepr4.screen.MinigameScreen;

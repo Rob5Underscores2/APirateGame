@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import lombok.Data;
-import uk.ac.york.sepr4.screen.SailScreen;
 
 @Data
 public abstract class Entity extends Actor {
