@@ -4,7 +4,7 @@
     "name": "Halifax College",
     "mapObjectStr": "halifax",
     "bossName": "Mud-Man",
-
+    "crewMemberId": 1,
     "bossDifficulty": 30,
     "spawnChance": 0.2,
     "enemyDifficulty": 30
@@ -14,7 +14,7 @@
     "name": "James College",
     "mapObjectStr": "james",
     "bossName": "PE Teacher",
-
+    "crewMemberId": 2,
     "bossDifficulty": 130,
     "spawnChance": 0.6,
     "enemyDifficulty": 130
@@ -24,7 +24,7 @@
     "name": "Constantine College",
     "mapObjectStr": "constantine",
     "bossName": "Big Boi",
-
+    "crewMemberId": 3,
     "bossDifficulty": 80,
     "spawnChance": 0.4,
     "enemyDifficulty": 80
@@ -34,7 +34,7 @@
     "name": "Langwith College",
     "mapObjectStr": "langwith",
     "bossName": "GlassHouse Manager",
-
+    "crewMemberId": 4,
     "bossDifficulty": 200,
     "spawnChance": 0.8,
     "enemyDifficulty": 200
@@ -44,7 +44,7 @@
     "name": "Derwent College",
     "mapObjectStr": "derwent",
     "bossName": "Asbest-Boss",
-
+    "crewMemberId": 5,
     "bossDifficulty": 350,
     "spawnChance": 1.0,
     "enemyDifficulty": 350

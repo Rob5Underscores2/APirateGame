@@ -69,6 +69,8 @@ public class GameInstance {
     public void start() {
         Gdx.app.debug("GameInstance", "Starting Instance");
         switchScreen(sailScreen);
+
+        entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(1).get());
     }
 
     /***

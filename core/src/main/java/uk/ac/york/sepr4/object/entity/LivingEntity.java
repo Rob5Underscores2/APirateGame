@@ -112,14 +112,13 @@ public abstract class LivingEntity extends Entity {
     /***
      * Called when a LivingEntity is to fire a shot.
      * @param angle angle at which to fire
-     * @param damage damage the fired bullet deals
      * @return true if cooldown sufficient and shot has been fired
      */
-    public boolean fire(float angle, double damage) {
+    public boolean fire(float angle) {
         EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
             if (currentCooldown >= reqCooldown) {
                 setCurrentCooldown(0f);
-                entityManager.getProjectileManager().spawnProjectile( this, getSpeed(), angle, damage);
+                entityManager.getProjectileManager().spawnProjectile( this, getSpeed(), angle, getDamage());
                 entityManager.getAnimationManager().addFiringAnimation(this,angle - (float)Math.PI/2);
                 return true;
             }

@@ -168,13 +168,13 @@ public class AIUtil {
                 if (target.getSpeed() < target.getMaxSpeed() / 5) {
                     float fireangle = npcBoat.getAngleTowardsEntity(target);
                     //Calls fire at angle
-                    npcBoat.fire((float) (fireangle + (-(1 / npcBoat.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcBoat.getAccuracy()) * (Math.PI / 32)))), npcBoat.getDamage());
+                    npcBoat.fire((float) (fireangle + (-(1 / npcBoat.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcBoat.getAccuracy()) * (Math.PI / 32)))));
                 } else {
                     //Stops the AI shooting at distances that are longer than 3 seconds due to infinte inteception points, if going parrell
                     if (AIUtil.timeForPerfectAngleToCollide(npcBoat, target, AIUtil.thetaForAngleDiffrence(AIUtil.normalizeAngle(target.getAngle()), npcBoat.getAngleTowardsEntity(target)), 100) < 3) {
                         float fireangle = AIUtil.perfectAngleToCollide(npcBoat, target, 100);
                         //calls fire at angle
-                        npcBoat.fire((float) (fireangle + (-(1 / npcBoat.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcBoat.getAccuracy()) * (Math.PI / 32)))), npcBoat.getDamage());
+                        npcBoat.fire((float) (fireangle + (-(1 / npcBoat.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcBoat.getAccuracy()) * (Math.PI / 32)))));
                     }
                 }
                 //******************************

@@ -8,7 +8,7 @@ public abstract class CrewMember {
     private String name, key;
     private Integer id, baseUpgradeCost, upgradeCostMultiplier, level = 1, maxLevel;
     private Double baseDamage;
-    private float cooldown, currentCooldown;
+    private float cooldown, currentCooldown = 0f;
 
     public CrewMember(Integer id, String name, String key, Double baseDamage,
                       Integer baseUpgradeCost, Integer upgradeCostMultiplier, Integer maxLevel, float cooldown) {
@@ -34,16 +34,19 @@ public abstract class CrewMember {
         level++;
     }
 
-    public abstract boolean fire();
+    public abstract boolean fire(float angle);
 
     public void decrementCooldown(float delta) {
-        if(currentCooldown>delta) {
+        if(currentCooldown<delta) {
             currentCooldown = 0f;
         } else {
             currentCooldown-=delta;
         }
     }
 
-    protected abstract Double getDamage();
+    protected Double getDamage() {
+        //each level increase damage by 50% of basedamage of each projectile fired by this crew member
+        return baseDamage + (baseDamage * (level-1) * 0.5);
+    }
 
 }

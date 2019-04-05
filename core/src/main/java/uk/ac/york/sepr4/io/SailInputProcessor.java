@@ -45,19 +45,14 @@ public class SailInputProcessor implements InputProcessor {
                 }
             }
         }
-
+        if(keycode == Input.Keys.NUM_1) {
+            gameInstance.getEntityManager().getOrCreatePlayer().setSelectedCrewMember(Optional.empty());
+            return true;
+        }
         if(gameInstance.getCrewBank().getCrewKeys().contains(Input.Keys.toString(keycode))) {
-            Optional<CrewMember> crewMember = gameInstance.getCrewBank().getCrewFromKey(Input.Keys.toString(keycode));
-            if(crewMember.isPresent()) {
-                CrewMember crewMember1 = crewMember.get();
-                if(gameInstance.getEntityManager().getOrCreatePlayer().getCrewMembers().contains(crewMember1)) {
-                    if(!crewMember.get().fire()) {
-                        Gdx.app.debug("SIP", "CrewMember: ON COOL DOWN!");
-                    }
-                } else {
-                    Gdx.app.debug("SIP", "CrewMember: NOT UNLOCKED!");
-                }
-            }
+            gameInstance.getEntityManager().getOrCreatePlayer().setSelectedCrewMember(
+                    gameInstance.getCrewBank().getCrewFromKey(Input.Keys.toString(keycode)));
+            return true;
         }
 
         if(keycode == Input.Keys.L){
@@ -95,7 +90,7 @@ public class SailInputProcessor implements InputProcessor {
             float fireAngle = (float) (-Math.atan2(player.getCentre().x - clickLoc.x, player.getCentre().y - clickLoc.y));
             Gdx.app.debug("SailScreen", "Firing: Click at (rad) " + fireAngle);
             //Added for Assessment 3: Allow player to use triple shot
-            if (!player.fire(fireAngle, player.getDamage())) {
+            if (!player.fire(fireAngle)) {
                 Gdx.app.debug("SailScreen", "Firing: Error! (cooldown?)");
             }
             return true;

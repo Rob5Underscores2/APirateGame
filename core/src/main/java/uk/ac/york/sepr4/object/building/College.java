@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.object.PirateMap;
+import uk.ac.york.sepr4.object.crew.CrewMember;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class College extends Building {
     //Must be defined in file
     private String bossName;
     private Double bossDifficulty;
+    private Integer crewMemberId;
 
     //Can be set optionally in file to change college parameters
     private float spawnRange = 500f;
@@ -26,6 +28,7 @@ public class College extends Building {
     //Set from college file variables
     private List<College> requiresCollege; //yet to be implemented (questing)
     private boolean bossSpawned = false;
+    private CrewMember crewMember;
 
 
     public College() {

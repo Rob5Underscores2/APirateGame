@@ -124,13 +124,22 @@ public class BuildingManager {
         }
     }
 
-    //TODO: Make generic method
+    //TODO: Make generic method and remove duplicate code
     private void loadBuildings(Array<Building> loading) {
         for(Building building : loading) {
             if (building.load(gameInstance.getPirateMap())) {
                 if(building instanceof College) {
-                    colleges.add((College) building);
-                } else if (building instanceof Department) {
+                    //check if crew member id is defined
+                    College college = (College) building;
+                    Optional<CrewMember> optionalCrewMember =
+                            gameInstance.getCrewBank().getCrewFromID(college.getCrewMemberId());
+                    if(optionalCrewMember.isPresent()) {
+                        college.setCrewMember(optionalCrewMember.get());
+                        colleges.add(college);
+                    } else {
+                        Gdx.app.error("BuildingManager", "Failed to load " + building.getName() + ": Crew Member ID not valid!");
+                    }                } else if (building instanceof Department) {
+                    //check if crew member id is defined
                     Department department = (Department) building;
                     Optional<CrewMember> optionalCrewMember =
                             gameInstance.getCrewBank().getCrewFromID(department.getCrewMemberId());

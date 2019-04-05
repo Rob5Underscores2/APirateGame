@@ -9,7 +9,6 @@ public class CrewBank {
     private List<CrewMember> crew = new ArrayList<>();
 
     public CrewBank() {
-
         crew.add(new DoubleShotCrew());
     }
 

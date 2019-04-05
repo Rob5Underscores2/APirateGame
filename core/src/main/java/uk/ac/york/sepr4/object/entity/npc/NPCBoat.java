@@ -133,8 +133,11 @@ public class NPCBoat extends NPCEntity {
             player.issueReward(reward);
 
             if(isBoss && getAllied().isPresent()) {
+                College allied =  getAllied().get();
                 Gdx.app.debug("NPCBoat", "Boss defeated - capturing allied college!");
-                player.capture(getAllied().get());
+                player.capture(allied);
+                Gdx.app.debug("NPCBoat", "Unlocked crew member: "+allied.getCrewMember().getName());
+                player.addCrewMember(allied.getCrewMember());
             }
 
             return false;

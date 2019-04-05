@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.crew.CrewMember;
@@ -13,6 +14,7 @@ import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.io.FileManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class Player extends LivingEntity implements InputProcessor {
@@ -22,6 +24,7 @@ public class Player extends LivingEntity implements InputProcessor {
     private boolean turningLeft, turningRight;
 
     private List<CrewMember> crewMembers = new ArrayList<>();
+    private Optional<CrewMember> selectedCrewMember = Optional.empty();
 
     public Player(Vector2 pos) {
         super(FileManager.PLAYER, pos);
@@ -52,6 +55,23 @@ public class Player extends LivingEntity implements InputProcessor {
             decrementCrewCooldown(deltaTime);
             super.act(deltaTime);
         }
+    }
+
+    @Override
+    public boolean fire(float angle) {
+        if(!selectedCrewMember.isPresent()) {
+            //normal fire
+            super.fire(angle);
+        } else {
+            CrewMember crewMember = selectedCrewMember.get();
+            crewMember.fire(angle);
+        }
+
+        return false;
+    }
+
+    public void addCrewMember(CrewMember crewMember) {
+        crewMembers.add(crewMember);
     }
 
     public void decrementCrewCooldown(float delta) {
