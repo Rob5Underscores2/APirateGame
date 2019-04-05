@@ -10,18 +10,24 @@ import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Data
 public abstract class LivingEntity extends Entity {
 
     private Double health = 20.0, maxHealth = 20.0, damage = 5.0;
-    private boolean isAccelerating, isBraking, isDead, isDying, onFire;
-    private float turningSpeed = 2f;
-    private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 150f, angularSpeed = 0f, acceleration = 40f;
+    private boolean isAccelerating, isBraking, isDead, isDying;
+    private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 150f,
+            angularSpeed = 0f, acceleration = 40f, turningSpeed = 2f, onFire = 0f;
 
     //TODO: Better ways to monitor this
     private int collidedWithIsland = 0, colliedWithBoat = 0;
 
     private HealthBar healthBar;
+
+    private List<UUID> animationIDs = new ArrayList<>();
 
     public LivingEntity(Texture texture, Vector2 pos) {
         super(texture, pos);
@@ -58,6 +64,10 @@ public abstract class LivingEntity extends Entity {
         }
     }
 
+    public boolean isOnFire() {
+        return onFire > 0f;
+    }
+
     public HealthBar getHealthBar() {
         this.healthBar.update();
         return this.healthBar;
@@ -68,6 +78,13 @@ public abstract class LivingEntity extends Entity {
         //Assessment 3 - do nothing if paused
 
         setCurrentCooldown(getCurrentCooldown() + deltaTime);
+        if(isOnFire()) {
+            if(getOnFire()>deltaTime) {
+                setOnFire(getOnFire() - deltaTime);
+            } else {
+                setOnFire(0f);
+            }
+        }
 
         if (!this.isDying) {
             float speed = getSpeed();

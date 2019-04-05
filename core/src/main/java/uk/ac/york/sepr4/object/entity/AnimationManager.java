@@ -19,7 +19,7 @@ public class AnimationManager {
     //For cleanup
     private Array<Entity> lastFrameEffects = new Array<>(); //Needed for clean up
     private HashMap<LivingEntity, Float> deathAnimations = new HashMap<>();
-    private HashMap<LivingEntity, Integer> boatFireAnimation = new HashMap<>();
+    private List<FireAnimation> fireAnimations = new ArrayList<>();
 
     //Death Animations
     private Array<Entity> effects = new Array<>();
@@ -52,7 +52,7 @@ public class AnimationManager {
         handleDeathAnimations(delta);
         updateWaterTrails();
         updateFiringAnimations();
-       // updateBoatFire();
+        updateBoatFire();
         stage.getActors().removeAll(this.lastFrameEffects, true);
 
         for (Entity effect : effects) {
@@ -84,43 +84,32 @@ public class AnimationManager {
     private void updateBoatFire() {
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
             if(livingEntity.isOnFire()) {
-                if(!boatFireAnimation.containsKey(livingEntity)) {
-                    Gdx.app.log("am", "fire new");
-
-                    boatFireAnimation.put(livingEntity, 1);
-                } else {
-                    Integer frame = boatFireAnimation.get(livingEntity);
-                    if(frame >= 17) {
-                        Gdx.app.log("am", "fire reset");
-                        frame = 1;
-                    } else {
-                        frame++;
+                boolean isAdded = false;
+                for(FireAnimation fireAnimation : fireAnimations) {
+                    if(fireAnimation.getLE().equals(livingEntity)) {
+                        isAdded = true;
+                        break;
                     }
-                    Gdx.app.log("am", "fire inc");
-
-                    boatFireAnimation.replace(livingEntity, frame);
+                }
+                if(!isAdded) {
+                    fireAnimations.add(new FireAnimation(livingEntity));
                 }
             } else {
-
-                //remove if animating and boat is no longer on fire
-                if(boatFireAnimation.containsKey(livingEntity)) {
-                    Gdx.app.log("am", "fire off");
-                    boatFireAnimation.remove(livingEntity);
+                FireAnimation toRemove = null;
+                for(FireAnimation fireAnimation : fireAnimations) {
+                    if(fireAnimation.getLE().equals(livingEntity)) {
+                        toRemove = fireAnimation;
+                        break;
+                    }
+                }
+                if(toRemove !=null) {
+                    fireAnimations.remove(toRemove);
                 }
             }
         }
 
-        for(LivingEntity livingEntity : boatFireAnimation.keySet()) {
-            Integer frame = boatFireAnimation.get(livingEntity);
-
-            Gdx.app.log("am", "fire "+frame);
-            addEffect(livingEntity.getCentre().x,
-                    livingEntity.getCentre().y,
-                    livingEntity.getAngle(),
-                    FileManager.fire_on_boat(frame),
-                    (int)livingEntity.getWidth(),
-                    (int)livingEntity.getHeight(),
-                    1);
+        for(FireAnimation fireAnimation:fireAnimations) {
+            fireAnimation.spawnEffects(this);
         }
     }
 
@@ -156,8 +145,6 @@ public class AnimationManager {
     public void createWaterTrail(LivingEntity livingEntity) {
         waterTrails.add(new WaterTrail(livingEntity));
     }
-    
-
 
     //Death Animations
     //TODO: Cleanup like other animations
@@ -196,6 +183,30 @@ public class AnimationManager {
 
 
 
+}
+
+class FireAnimation {
+    @Getter
+    private LivingEntity lE;
+    private int frame = 1;
+
+    public FireAnimation(LivingEntity lE) {
+        this.lE = lE;
+    }
+    public void spawnEffects(AnimationManager animationManager) {
+        animationManager.addEffect(lE.getCentre().x,
+                lE.getCentre().y,
+                lE.getAngle(),
+                FileManager.fire_on_boat(frame),
+                (int)lE.getWidth(),
+                (int)lE.getHeight(),
+                1);
+        if(frame==17) {
+            frame=1;
+        } else {
+            frame++;
+        }
+    }
 }
 
 class CannonExplosion {

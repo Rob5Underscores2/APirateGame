@@ -35,7 +35,7 @@ public class Player extends LivingEntity implements InputProcessor {
         //setMaxHealth(1000.0);
         //setHealth(1000.0);
 
-        setOnFire(true);
+        setOnFire(15f);
     }
 
     @Override
