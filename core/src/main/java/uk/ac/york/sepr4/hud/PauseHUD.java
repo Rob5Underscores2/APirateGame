@@ -71,7 +71,7 @@ public class PauseHUD {
         crewTable.add().padLeft(Value.percentWidth(0.75f, crewTable)).expandX();
         Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(40, Color.BLACK));
         crewTable.add(crewHeader).padTop(Value.percentHeight(0.05f, crewTable)).expandX();
-        Gdx.app.log("CMS", ""+player.getCrewMembers().size());
+
         for(CrewMember crew : player.getCrewMembers()) {
             Label crewLabel = new Label(crew.getName()+" : "+crew.getLevel()+"/"+crew.getMaxLevel(),
                     StyleManager.generateLabelStyle(30, Color.GOLD));

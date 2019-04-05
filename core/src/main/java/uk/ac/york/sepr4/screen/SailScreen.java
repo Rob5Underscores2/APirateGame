@@ -18,13 +18,11 @@ import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
-import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.utils.AIUtil;
 
 /**
  * SailScreen is main game class. Holds data related to current player including the
- * {@link BuildingManager}, {@link RewardManager},
- * {@link QuestManager} and {@link EntityManager}
+ * {@link BuildingManager}, {@link RewardManager} and {@link EntityManager}
  * <p>
  * Responds to keyboard and mouse input by the player. InputMultiplexer used to combine input processing in both
  * this class (mouse clicks) and {@link Player} class (key press).

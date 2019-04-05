@@ -14,7 +14,6 @@ import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.crew.CrewBank;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.item.RewardManager;
-import uk.ac.york.sepr4.object.quest.QuestManager;
 import uk.ac.york.sepr4.screen.PirateScreen;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.screen.TransitionScreen;
@@ -32,7 +31,6 @@ public class GameInstance {
     private CrewBank crewBank;
     private RewardManager itemManager;
     private EntityManager entityManager;
-    private QuestManager questManager;
     private BuildingManager buildingManager;
 
     private StatsHUD statsHUD;
@@ -53,7 +51,6 @@ public class GameInstance {
         this.crewBank = new CrewBank();
         this.itemManager = new RewardManager();
         this.entityManager = new EntityManager(this);
-        this.questManager = new QuestManager(entityManager);
         this.buildingManager = new BuildingManager(this);
 
         // Create HUDs (display for xp, gold, etc..)
