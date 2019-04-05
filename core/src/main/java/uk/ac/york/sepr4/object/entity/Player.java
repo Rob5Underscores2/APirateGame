@@ -8,6 +8,7 @@ import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.building.College;
+import uk.ac.york.sepr4.object.building.Department;
 import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
@@ -114,7 +115,7 @@ public class Player extends LivingEntity implements InputProcessor {
 
 
     //Added for Assessment 3: Allow interaction with shops
-    public boolean deduceBalance(int deduction) {
+    public boolean deductBalance(int deduction) {
         if(deduction <= balance) {
             balance -= deduction;
             return true;

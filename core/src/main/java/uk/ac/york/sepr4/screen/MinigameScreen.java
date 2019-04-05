@@ -162,7 +162,7 @@ public class MinigameScreen extends PirateScreen {
     private void startGame(MinigameDifficulty difficulty) {
         Player player = getGameInstance().getEntityManager().getOrCreatePlayer();
         if(player.getBalance() >= difficulty.getCost()) {
-            player.deduceBalance(difficulty.getCost());
+            player.deductBalance(difficulty.getCost());
             setCountdowns(difficulty);
             this.difficulty = difficulty;
             getStage().clear();

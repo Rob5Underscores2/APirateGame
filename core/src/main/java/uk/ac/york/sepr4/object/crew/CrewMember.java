@@ -8,10 +8,10 @@ public abstract class CrewMember {
     private String name, key;
     private Integer id, baseUpgradeCost, upgradeCostMultiplier, level = 1, maxLevel;
     private Double baseDamage;
-    private float cooldown, currentCooldown = 0f;
+    private float baseCooldown, currentCooldown = 0f;
 
     public CrewMember(Integer id, String name, String key, Double baseDamage,
-                      Integer baseUpgradeCost, Integer upgradeCostMultiplier, Integer maxLevel, float cooldown) {
+                      Integer baseUpgradeCost, Integer upgradeCostMultiplier, Integer maxLevel, float baseCooldown) {
         this.id = id;
         this.name = name;
         this.key = key;
@@ -19,7 +19,7 @@ public abstract class CrewMember {
         this.baseUpgradeCost = baseUpgradeCost;
         this.upgradeCostMultiplier = upgradeCostMultiplier;
         this.maxLevel = maxLevel;
-        this.cooldown = cooldown;
+        this.baseCooldown = baseCooldown;
     }
 
     public Integer getUpgradeCost() {
@@ -42,6 +42,11 @@ public abstract class CrewMember {
         } else {
             currentCooldown-=delta;
         }
+    }
+
+    protected float getCooldown() {
+        //each level reduces cooldown by 1 second
+        return baseCooldown - (1*(level-1));
     }
 
     protected Double getDamage() {
