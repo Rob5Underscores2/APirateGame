@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.building.Department;
+import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.utils.StyleManager;
 
@@ -36,17 +37,18 @@ public class DepartmentScreen extends PirateScreen {
     }
 
     private void createShopMenu() {
+        Player player = gameInstance.getEntityManager().getOrCreatePlayer();
+
         Table table = new Table();
         table.top();
         table.setFillParent(true);
 
         Label welcome = new Label("Welcome to the "+department.getName()+" Department!",
                 StyleManager.generateLabelStyle(30, Color.GOLD));
-        TextButton repair = new TextButton("Click to repair your ship for "+getHealCost(), StyleManager.generateTBStyle(25, Color.GREEN, Color.GRAY));
+        TextButton repair = new TextButton("Click to repair your ship for "+getHealCost()+ " gold!", StyleManager.generateTBStyle(25, Color.GREEN, Color.GRAY));
         repair.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
-                Player player = gameInstance.getEntityManager().getOrCreatePlayer();
                 if(player.getBalance()>=getHealCost()) {
                     //has enough gold
                     player.deductBalance(getHealCost());
@@ -63,9 +65,32 @@ public class DepartmentScreen extends PirateScreen {
             }
         });
 
+        Label noUpgrade = new Label("You have not unlocked this crew member!", StyleManager.generateLabelStyle(25, Color.BLACK));
+
+        CrewMember crewMember = department.getCrewMember();
+        TextButton upgrade = new TextButton("Upgrade " + crewMember.getName() + " for "+crewMember.getUpgradeCost()+" gold!",
+                StyleManager.generateTBStyle(25, Color.BLUE, Color.GRAY));
+        upgrade.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent ev, float x, float y) {
+                if(player.getBalance()>=crewMember.getUpgradeCost()) {
+                    //has enough gold
+                    player.deductBalance(crewMember.getUpgradeCost());
+                    crewMember.upgrade();
+                }
+            }
+        });
+
         table.add(welcome).padTop(Value.percentHeight(0.05f, table)).expandX();
         table.row();
         table.add(repair).padTop(Value.percentHeight(0.02f, table)).expandX();
+        table.row();
+        if(player.getCrewMembers().contains(crewMember)) {
+            //has unlocked crew member
+            table.add(upgrade).padTop(Value.percentHeight(0.02f, table)).expandX();;
+        } else {
+            table.add(noUpgrade).padTop(Value.percentHeight(0.02f, table)).expandX();
+        }
         table.row();
         table.add(exit).padTop(Value.percentHeight(0.02f, table)).expandX();
 
