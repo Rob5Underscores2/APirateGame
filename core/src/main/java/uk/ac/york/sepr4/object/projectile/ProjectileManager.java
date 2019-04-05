@@ -29,8 +29,9 @@ public class ProjectileManager {
     }
 
     //added for crew members to be able to spawn projectiles with different textures
-    public void spawnProjectile(LivingEntity livingEntity, Texture texture, float speed, float angle, double damage) {
+    public void spawnProjectile(LivingEntity livingEntity, Texture texture, float speed, float angle, double damage, boolean fire) {
         Projectile projectile = new Projectile(livingEntity, texture, speed, angle, damage);
+        projectile.setOnFire(true);
         projectileList.add(projectile);
     }
 

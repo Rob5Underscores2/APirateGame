@@ -181,8 +181,6 @@ public class AnimationManager {
         }
     }
 
-
-
 }
 
 class FireAnimation {

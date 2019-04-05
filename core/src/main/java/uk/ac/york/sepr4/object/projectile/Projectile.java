@@ -14,7 +14,7 @@ public class Projectile extends Entity {
     private Double damage = 5.0;
     private Integer baseSpeed = 100;
 
-    private boolean active = true;
+    private boolean active = true, onFire = false;
 
     /**
      * Added for Assessment 3: overloaded projectile constructor to add a damage parameter
@@ -24,7 +24,7 @@ public class Projectile extends Entity {
      * @param damage Damage dealt on impact by projectile
      */
     public Projectile(LivingEntity shooter, Texture texture, float speed, float angle, double damage){
-         super(FileManager.CANNONBALL, shooter.getCentre());
+         super(texture, shooter.getCentre());
 
         this.shooter = shooter;
 

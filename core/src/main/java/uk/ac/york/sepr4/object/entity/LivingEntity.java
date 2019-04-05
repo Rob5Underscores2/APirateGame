@@ -20,7 +20,7 @@ public abstract class LivingEntity extends Entity {
     private Double health = 20.0, maxHealth = 20.0, damage = 5.0;
     private boolean isAccelerating, isBraking, isDead, isDying;
     private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 150f,
-            angularSpeed = 0f, acceleration = 40f, turningSpeed = 2f, onFire = 0f;
+            angularSpeed = 0f, acceleration = 40f, turningSpeed = 2f, onFire = 0f, fireDmgCooldown;
 
     //TODO: Better ways to monitor this
     private int collidedWithIsland = 0, colliedWithBoat = 0;
@@ -86,6 +86,15 @@ public abstract class LivingEntity extends Entity {
             }
         }
 
+        if(isOnFire()) {
+            if (fireDmgCooldown - deltaTime < 0) {
+                setHealth(getHealth() - 0.5);
+                setFireDmgCooldown(0.5f);
+            } else {
+                fireDmgCooldown-=deltaTime;
+            }
+        }
+
         if (!this.isDying) {
             float speed = getSpeed();
 
@@ -122,6 +131,10 @@ public abstract class LivingEntity extends Entity {
             kill(false);
             Gdx.app.debug("LE", "LE died.");
             return false;
+        }
+        if(projectile.isOnFire()) {
+            setOnFire(5f);
+
         }
         return true;
     }

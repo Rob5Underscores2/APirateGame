@@ -22,7 +22,7 @@ public class DoubleShotCrew extends CrewMember {
             //can fire
             EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
             Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
-            entityManager.getProjectileManager().spawnProjectile(player, player.getSpeed(), player.getAngle(), getDamage());
+            entityManager.getProjectileManager().spawnProjectile(player, player.getSpeed(), angle, getDamage());
             entityManager.getAnimationManager().addFiringAnimation(player, angle - (float)Math.PI/2);
             setCurrentCooldown(getCooldown());
 

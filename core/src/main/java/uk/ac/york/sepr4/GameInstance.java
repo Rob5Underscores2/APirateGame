@@ -71,6 +71,7 @@ public class GameInstance {
         switchScreen(sailScreen);
 
         entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(1).get());
+        entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(2).get());
     }
 
     /***

@@ -10,6 +10,7 @@ public class CrewBank {
 
     public CrewBank() {
         crew.add(new DoubleShotCrew());
+        crew.add(new FireShotCrew());
     }
 
     public List<String> getCrewKeys() {
