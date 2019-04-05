@@ -67,6 +67,10 @@ public class GameInstance {
 
         entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(1).get());
         entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(2).get());
+        entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(3).get());
+        entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(4).get());
+        entityManager.getOrCreatePlayer().addCrewMember(crewBank.getCrewFromID(5).get());
+
     }
 
     /***

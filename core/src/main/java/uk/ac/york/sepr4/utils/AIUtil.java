@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Array;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
-
 import java.util.Optional;
 import java.util.Random;
 
@@ -15,7 +14,6 @@ public class AIUtil {
 
     private static float idealDistFromTarget = 250f; //For the distance you want NPC to be away from target (Goldy Lox Zone)
     private static float gradientForNormalDist = 50f; //This is the standard deviation of the normal distabution
-
 
     public static void actNPCBoat(NPCBoat npcBoat, float deltaTime) {
         //Clears arrays for later use

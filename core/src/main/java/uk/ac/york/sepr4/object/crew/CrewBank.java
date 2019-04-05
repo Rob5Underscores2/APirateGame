@@ -9,8 +9,11 @@ public class CrewBank {
     private List<CrewMember> crew = new ArrayList<>();
 
     public CrewBank() {
-        crew.add(new DoubleShotCrew());
-        crew.add(new FireShotCrew());
+        crew.add(new DoubleShotCrew()); //1
+        crew.add(new FireShotCrew()); //2
+        crew.add(new BoostCrew()); //3
+        crew.add(new PowerShotCrew()); //4
+        crew.add(new TripleShotCrew()); //5
     }
 
     public List<String> getCrewKeys() {
