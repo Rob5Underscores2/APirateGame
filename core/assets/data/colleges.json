@@ -5,6 +5,7 @@
     "mapObjectStr": "halifax",
     "bossName": "Mud-Man",
     "crewMemberId": 1,
+    "bossSpawnThreshold": 5,
     "bossDifficulty": 30,
     "spawnChance": 0.2,
     "enemyDifficulty": 30
@@ -15,6 +16,7 @@
     "mapObjectStr": "james",
     "bossName": "PE Teacher",
     "crewMemberId": 2,
+    "bossSpawnThreshold": 5,
     "bossDifficulty": 130,
     "spawnChance": 0.6,
     "enemyDifficulty": 130
@@ -25,6 +27,7 @@
     "mapObjectStr": "constantine",
     "bossName": "Big Boi",
     "crewMemberId": 3,
+    "bossSpawnThreshold": 5,
     "bossDifficulty": 80,
     "spawnChance": 0.4,
     "enemyDifficulty": 80
@@ -35,6 +38,7 @@
     "mapObjectStr": "langwith",
     "bossName": "GlassHouse Manager",
     "crewMemberId": 4,
+    "bossSpawnThreshold": 5,
     "bossDifficulty": 200,
     "spawnChance": 0.8,
     "enemyDifficulty": 200
@@ -45,6 +49,7 @@
     "mapObjectStr": "derwent",
     "bossName": "Asbest-Boss",
     "crewMemberId": 5,
+    "bossSpawnThreshold": 5,
     "bossDifficulty": 350,
     "spawnChance": 1.0,
     "enemyDifficulty": 350

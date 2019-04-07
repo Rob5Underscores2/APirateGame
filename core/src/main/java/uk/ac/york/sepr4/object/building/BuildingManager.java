@@ -54,7 +54,7 @@ public class BuildingManager {
     //TODO: Could have a cooldown here
     public void checkBossSpawn() {
         for(College college : colleges) {
-            if(!college.isBossSpawned()) {
+            if(!college.isBossSpawned() && college.getBossSpawnThreshold() == 0) {
                 //TODO: Add collision check for boss spawn
                 Player player = gameInstance.getEntityManager().getOrCreatePlayer();
                 if (college.getBuildingZone().contains(player.getRectBounds())) {

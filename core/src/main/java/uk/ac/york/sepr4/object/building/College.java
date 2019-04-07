@@ -17,7 +17,8 @@ public class College extends Building {
     //Must be defined in file
     private String bossName;
     private Double bossDifficulty;
-    private Integer crewMemberId;
+    //id of crew member to be upgraded here and number of normal boats before boss spawns
+    private Integer crewMemberId, bossSpawnThreshold;
 
     //Can be set optionally in file to change college parameters
     private float spawnRange = 500f;
@@ -51,6 +52,10 @@ public class College extends Building {
             }
         }
         return false;
+    }
+
+    public void decrementBossSpawnThreshold() {
+        bossSpawnThreshold--;
     }
 
     /***
