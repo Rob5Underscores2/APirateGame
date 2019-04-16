@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
 import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
+import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.utils.AIUtil;
 
 import java.util.*;
@@ -81,9 +82,9 @@ public class AnimationManager {
         }
     }
 
-    private void updatekrackensprite(){
+    private void updateKrackenSprite(){
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
-            if(livingEntity.isKracken()) {
+            if(livingEntity instanceof NPCMonster) {
                 boolean isAdded = false;
                 for(KrackenAnimation krackenAnimation : krackenAnimation) {
                     if(krackenAnimation.getLE().equals(livingEntity)) {
