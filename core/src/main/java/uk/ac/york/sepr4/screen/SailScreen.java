@@ -77,6 +77,7 @@ public class SailScreen extends PirateScreen {
     private void startGame() {
         getStage().addActor(gameInstance.getEntityManager().getOrCreatePlayer());
 
+        //TODO: DEBUG add kraken next to spawn
         Vector2 pos = gameInstance.getPirateMap().getSpawnPoint();
         pos.add(100f, 100f);
         getStage().addActor(new NPCMonster(pos, 10));

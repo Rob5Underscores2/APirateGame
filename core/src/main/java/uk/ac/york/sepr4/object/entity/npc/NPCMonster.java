@@ -2,7 +2,11 @@ package uk.ac.york.sepr4.object.entity.npc;
 
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
+import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.io.FileManager;
+import uk.ac.york.sepr4.object.entity.EntityManager;
+import uk.ac.york.sepr4.object.projectile.Projectile;
+import uk.ac.york.sepr4.utils.AIUtil;
 
 @Data
 public class NPCMonster extends NPCEntity {
@@ -22,11 +26,45 @@ public class NPCMonster extends NPCEntity {
      * @param deltaTime time since last act
      */
     public void act(float deltaTime) {
-        //AIUtil.actNPCBoat(this, deltaTime); //need actnpcmonster
+        AIUtil.actNPCEntity(this, deltaTime); //need actnpcmonster
         upateKrakenSprite(deltaTime);
         super.act(deltaTime);
     }
 
+    /***
+     * Overrides from LivingEntity.
+     * NPCMonster should not take damage (as per requirements, must be avoided!)
+     * @param projectile which damaged LivingEntity
+     * @return true (stil alive)
+     */
+    @Override
+    public boolean damage(Projectile projectile) {
+        return true;
+    }
+
+    /***
+     * Overrides from LivingEntity
+     * NPCMonster should have different projectile texture and no cannon firing animation!
+     * @param angle angle at which to fire
+     * @return
+     */
+    @Override
+    public boolean fire(float angle) {
+        EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
+        if (getCurrentCooldown() >= getReqCooldown()) {
+            setCurrentCooldown(0f);
+            entityManager.getProjectileManager().spawnProjectile( this, FileManager.REDFIRE,
+                    getSpeed(), angle, getDamage(), false);
+            return true;
+        }
+
+        return false;
+    }
+
+    /***
+     * Update Kraken Sprite to next frame if enough time has passed since last update.
+     * @param delta time since last render
+     */
     private void upateKrakenSprite(float delta) {
         if(spriteUpdate <= delta) {
             spriteUpdate = 0.05f;

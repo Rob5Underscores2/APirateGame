@@ -146,7 +146,7 @@ public abstract class LivingEntity extends Entity {
      */
     public boolean fire(float angle) {
         EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
-            if (currentCooldown >= reqCooldown) {
+            if (getCurrentCooldown() >= getReqCooldown()) {
                 setCurrentCooldown(0f);
                 entityManager.getProjectileManager().spawnProjectile( this, getSpeed(), angle, getDamage());
                 entityManager.getAnimationManager().addFiringAnimation(this,angle - (float)Math.PI/2);

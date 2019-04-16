@@ -11,7 +11,6 @@ import uk.ac.york.sepr4.object.building.MinigameBuilding;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.screen.DepartmentScreen;
 import uk.ac.york.sepr4.screen.MinigameScreen;
-
 import java.util.Optional;
 
 public class SailInputProcessor implements InputProcessor {
@@ -27,6 +26,7 @@ public class SailInputProcessor implements InputProcessor {
     public boolean keyDown(int keycode) {
 
         if (keycode == Input.Keys.E) {
+            //attempt to enter building (successful if one in range of player)
             Optional<Building> optionalBuilding = gameInstance.getEntityManager().getPlayerLocation();
             if(optionalBuilding.isPresent()) {
                 Building building = optionalBuilding.get();
@@ -56,6 +56,7 @@ public class SailInputProcessor implements InputProcessor {
         }
 
         if (keycode == Input.Keys.ESCAPE) {
+            //toggle pause menu on/off
             gameInstance.setPaused(!gameInstance.isPaused());
             return true;
         }

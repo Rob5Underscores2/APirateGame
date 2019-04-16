@@ -35,7 +35,7 @@ public class NPCBoat extends NPCEntity {
      * @param deltaTime time since last act
      */
     public void act(float deltaTime) {
-        AIUtil.actNPCBoat(this, deltaTime);
+        AIUtil.actNPCEntity(this, deltaTime);
         super.act(deltaTime);
     }
 
