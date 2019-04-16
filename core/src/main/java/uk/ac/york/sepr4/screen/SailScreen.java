@@ -88,6 +88,8 @@ public class SailScreen extends PirateScreen {
         Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         BuildingManager buildingManager = gameInstance.getBuildingManager();
         EntityManager entityManager = gameInstance.getEntityManager();
+
+        //check if game over
         if (player.isDead()) {
             Gdx.app.debug("SailScreen", "Player Died!");
             gameInstance.fadeSwitchScreen(new EndScreen(gameInstance, false));

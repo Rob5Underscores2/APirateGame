@@ -179,7 +179,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
 
         if(keycode == Input.Keys.D) {
-            // Assessmnent 3 - changed to make turning more responsive
+            // Assessment 3 - changed to make turning more responsive
             // TODO: unexpected behaviour when changing input managers
             turningRight = false;
             return true;

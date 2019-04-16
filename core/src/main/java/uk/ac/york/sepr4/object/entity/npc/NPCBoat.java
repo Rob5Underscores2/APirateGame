@@ -13,7 +13,6 @@ import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
-
 import java.util.Optional;
 
 @Data
@@ -23,7 +22,6 @@ public class NPCBoat extends NPCEntity {
     private Optional<College> allied = Optional.empty(); //This is the faction the boat is allied with
 
     private boolean isBoss;
-
 
     public NPCBoat(Texture texture, Vector2 pos, float difficulty) {
         super(texture, pos, difficulty);
@@ -40,7 +38,6 @@ public class NPCBoat extends NPCEntity {
         AIUtil.actNPCBoat(this, deltaTime);
         super.act(deltaTime);
     }
-
 
     /**
      * Checks whether the livingEntity is part of the same college/faction
@@ -117,7 +114,7 @@ public class NPCBoat extends NPCEntity {
     /***
      * Override
      * @param projectile which damaged LivingEntity
-     * @return true if NPCboat still alive
+     * @return true if NPCBoat still alive
      */
     @Override
     public boolean damage(Projectile projectile) {
