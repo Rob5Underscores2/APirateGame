@@ -42,7 +42,7 @@ public class FileManager {
     }
 
     public static Texture krackenFrames(int number) {
-        return new Texture(Gdx.files.internal(path+"krackenFrames/kr_frame"+number+".png"));
+        return new Texture(Gdx.files.internal(path+"kracken_sprite/kr_frame"+number+".png"));
     }
 
     private static final String minigamePath = "images/minigame/";
