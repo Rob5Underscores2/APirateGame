@@ -20,6 +20,7 @@ public class AnimationManager {
     private Array<Entity> lastFrameEffects = new Array<>(); //Needed for clean up
     private HashMap<LivingEntity, Float> deathAnimations = new HashMap<>();
     private List<FireAnimation> fireAnimations = new ArrayList<>();
+    private List<KrackenAnimation> krackenAnimation = new ArrayList<>();
 
     //Death Animations
     private Array<Entity> effects = new Array<>();
@@ -77,6 +78,27 @@ public class AnimationManager {
             } else {
                 cannonExplosion.spawnEffects(this);
             }
+        }
+    }
+
+    private void updatekrackensprite(){
+        for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
+            if(livingEntity.isKracken()) {
+                boolean isAdded = false;
+                for(KrackenAnimation krackenAnimation : krackenAnimation) {
+                    if(krackenAnimation.getLE().equals(livingEntity)) {
+                        isAdded = true;
+                        break;
+                    }
+                }
+                if(!isAdded) {
+                    krackenAnimation.add(new KrackenAnimation(livingEntity));
+                }
+            }
+        }
+
+        for(KrackenAnimation krackenAnimation:krackenAnimation) {
+            krackenAnimation.spawnEffects(this);
         }
     }
 
@@ -181,6 +203,28 @@ public class AnimationManager {
         }
     }
 
+}
+
+class KrackenAnimation{
+    @Getter
+    private LivingEntity lE;
+    private int frame = 1;
+
+    public KrackenAnimation(LivingEntity lE) {this.lE = lE;}
+    public void spawnEffects(AnimationManager animationManager) {
+        animationManager.addEffect(lE.getCentre().x,
+                lE.getCentre().y,
+                lE.getAngle(),
+                FileManager.krackenFrames(frame),
+                (int)lE.getWidth(),
+                (int)lE.getHeight(),
+                1);
+        if(frame==17) {
+            frame=1;
+        } else {
+            frame++;
+        }
+    }
 }
 
 class FireAnimation {
