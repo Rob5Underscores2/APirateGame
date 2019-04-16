@@ -220,7 +220,7 @@ public class AIUtil {
      * @param thetaTP
      * @return theta (Green angle)
      */
-    private static float thetaForAngleDiffrence(double thetaP, double thetaTP){
+    public static float thetaForAngleDiffrence(double thetaP, double thetaTP){
         double theta;
         if (thetaP <= thetaTP && thetaTP <= Math.PI) {
             theta = thetaP + (Math.PI - thetaTP);
@@ -246,7 +246,7 @@ public class AIUtil {
      * @param thetaTP
      * @return right = true, left = false
      */
-    private static boolean rightThetaForAngleDiffrence(double thetaP, double thetaTP){
+    public static boolean rightThetaForAngleDiffrence(double thetaP, double thetaTP){
         boolean right;
         if (thetaP <= thetaTP && thetaTP <= Math.PI) {
             right = true;
@@ -323,7 +323,7 @@ public class AIUtil {
     }
 
     //Functions for knowing the force due the distance
-    private static float normalDistFromMean(float dist, float standardDeviation, float mean) {
+    public static float normalDistFromMean(float dist, float standardDeviation, float mean) {
         //Formula for a normal distbution to find the height
         double fx = (1 / (Math.sqrt(2 * Math.PI) * (double)standardDeviation)) * Math.pow(Math.E, -(Math.pow((dist - (double) mean), 2) / (2 * Math.pow((double)standardDeviation, 2))));
         //Just incase it goes over 1 for error stops
@@ -346,7 +346,7 @@ public class AIUtil {
     //********************
 
     //Returns the diffrence between 2 angles where angle 1 is the one with the respect (Same as doing a dot product of 2 vectors basically)
-    private static float angleDiffrenceBetweenTwoAngles(float angle1, float angle2){
+    public static float angleDiffrenceBetweenTwoAngles(float angle1, float angle2){
         angle1 = normalizeAngle(angle1);
         angle2 = normalizeAngle(angle2);
         if (normalizeAngle(angle2 - angle1) > Math.PI){
@@ -357,7 +357,7 @@ public class AIUtil {
     }
 
     //Returns true if angle2 is right of angle1 (meaning if I travel along angle1 then turn to angle2 will it be left or right)
-    private static boolean rightForAngleDiffrenceBetweenTwoAngles(float angle1, float angle2){
+    public static boolean rightForAngleDiffrenceBetweenTwoAngles(float angle1, float angle2){
         angle1 = normalizeAngle(angle1);
         angle2 = normalizeAngle(angle2);
         if (angleDiffrenceBetweenTwoAngles(angle1, angle2) >= 0){

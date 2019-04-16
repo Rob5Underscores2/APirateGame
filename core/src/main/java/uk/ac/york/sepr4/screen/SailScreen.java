@@ -80,7 +80,7 @@ public class SailScreen extends PirateScreen {
         //TODO: DEBUG add kraken next to spawn
         Vector2 pos = gameInstance.getPirateMap().getSpawnPoint();
         pos.add(100f, 100f);
-        getStage().addActor(new NPCMonster(pos, 10));
+        //getStage().addActor(new NPCMonster(pos, 10));
     }
 
     /**
