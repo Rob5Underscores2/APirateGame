@@ -26,11 +26,6 @@ public class SailInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
 
-        if (keycode == Input.Keys.SPACE) {
-                gameInstance.setPaused(!gameInstance.isPaused());
-                return true;
-        }
-
         if (keycode == Input.Keys.E) {
             Optional<Building> optionalBuilding = gameInstance.getEntityManager().getPlayerLocation();
             if(optionalBuilding.isPresent()) {
@@ -61,7 +56,8 @@ public class SailInputProcessor implements InputProcessor {
         }
 
         if (keycode == Input.Keys.ESCAPE) {
-            Gdx.app.exit();
+            gameInstance.setPaused(!gameInstance.isPaused());
+            return true;
         }
 
         return false;

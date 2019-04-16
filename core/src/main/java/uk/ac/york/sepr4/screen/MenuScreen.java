@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.APirateGame;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.utils.StyleManager;
 
 public class MenuScreen implements Screen {
@@ -67,6 +69,19 @@ public class MenuScreen implements Screen {
 
     }
 
+    /***
+     * Draw screen's background.
+     */
+    private void drawMenuBackground() {
+        //sets background texture
+        stage.getBatch().begin();
+        Texture texture = FileManager.menuScreenBG;
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+        stage.getBatch().draw(texture, 0, 0, stage.getWidth(), stage.getHeight());
+        stage.getBatch().end();
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -77,6 +92,8 @@ public class MenuScreen implements Screen {
         // clear the screen ready for next set of images to be drawn
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        drawMenuBackground();
 
         stage.act();
         stage.draw();

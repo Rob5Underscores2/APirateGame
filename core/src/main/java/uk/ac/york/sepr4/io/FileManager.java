@@ -11,7 +11,7 @@ public class FileManager {
     private static final String path = "images/sprites/";
 
     public static Texture menuScreenBG = new Texture(Gdx.files.internal("images/screen/menu.png"));
-
+    public static Texture departmentScreenBG = new Texture(Gdx.files.internal("images/screen/department.png"));
 
     public static Texture ENEMY = new Texture(Gdx.files.internal(path+"enemy.png"));
     public static Texture DEADENEMY = new Texture(Gdx.files.internal(path+"deadEnemy.png"));

@@ -22,7 +22,7 @@ public class DepartmentScreen extends PirateScreen {
     private GameInstance gameInstance;
 
     public DepartmentScreen(GameInstance gameInstance, Department department) {
-        super(gameInstance, new Stage(new ScreenViewport()), FileManager.menuScreenBG);
+        super(gameInstance, new Stage(new ScreenViewport()), FileManager.departmentScreenBG);
         this.gameInstance = gameInstance;
         this.department = department;
 
