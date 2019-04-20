@@ -31,7 +31,7 @@ public class MinigameScreen extends PirateScreen {
     private Image playerImage, enemyImage;
 
     public MinigameScreen(GameInstance gameInstance) {
-        super(gameInstance, new Stage(new ScreenViewport()), FileManager.menuScreenBG);
+        super(gameInstance, new Stage(new ScreenViewport()), FileManager.miniGameMenu);
 
         getInputMultiplexer().addProcessor(new MinigameInputProcessor(this));
 
