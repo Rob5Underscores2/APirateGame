@@ -17,7 +17,6 @@ import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.Player;
-import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;

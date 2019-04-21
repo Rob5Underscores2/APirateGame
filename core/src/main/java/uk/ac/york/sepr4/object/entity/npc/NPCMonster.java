@@ -15,7 +15,7 @@ public class NPCMonster extends NPCEntity {
     private float spriteUpdate = 0.05f;
 
     public NPCMonster(Vector2 pos, float difficulty) {
-        super(FileManager.krackenFrames(1), pos, difficulty);
+        super(FileManager.krackenFrame(1), pos, difficulty);
     }
 
     /***
@@ -73,7 +73,7 @@ public class NPCMonster extends NPCEntity {
             } else {
                 spriteFrame++;
             }
-            setTexture(FileManager.krackenFrames(spriteFrame));
+            setTexture(FileManager.krackenFrame(spriteFrame));
         } else {
             spriteUpdate-=delta;
         }

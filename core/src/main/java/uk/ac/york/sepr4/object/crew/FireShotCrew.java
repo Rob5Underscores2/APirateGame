@@ -16,7 +16,7 @@ public class FireShotCrew extends CrewMember {
             //can fire
             EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
             Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
-            entityManager.getProjectileManager().spawnProjectile(player, FileManager.CANNONBALL,
+            entityManager.getProjectileManager().spawnProjectile(player, FileManager.CANNONBALL_FIRE,
                     player.getSpeed(), angle, getDamage(), true);
             entityManager.getAnimationManager().addFiringAnimation(player, angle - (float)Math.PI/2);
             setCurrentCooldown(getCooldown());

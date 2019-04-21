@@ -3,6 +3,7 @@ package uk.ac.york.sepr4.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import lombok.Getter;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.Player;
@@ -38,28 +39,38 @@ public class PauseHUD {
         stage = new Stage(new FitViewport(w, h, new OrthographicCamera()));
 
         createTable();
-        createCollegeTable();
+        createControlsTable();
         createCrewTable();
     }
 
-    private void createCollegeTable() {
-        Player player = gameInstance.getEntityManager().getOrCreatePlayer();
-        Table objectiveTable = new Table();
-        objectiveTable.top();
-        objectiveTable.setFillParent(true);
+    private void createControlsTable() {
+        Table controlsTable = new Table();
+        controlsTable.top();
+        controlsTable.setFillParent(true);
+        controlsTable.padRight(Value.percentWidth(0.5f, controlsTable))
+                .padLeft(Value.percentWidth(0.15f, controlsTable));
 
-        Label collegesHeader = new Label("Colleges", StyleManager.generateLabelStyle(40, Color.BLACK));
-        objectiveTable.add(collegesHeader).padTop(Value.percentHeight(0.05f, objectiveTable)).expandX();
-        objectiveTable.add().padRight(Value.percentWidth(0.75f, objectiveTable)).expandX();
+        Label controlsHeader = new Label("Controls", StyleManager.generateLabelStyle(40, Color.NAVY));
+        controlsTable.add(controlsHeader).padTop(Value.percentHeight(0.22f, controlsTable)).expandX();
+        controlsTable.row();
 
-        for(College college : gameInstance.getBuildingManager().getColleges()) {
-            boolean isCaptured = player.getCaptured().contains(college);
-            Label collegeLabel = new Label(college.getName(), StyleManager.generateLabelStyle(30, (isCaptured ? Color.GREEN : Color.RED)));
-            objectiveTable.row();
-            objectiveTable.add(collegeLabel).padTop(Value.percentHeight(0.02f, objectiveTable)).expandX();
-        }
+        Label W = new Label("Accelerate : W", StyleManager.generateLabelStyle(30, Color.GOLD));
+        Label A = new Label("Turn Left : A", StyleManager.generateLabelStyle(30, Color.GOLD));
+        Label S = new Label("Slow down : S", StyleManager.generateLabelStyle(30, Color.GOLD));
+        Label D = new Label("Turn Right : D", StyleManager.generateLabelStyle(30, Color.GOLD));
+        Label M = new Label("Open Minimap : M", StyleManager.generateLabelStyle(30, Color.GOLD));
 
-        stage.addActor(objectiveTable);
+        controlsTable.add(W).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
+        controlsTable.row();
+        controlsTable.add(A).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
+        controlsTable.row();
+        controlsTable.add(S).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
+        controlsTable.row();
+        controlsTable.add(D).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
+        controlsTable.row();
+        controlsTable.add(M).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
+
+        stage.addActor(controlsTable);
     }
 
     private void createCrewTable() {
@@ -67,16 +78,17 @@ public class PauseHUD {
         Table crewTable = new Table();
         crewTable.top();
         crewTable.setFillParent(true);
+        //crewTable.debug();
+        crewTable.padLeft(Value.percentWidth(0.5f, crewTable))
+                        .padRight(Value.percentWidth(0.15f, crewTable));
 
-        crewTable.add().padLeft(Value.percentWidth(0.75f, crewTable)).expandX();
-        Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(40, Color.BLACK));
-        crewTable.add(crewHeader).padTop(Value.percentHeight(0.05f, crewTable)).expandX();
+        Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(40, Color.NAVY));
+        crewTable.add(crewHeader).padTop(Value.percentHeight(0.22f, crewTable)).expandX();
 
         for(CrewMember crew : player.getCrewMembers()) {
             Label crewLabel = new Label(crew.getName()+" : "+crew.getLevel()+"/"+crew.getMaxLevel(),
                     StyleManager.generateLabelStyle(30, Color.GOLD));
             crewTable.row();
-            crewTable.add();
             crewTable.add(crewLabel).padTop(Value.percentHeight(0.02f, crewTable)).expandX();
         }
 
@@ -84,6 +96,7 @@ public class PauseHUD {
     }
 
     private void createTable() {
+        Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         //define a table used to organize our sailHud's labels
         Table table = new Table();
         //Top-Align table
@@ -105,13 +118,38 @@ public class PauseHUD {
 
         table.add(pausedLabel)
                 .expandX()
-                .padTop(Value.percentHeight(0.05f, table));
+                .padTop(Value.percentHeight(0.24f, table));
         table.row();
         table.add(btnMenu).expandX();
+        table.row();
+        //College/Goal Tracker
+        Label collegesHeader = new Label("Colleges", StyleManager.generateLabelStyle(40, Color.BLACK));
+        table.add(collegesHeader).padTop(Value.percentHeight(0.11f, table)).expandX();
+
+        for(College college : gameInstance.getBuildingManager().getColleges()) {
+            boolean isCaptured = player.getCaptured().contains(college);
+            Label collegeLabel = new Label(college.getName(), StyleManager.generateLabelStyle(30, (isCaptured ? Color.GREEN : Color.RED)));
+            table.row();
+            table.add(collegeLabel).padTop(Value.percentHeight(0.02f, table)).expandX();
+        }
 
         stage.addActor(table);
 
     }
+
+    /***
+     * Draw pause HUD's background overlay.
+     */
+    private void drawPauseOverlay() {
+        //sets background texture
+        stage.getBatch().begin();
+        Texture texture = FileManager.pauseScreenBG;
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+        stage.getBatch().draw(texture, 0, 0, stage.getWidth(), stage.getHeight());
+        stage.getBatch().end();
+    }
+
     /***
      * Update label values - called during stage render
      */
@@ -119,8 +157,9 @@ public class PauseHUD {
         stage.clear();
 
         createTable();
-        createCollegeTable();
+        createControlsTable();
         createCrewTable();
+        drawPauseOverlay();
 
         stage.act();
         stage.draw();

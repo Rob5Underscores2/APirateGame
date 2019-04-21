@@ -161,7 +161,7 @@ public class AnimationManager {
             Map.Entry<LivingEntity, Float> entry = it.next();
             LivingEntity livingEntity = entry.getKey();
             Float deathTimer = entry.getValue();
-            livingEntity.setTexture(FileManager.DEADENEMY);
+            livingEntity.setTexture(FileManager.DEAD_ENEMY);
             livingEntity.setAlpha(1-(deathTimer/5));
             if (deathTimer < 1/6f) {
                 addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
@@ -197,7 +197,7 @@ class FireAnimation {
         animationManager.addEffect(lE.getCentre().x,
                 lE.getCentre().y,
                 lE.getAngle(),
-                FileManager.fire_on_boat(frame),
+                FileManager.boatFireFrame(frame),
                 (int)lE.getWidth(),
                 (int)lE.getHeight(),
                 1);

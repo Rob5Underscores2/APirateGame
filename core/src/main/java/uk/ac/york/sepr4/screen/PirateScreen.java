@@ -76,8 +76,8 @@ public abstract class PirateScreen implements Screen {
             if (enableStatsHUD) {
                 gameInstance.getStatsHUD().update();
             }
+            stage.draw();
         }
-        stage.draw();
     }
 
     public abstract void renderInner(float delta);

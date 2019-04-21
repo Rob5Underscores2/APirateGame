@@ -75,7 +75,7 @@ public class MenuScreen implements Screen {
     private void drawMenuBackground() {
         //sets background texture
         stage.getBatch().begin();
-        Texture texture = FileManager.menuScreenBG;
+        Texture texture = FileManager.mainMenuScreenBG;
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         stage.getBatch().draw(texture, 0, 0, stage.getWidth(), stage.getHeight());

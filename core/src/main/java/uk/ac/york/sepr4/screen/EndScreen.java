@@ -18,7 +18,7 @@ public class EndScreen extends PirateScreen {
         private boolean win;
 
         public EndScreen(GameInstance gameInstance, boolean win) {
-            super(gameInstance, new Stage(new ScreenViewport()), FileManager.menuScreenBG);
+            super(gameInstance, new Stage(new ScreenViewport()), FileManager.departmentScreenBG);
 
             this.gameInstance = gameInstance;
             this.win = win;
