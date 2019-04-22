@@ -17,6 +17,7 @@ import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
@@ -79,7 +80,7 @@ public class SailScreen extends PirateScreen {
         //TODO: DEBUG add kraken next to spawn
         Vector2 pos = gameInstance.getPirateMap().getSpawnPoint();
         pos.add(100f, 100f);
-        //getStage().addActor(new NPCMonster(pos, 10));
+        getStage().addActor(new NPCMonster(pos, 10));
     }
 
     /**

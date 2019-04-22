@@ -33,6 +33,7 @@ public class FileManager {
             PLAYER = new Texture(Gdx.files.internal(boatPath + "player.png")),
             CANNONBALL = new Texture(Gdx.files.internal(spritePath + "cannonball.png")),
             CANNONBALL_FIRE = new Texture(Gdx.files.internal(spritePath + "cannonball_fire.png")),
+            KRAKEN_WAVE = new Texture(Gdx.files.internal(spritePath + "kraken_wave.png")),
             LOOT = new Texture(Gdx.files.internal(spritePath + "crew.png")),
             EXPLOSION1 = new Texture(Gdx.files.internal(spritePath + "explosion1.png")),
             EXPLOSION2 = new Texture(Gdx.files.internal(spritePath + "explosion2.png")),

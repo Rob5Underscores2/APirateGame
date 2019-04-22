@@ -48,6 +48,7 @@ public class StatsHUD {
 
         stage = new Stage(new FitViewport(w, h, new OrthographicCamera()));
 
+        //background images (wooden effect) for stats
         Image hudTopLeft = new Image(FileManager.hudTopLeft);
         hudTopLeft.setY(Gdx.graphics.getHeight()-hudTopLeft.getHeight());
         stage.addActor(hudTopLeft);

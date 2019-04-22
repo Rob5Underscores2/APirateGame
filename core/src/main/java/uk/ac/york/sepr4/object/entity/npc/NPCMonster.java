@@ -26,7 +26,7 @@ public class NPCMonster extends NPCEntity {
      * @param deltaTime time since last act
      */
     public void act(float deltaTime) {
-        AIUtil.actNPCEntity(this, deltaTime); //need actnpcmonster
+        AIUtil.actNPCEntity(this, deltaTime); //decide where to move/fire
         upateKrakenSprite(deltaTime);
         super.act(deltaTime);
     }
@@ -35,7 +35,7 @@ public class NPCMonster extends NPCEntity {
      * Overrides from LivingEntity.
      * NPCMonster should not take damage (as per requirements, must be avoided!)
      * @param projectile which damaged LivingEntity
-     * @return true (stil alive)
+     * @return true (still alive)
      */
     @Override
     public boolean damage(Projectile projectile) {
@@ -53,7 +53,7 @@ public class NPCMonster extends NPCEntity {
         EntityManager entityManager = GameInstance.INSTANCE.getEntityManager();
         if (getCurrentCooldown() >= getReqCooldown()) {
             setCurrentCooldown(0f);
-            entityManager.getProjectileManager().spawnProjectile( this, FileManager.REDFIRE,
+            entityManager.getProjectileManager().spawnProjectile( this, FileManager.KRAKEN_WAVE,
                     getSpeed(), angle, getDamage(), false);
             return true;
         }
