@@ -48,17 +48,17 @@ public class PauseHUD {
         controlsTable.top();
         controlsTable.setFillParent(true);
         controlsTable.padRight(Value.percentWidth(0.5f, controlsTable))
-                .padLeft(Value.percentWidth(0.15f, controlsTable));
+                .padLeft(Value.percentWidth(0.16f, controlsTable));
 
-        Label controlsHeader = new Label("Controls", StyleManager.generateLabelStyle(40, Color.NAVY));
+        Label controlsHeader = new Label("Controls", StyleManager.generateLabelStyle(35, Color.NAVY));
         controlsTable.add(controlsHeader).padTop(Value.percentHeight(0.22f, controlsTable)).expandX();
         controlsTable.row();
 
-        Label W = new Label("Accelerate : W", StyleManager.generateLabelStyle(30, Color.GOLD));
-        Label A = new Label("Turn Left : A", StyleManager.generateLabelStyle(30, Color.GOLD));
-        Label S = new Label("Slow down : S", StyleManager.generateLabelStyle(30, Color.GOLD));
-        Label D = new Label("Turn Right : D", StyleManager.generateLabelStyle(30, Color.GOLD));
-        Label M = new Label("Open Minimap : M", StyleManager.generateLabelStyle(30, Color.GOLD));
+        Label W = new Label("Accelerate : W", StyleManager.generateLabelStyle(25, Color.GOLD));
+        Label A = new Label("Turn Left : A", StyleManager.generateLabelStyle(25, Color.GOLD));
+        Label S = new Label("Slow down : S", StyleManager.generateLabelStyle(25, Color.GOLD));
+        Label D = new Label("Turn Right : D", StyleManager.generateLabelStyle(25, Color.GOLD));
+        Label M = new Label("Open Minimap : M", StyleManager.generateLabelStyle(25, Color.GOLD));
 
         controlsTable.add(W).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
         controlsTable.row();
@@ -80,14 +80,14 @@ public class PauseHUD {
         crewTable.setFillParent(true);
         //crewTable.debug();
         crewTable.padLeft(Value.percentWidth(0.5f, crewTable))
-                        .padRight(Value.percentWidth(0.15f, crewTable));
+                        .padRight(Value.percentWidth(0.16f, crewTable));
 
-        Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(40, Color.NAVY));
+        Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(35, Color.NAVY));
         crewTable.add(crewHeader).padTop(Value.percentHeight(0.22f, crewTable)).expandX();
 
         for(CrewMember crew : player.getCrewMembers()) {
             Label crewLabel = new Label(crew.getName()+" : "+crew.getLevel()+"/"+crew.getMaxLevel(),
-                    StyleManager.generateLabelStyle(30, Color.GOLD));
+                    StyleManager.generateLabelStyle(25, Color.GOLD));
             crewTable.row();
             crewTable.add(crewLabel).padTop(Value.percentHeight(0.02f, crewTable)).expandX();
         }
@@ -118,17 +118,17 @@ public class PauseHUD {
 
         table.add(pausedLabel)
                 .expandX()
-                .padTop(Value.percentHeight(0.24f, table));
+                .padTop(Value.percentHeight(0.23f, table));
         table.row();
         table.add(btnMenu).expandX();
         table.row();
         //College/Goal Tracker
-        Label collegesHeader = new Label("Colleges", StyleManager.generateLabelStyle(40, Color.BLACK));
+        Label collegesHeader = new Label("Colleges", StyleManager.generateLabelStyle(35, Color.BLACK));
         table.add(collegesHeader).padTop(Value.percentHeight(0.11f, table)).expandX();
 
         for(College college : gameInstance.getBuildingManager().getColleges()) {
             boolean isCaptured = player.getCaptured().contains(college);
-            Label collegeLabel = new Label(college.getName(), StyleManager.generateLabelStyle(30, (isCaptured ? Color.GREEN : Color.RED)));
+            Label collegeLabel = new Label(college.getName(), StyleManager.generateLabelStyle(25, (isCaptured ? Color.GREEN : Color.RED)));
             table.row();
             table.add(collegeLabel).padTop(Value.percentHeight(0.02f, table)).expandX();
         }
