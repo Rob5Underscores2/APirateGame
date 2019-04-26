@@ -112,8 +112,8 @@ public class NPCBoat extends NPCEntity {
         //}
         if (!super.damage(projectile)) {
             //is dead
-            Gdx.app.debug("NPCBoat", "Issuing reward to player!");
             if(projectile.getShooter() instanceof Player) {
+                Gdx.app.debug("NPCBoat", "Issuing reward to player!");
                 Player player = (Player) projectile.getShooter();
                 Reward reward = RewardManager.generateReward((int) getDifficulty());
                 player.issueReward(reward);
