@@ -90,7 +90,7 @@ public class BuildingManager {
         if(random.nextDouble() <= college.getSpawnChance()){
             Optional<Vector2> pos = getValidRandomSpawn(college, 250f);
             if(pos.isPresent()) {
-                NPCBoat boat = new NPCBuilder().generateRandomEnemy( pos.get(), Optional.of(college),
+                NPCBoat boat = new NPCBuilder().generateRandomEnemyBoat( pos.get(), Optional.of(college),
                          boss ? college.getBossDifficulty().floatValue() : college.getEnemyDifficulty().floatValue(), boss);
                 return Optional.of(boat);
             }

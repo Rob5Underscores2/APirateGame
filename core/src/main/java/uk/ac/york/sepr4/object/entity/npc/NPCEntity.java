@@ -19,7 +19,7 @@ import java.util.Optional;
 @Data
 public abstract class NPCEntity extends LivingEntity {
 
-    private float range = 2000f; //How far away it can see livingEntities/objects
+    private float range = 1000f; //How far away it can see livingEntities/objects
     private float accuracy = 0.5f; //This is how accurate this is (currently is (1/0.5)*Math.PI/32 which allows for that much range on both sides of the perfect shot and picks a random angle from that range
 
     private Optional<LivingEntity> lastTarget = Optional.empty(); //This is the target currently being fought
@@ -28,6 +28,7 @@ public abstract class NPCEntity extends LivingEntity {
     private boolean turning = false; //This is wether the boat is turning or not. ~In conjuction these to help turnPreCalc determine the angularSpeed across multiple frames
 
     private int dodging = 0; //Not dodging = 0 anything other than 0 is meaning dodging. this is the amount of frames you want the NPC to dodge for
+    //Adjusted - should be 1-10 for correct balancing
     private float difficulty;
 
     private float targetCheck = 3f; //Timer so target check aint every frame

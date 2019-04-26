@@ -9,7 +9,6 @@ import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.hud.HealthBar;
 import uk.ac.york.sepr4.object.projectile.Projectile;
 import uk.ac.york.sepr4.utils.AIUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +16,9 @@ import java.util.UUID;
 @Data
 public abstract class LivingEntity extends Entity {
 
-    private Double health = 20.0, maxHealth = 20.0, damage = 5.0;
+    private Double health = 10.0, maxHealth = 10.0, damage = 4.0;
     private boolean isAccelerating, isBraking, isDead, isDying;
-    private float currentCooldown = 0f, reqCooldown = 0.5f, maxSpeed = 150f,
+    private float currentCooldown = 0f, reqCooldown = 0.8f, maxSpeed = 100f,
             angularSpeed = 0f, acceleration = 40f, turningSpeed = 2f, onFire = 0f, fireDmgCooldown;
 
     //TODO: Better ways to monitor this

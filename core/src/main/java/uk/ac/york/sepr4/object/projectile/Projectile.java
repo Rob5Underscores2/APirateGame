@@ -11,12 +11,11 @@ public class Projectile extends Entity {
 
     private LivingEntity shooter;
     private Double damage = 5.0;
-    private Integer baseSpeed = 200;
+    private Integer baseSpeed = 125;
 
     private boolean active = true, onFire = false;
 
     /**
-     * Added for Assessment 3: overloaded projectile constructor to add a damage parameter
      * @param shooter The entity shooting the projectile
      * @param speed Speed of the projectile
      * @param angle Angle at which the projectile is shot

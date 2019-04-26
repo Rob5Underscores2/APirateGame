@@ -3,12 +3,12 @@
     "class": "uk.ac.york.sepr4.object.building.College",
     "name": "Halifax College",
     "mapObjectStr": "halifax",
-    "bossName": "Mud-Man",
+    "bossName": "Oleg",
     "crewMemberId": 1,
     "bossSpawnThreshold": 5,
-    "bossDifficulty": 30,
+    "bossDifficulty": 2,
     "spawnChance": 0.2,
-    "enemyDifficulty": 30
+    "enemyDifficulty": 1
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
@@ -17,9 +17,9 @@
     "bossName": "PE Teacher",
     "crewMemberId": 2,
     "bossSpawnThreshold": 5,
-    "bossDifficulty": 130,
+    "bossDifficulty": 3,
     "spawnChance": 0.6,
-    "enemyDifficulty": 130
+    "enemyDifficulty": 2
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
@@ -28,9 +28,9 @@
     "bossName": "Big Boi",
     "crewMemberId": 3,
     "bossSpawnThreshold": 5,
-    "bossDifficulty": 80,
+    "bossDifficulty": 5,
     "spawnChance": 0.4,
-    "enemyDifficulty": 80
+    "enemyDifficulty": 3
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
@@ -39,9 +39,9 @@
     "bossName": "GlassHouse Manager",
     "crewMemberId": 4,
     "bossSpawnThreshold": 5,
-    "bossDifficulty": 200,
+    "bossDifficulty": 7,
     "spawnChance": 0.8,
-    "enemyDifficulty": 200
+    "enemyDifficulty": 5
   },
   {
     "class": "uk.ac.york.sepr4.object.building.College",
@@ -50,8 +50,8 @@
     "bossName": "Asbest-Boss",
     "crewMemberId": 5,
     "bossSpawnThreshold": 5,
-    "bossDifficulty": 350,
+    "bossDifficulty": 10,
     "spawnChance": 1.0,
-    "enemyDifficulty": 350
+    "enemyDifficulty": 8
   }
 ]

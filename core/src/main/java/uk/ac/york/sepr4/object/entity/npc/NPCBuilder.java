@@ -9,10 +9,6 @@ import java.util.Random;
 
 public class NPCBuilder {
 
-    private float speed = 0f, maxSpeed = 100f, range = 500f, accuracy = 0.5f, reqCooldown = 0.8f;
-    private Double health = 15.0, maxHealth = 15.0, damage = 5.0;
-    private Integer turningSpeed = 2;
-
     public NPCBuilder() {}
 
     //Changed for Assessment 3: changed the factory method to create a new boat instead of creating another NPCBuilder
@@ -25,7 +21,7 @@ public class NPCBuilder {
      * @param isBoss Is the NPCBoat a college boss
      * @return An NPCBoat with correct stats
      */
-    public NPCBoat generateRandomEnemy(Vector2 pos, Optional<College> allied, float difficulty, boolean isBoss) {
+    public NPCBoat generateRandomEnemyBoat(Vector2 pos, Optional<College> allied, float difficulty, boolean isBoss) {
         Random random = new Random();
 
         NPCBoat npcBoat;
@@ -39,21 +35,48 @@ public class NPCBuilder {
             npcBoat = new NPCBoat(FileManager.ENEMY, pos, difficulty);
         }
 
-
         npcBoat.setAngle((float) (2*Math.PI*random.nextDouble()));;
-        npcBoat.setAccuracy(accuracy + difficulty/50);
-        npcBoat.setMaxSpeed(difficulty+maxSpeed);
-        npcBoat.setRange(range);
-        npcBoat.setMaxHealth(difficulty + maxHealth);
+        npcBoat.setAccuracy(npcBoat.getAccuracy());
+        //10f extra speed per difficulty leve
+        npcBoat.setMaxSpeed(npcBoat.getMaxSpeed() + (difficulty*10f));
+        //5.0 extra health per difficulty
+        npcBoat.setMaxHealth(npcBoat.getMaxHealth() + (difficulty*5.0));
         npcBoat.setHealth(npcBoat.getMaxHealth());
-        npcBoat.setTurningSpeed(Math.round(difficulty/50)+turningSpeed);
+        //0.25f extra turning speed per level
+        npcBoat.setTurningSpeed(npcBoat.getTurningSpeed() + (difficulty*0.25f));
         npcBoat.setAllied(allied);
         npcBoat.setBoss(isBoss);
-        npcBoat.setDamage(damage + difficulty / 50);
-        npcBoat.setReqCooldown(reqCooldown);
-
+        //2.0 extra damage per level
+        npcBoat.setDamage(npcBoat.getDamage() + (difficulty*2.0));
+        //0.05s less cooldown per level
+        npcBoat.setReqCooldown(npcBoat.getReqCooldown() - (difficulty*0.05f));
 
         return npcBoat;
+    }
+
+    /**
+     * Generate an enemy NPCMonster from base stats and difficulty
+     * @param pos The position the NPCMonster is to have
+     * @param difficulty Arbitrary difficulty value which determines health, damage, speed and accuracy
+     * @return An NPCMonster with correct stats
+     */
+    public NPCMonster generateRandomMonster(Vector2 pos, float difficulty) {
+        Random random = new Random();
+
+        NPCMonster npcMonster = new NPCMonster(pos, difficulty);
+
+        npcMonster.setAngle((float) (2*Math.PI*random.nextDouble()));;
+        //5f extra speed per difficulty level
+        npcMonster.setMaxSpeed(npcMonster.getMaxSpeed() + (difficulty*5f));
+        //0.5f extra turning speed per level
+        npcMonster.setTurningSpeed(npcMonster.getTurningSpeed() + (difficulty*0.5f));
+        npcMonster.setDamage(npcMonster.getDamage() + (difficulty / 50));
+        //4.0 extra damage per level
+        npcMonster.setDamage(npcMonster.getDamage() + (difficulty*4.0));
+        //0.05s less cooldown per level
+        npcMonster.setReqCooldown(npcMonster.getReqCooldown() - (difficulty*0.05f));
+
+        return npcMonster;
     }
 
 }

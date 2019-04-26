@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.GameInstance;
@@ -18,7 +19,7 @@ public class EndScreen extends PirateScreen {
         private boolean win;
 
         public EndScreen(GameInstance gameInstance, boolean win) {
-            super(gameInstance, new Stage(new ScreenViewport()), FileManager.departmentScreenBG);
+            super(gameInstance, new Stage(new ScreenViewport()), FileManager.mainMenuScreenBG);
 
             this.gameInstance = gameInstance;
             this.win = win;
@@ -33,14 +34,15 @@ public class EndScreen extends PirateScreen {
          */
         private void setupScreen() {
             Table table = new Table();
-            table.top();
             table.setFillParent(true);
 
             //set win/lose label
             if (win) {
-                table.add(new Label("You Won!", StyleManager.generateLabelStyle(50, Color.GOLD)));
+                table.add(new Label("You Won!", StyleManager.generateLabelStyle(40, Color.GOLD)))
+                        .padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
             } else {
-                table.add(new Label("You Lost!", StyleManager.generateLabelStyle(50, Color.RED)));
+                table.add(new Label("You Lost!", StyleManager.generateLabelStyle(40, Color.RED)))
+                        .padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
 
             }
             table.row();
@@ -53,7 +55,7 @@ public class EndScreen extends PirateScreen {
                     gameInstance.switchScreen(gameInstance.getGame().getMenuScreen());
                 }
             });
-            table.add(textButton);
+            table.add(textButton).padTop(Value.percentHeight(0.02f, table));
 
             getStage().addActor(table);
         }

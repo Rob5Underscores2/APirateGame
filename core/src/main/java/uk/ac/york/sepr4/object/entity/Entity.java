@@ -44,16 +44,8 @@ public abstract class Entity extends Actor {
         //Assessment 3 do nothing if paused
 
         super.act(deltaTime);
-
-        float speed = getSpeed();
-        float angle = getAngle();
-
-        float y = getY();
-        float x = getX();
-        y -= speed * deltaTime * Math.cos(angle);
-        x += speed * deltaTime * Math.sin(angle);
-
-        setPosition(x, y);
+        setY((float) (getY()-(getSpeed()*deltaTime*Math.cos(getAngle()))));
+        setX((float) (getX()+(getSpeed()*deltaTime*Math.sin(getAngle()))));
     }
 
 

@@ -45,7 +45,7 @@ public class NPCBoat extends NPCEntity {
                 }
                 return player.getCaptured().contains(getAllied().get());
             }
-        } else {
+        } else if(livingEntity instanceof NPCBoat) {
             //must be an NPCBoat
             NPCBoat npcBoat = (NPCBoat) livingEntity;
             if (npcBoat.getAllied().isPresent() && getAllied().isPresent()) {
@@ -106,28 +106,29 @@ public class NPCBoat extends NPCEntity {
      */
     @Override
     public boolean damage(Projectile projectile) {
-        if (projectile.getShooter() instanceof NPCBoat) {
-            //if shooter is NPCBoat, dont damage (NPCs shouldnt be able to damage eachother)
-            return true;
-        }
+        //if (projectile.getShooter() instanceof NPCBoat) {
+        //    //if shooter is NPCBoat, dont damage (NPCs shouldnt be able to damage eachother)
+        //    return true;
+        //}
         if (!super.damage(projectile)) {
             //is dead
             Gdx.app.debug("NPCBoat", "Issuing reward to player!");
+            if(projectile.getShooter() instanceof Player) {
+                Player player = (Player) projectile.getShooter();
+                Reward reward = RewardManager.generateReward((int) getDifficulty());
+                player.issueReward(reward);
 
-            Player player = (Player) projectile.getShooter();
-            Reward reward = RewardManager.generateReward((int) getDifficulty());
-            player.issueReward(reward);
-
-            if (getAllied().isPresent()) {
-                College allied = getAllied().get();
-                if (isBoss) {
-                    Gdx.app.debug("NPCBoat", "Boss defeated - capturing allied college!");
-                    player.capture(allied);
-                    Gdx.app.debug("NPCBoat", "Unlocked crew member: " + allied.getCrewMember().getName());
-                    player.addCrewMember(allied.getCrewMember());
-                } else {
-                    if (allied.getBossSpawnThreshold() > 0) {
-                        allied.decrementBossSpawnThreshold();
+                if (getAllied().isPresent()) {
+                    College allied = getAllied().get();
+                    if (isBoss) {
+                        Gdx.app.debug("NPCBoat", "Boss defeated - capturing allied college!");
+                        player.capture(allied);
+                        Gdx.app.debug("NPCBoat", "Unlocked crew member: " + allied.getCrewMember().getName());
+                        player.addCrewMember(allied.getCrewMember());
+                    } else {
+                        if (allied.getBossSpawnThreshold() > 0) {
+                            allied.decrementBossSpawnThreshold();
+                        }
                     }
                 }
             }

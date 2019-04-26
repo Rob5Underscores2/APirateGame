@@ -33,9 +33,8 @@ public class EntityManager {
     @Getter
     private ProjectileManager projectileManager;
 
-    private Integer MAX_ENTITIES = 8;
-
-    private float KRAKEN_CHANCE = 0.25f;
+    private Integer MAX_ENTITIES = 5;
+    private float KRAKEN_CHANCE = 0.15f;
 
     //time till next spawn attempt
     private float spawnDelta = 0f;
@@ -155,16 +154,14 @@ public class EntityManager {
                         //player is spawn zone
                         Optional<Vector2> optionalSpawnPos = ShapeUtil.getRandomPosition(polygon);
                         if (optionalSpawnPos.isPresent()) {
-                            double dist = player.distanceFrom(optionalSpawnPos.get());
-                            Gdx.app.debug("EM", dist+"");
-                            if(dist > 500 && dist < 2000) {
+                            if(checkSpawnPoint(optionalSpawnPos.get())) {
                                 Random random = new Random();
                                 if(KRAKEN_CHANCE>=random.nextFloat()) {
-                                    NPCMonster npcMonster = new NPCMonster(optionalSpawnPos.get(), difficulty);
+                                    NPCMonster npcMonster = new NPCBuilder().generateRandomMonster(optionalSpawnPos.get(), difficulty);
                                     Gdx.app.debug("Building Manager", "Spawning a moster");
                                     addNPC(npcMonster);
                                 } else {
-                                    NPCBoat npcBoat = new NPCBuilder().generateRandomEnemy(optionalSpawnPos.get(), Optional.empty(),
+                                    NPCBoat npcBoat = new NPCBuilder().generateRandomEnemyBoat(optionalSpawnPos.get(), Optional.empty(),
                                             difficulty, false);
                                     Gdx.app.debug("Building Manager", "Spawning an enemy");
                                     addNPC(npcBoat);
@@ -177,6 +174,26 @@ public class EntityManager {
 
             spawnDelta = 0f;
         }
+    }
+
+    /***
+     * Check whether generated spawn point is fairly close to player and not too close to player
+     * or other NPCs.
+     * @param pos generated spawn point
+     * @return true if spawn acceptable.
+     */
+    private boolean checkSpawnPoint(Vector2 pos) {
+        Player player = getOrCreatePlayer();
+        double dist = player.distanceFrom(pos);
+        if(dist > 750 && dist < 3000) {
+            for(NPCEntity npcEntity : npcList) {
+                if(npcEntity.distanceFrom(pos) < 750) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public Array<LivingEntity> getLivingEntitiesInArea(Rectangle rectangle) {

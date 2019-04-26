@@ -6,7 +6,6 @@ import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
-import uk.ac.york.sepr4.utils.AIUtil;
 
 @Data
 public class NPCMonster extends NPCEntity {
@@ -16,6 +15,10 @@ public class NPCMonster extends NPCEntity {
 
     public NPCMonster(Vector2 pos, float difficulty) {
         super(FileManager.krackenFrame(1), pos, difficulty);
+        //half speed and slower firing but more damage
+        setMaxSpeed(50f);
+        setDamage(4.0);
+        setReqCooldown(1.2f);
     }
 
     /***
