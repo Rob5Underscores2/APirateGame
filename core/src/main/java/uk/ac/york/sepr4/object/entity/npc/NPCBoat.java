@@ -12,7 +12,6 @@ import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
-import uk.ac.york.sepr4.utils.AIUtil;
 import java.util.Optional;
 
 @Data
@@ -25,18 +24,7 @@ public class NPCBoat extends NPCEntity {
 
     public NPCBoat(Texture texture, Vector2 pos, float difficulty) {
         super(texture, pos, difficulty);
-    }
 
-    /***
-     *  This is the control logic of the NPCs AI. It uses functions from mainly AIUtil to be able to make decisions on how it is meant to behave.
-     *  They are broken down into sections as to be able to make the code and control structure easier to read.
-     *  When calling this function it will actually make the NPC that is in the world do the actions.
-     *
-     * @param deltaTime time since last act
-     */
-    public void act(float deltaTime) {
-        AIUtil.actNPCEntity(this, deltaTime);
-        super.act(deltaTime);
     }
 
     /**

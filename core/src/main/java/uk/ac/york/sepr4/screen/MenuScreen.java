@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.APirateGame;
 import uk.ac.york.sepr4.GameInstance;
@@ -36,17 +39,34 @@ public class MenuScreen implements Screen {
     private void createTable() {
         // Create a table that fills the screen. Everything else will go inside this table.
         Table table = new Table();
+        Table logoTable = new Table();
         table.setFillParent(true);
+        logoTable.setFillParent(true);
         stage.addActor(table);
+        stage.addActor(logoTable);
 
-        //TODO: LOGO!
+        //add team and game logos
+        Image gameLogo = new Image(FileManager.gameLogo);
+        gameLogo.setScaling(Scaling.fit);
+        logoTable.add(gameLogo)
+                .padTop(Value.percentHeight(0.07f, logoTable))
+                .maxHeight(Value.percentWidth(0.17f, logoTable))
+                .expandX();
+        logoTable.row();
+
+        Image teamLogo = new Image(FileManager.teamLogo);
+        teamLogo.setScaling(Scaling.fit);
+        logoTable.add(teamLogo)
+                .padTop(Value.percentHeight(0.55f, logoTable))
+                .maxHeight(Value.percentWidth(0.08f, logoTable))
+                .expandX();
 
         //create buttons
-        TextButton newGame = new TextButton("New Game", StyleManager.generateTBStyle(30, Color.GREEN, Color.GRAY));
-        TextButton exit = new TextButton("Exit", StyleManager.generateTBStyle(30, Color.RED, Color.GRAY));
+        TextButton newGame = new TextButton("New Game", StyleManager.generateTBStyle(40, Color.BLACK, Color.GRAY));
+        TextButton exit = new TextButton("Exit", StyleManager.generateTBStyle(40, Color.BLACK, Color.GRAY));
 
         //add buttons to table
-        table.add(newGame).fillX().uniformX();
+        table.add(newGame).padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
         table.row().pad(10,0,10,0);
         table.add(exit).fillX().uniformX();
 
@@ -58,7 +78,7 @@ public class MenuScreen implements Screen {
             }
         });
 
-        //Changed for Assessment 3: Added a resume button to the menu
+        //Changed for Assessment 3: Added a start button to the menu
         newGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

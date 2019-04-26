@@ -51,6 +51,7 @@ public class StyleManager {
         style.font = generatePirateFont(size, colorUp);
         style.fontColor = colorUp;
         style.downFontColor = colorDown;
+        style.overFontColor = colorDown;
 
         return style;
     }

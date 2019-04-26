@@ -19,8 +19,10 @@ public class FileManager {
             miniGameMenu = new Texture(Gdx.files.internal(screenPath + "minigame.png")),
             departmentScreenBG = new Texture(Gdx.files.internal(screenPath + "department.png")),
             mainMenuScreenBG = new Texture(Gdx.files.internal(screenPath + "main_menu.png")),
+            gameLogo = new Texture(Gdx.files.internal(screenPath + "game_logo.png")),
+            teamLogo = new Texture(Gdx.files.internal(screenPath + "team_logo.png")),
 
-            hudTopLeft = new Texture(Gdx.files.internal(hudPath + "hud_tl.png")),
+    hudTopLeft = new Texture(Gdx.files.internal(hudPath + "hud_tl.png")),
                     hudTopRight = new Texture(Gdx.files.internal(hudPath + "hud_tr.png")),
                     hudMiddle = new Texture(Gdx.files.internal(hudPath + "hud_tm.png")),
                     hudGold = new Texture(Gdx.files.internal(hudPath + "gold.png")),
@@ -29,6 +31,7 @@ public class FileManager {
 
     ENEMY = new Texture(Gdx.files.internal(boatPath + "enemy.png")),
             DEAD_ENEMY = new Texture(Gdx.files.internal(boatPath + "dead_enemy.png")),
+            COLLEGE_ENEMY = new Texture(Gdx.files.internal(boatPath + "college.png")),
             BOSS = new Texture(Gdx.files.internal(boatPath + "boss.png")),
             PLAYER = new Texture(Gdx.files.internal(boatPath + "player.png")),
             CANNONBALL = new Texture(Gdx.files.internal(spritePath + "cannonball.png")),

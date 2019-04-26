@@ -11,7 +11,6 @@ import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.entity.Player;
 import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 import uk.ac.york.sepr4.object.entity.npc.NPCBuilder;
-
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,9 +23,6 @@ public class BuildingManager {
 
     private GameInstance gameInstance;
 
-    //time till next spawn attempt
-    private float spawnDelta;
-
     /***
      * This class handles instances of buildings (Colleges and Departments)
      *
@@ -36,7 +32,6 @@ public class BuildingManager {
      */
     public BuildingManager(GameInstance gameInstance) {
         this.gameInstance = gameInstance;
-        this.spawnDelta = 0f;
 
         if(gameInstance.getPirateMap().isObjectsEnabled()) {
             Json json = new Json();
@@ -90,12 +85,12 @@ public class BuildingManager {
      * @param boss Whether the generated npc is a boss
      * @return       An NPCBoat with correct parameters
      */
-    private Optional<NPCBoat> generateCollegeNPC(College college, boolean boss) {
+    public Optional<NPCBoat> generateCollegeNPC(College college, boolean boss) {
         Random random = new Random();
         if(random.nextDouble() <= college.getSpawnChance()){
             Optional<Vector2> pos = getValidRandomSpawn(college, 250f);
             if(pos.isPresent()) {
-                NPCBoat boat = new NPCBuilder().generateRandomEnemy( pos.get(), college,
+                NPCBoat boat = new NPCBuilder().generateRandomEnemy( pos.get(), Optional.of(college),
                          boss ? college.getBossDifficulty().floatValue() : college.getEnemyDifficulty().floatValue(), boss);
                 return Optional.of(boat);
             }
@@ -103,26 +98,7 @@ public class BuildingManager {
         return Optional.empty();
     }
 
-    public void spawnCollegeEnemies(float delta) {
-        spawnDelta+=delta;
-        if(spawnDelta >= 1f) {
-            for (College college : this.colleges) {
-                //check how many entities already exist in college zone (dont spawn too many)
-                if(gameInstance.getEntityManager().getLivingEntitiesInArea(college.getBuildingZone()).size
-                        < college.getMaxEntities()) {
-                    Optional<NPCBoat> optionalEnemy = generateCollegeNPC(college,false);
-                    if (optionalEnemy.isPresent()) {
-                        //checks if spawn spot is valid
-                        Gdx.app.debug("Building Manager", "Spawning an enemy at " + college.getName());
-                        gameInstance.getEntityManager().addNPC(optionalEnemy.get());
-                    }
-                } else {
-                    //Gdx.app.debug("BuildingManager", "Max entities @ "+college.getName());
-                }
-            }
-            spawnDelta = 0f;
-        }
-    }
+
 
     //TODO: Make generic method and remove duplicate code
     private void loadBuildings(Array<Building> loading) {

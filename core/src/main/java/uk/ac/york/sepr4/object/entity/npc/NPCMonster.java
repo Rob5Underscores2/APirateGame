@@ -26,7 +26,6 @@ public class NPCMonster extends NPCEntity {
      * @param deltaTime time since last act
      */
     public void act(float deltaTime) {
-        AIUtil.actNPCEntity(this, deltaTime); //decide where to move/fire
         upateKrakenSprite(deltaTime);
         super.act(deltaTime);
     }

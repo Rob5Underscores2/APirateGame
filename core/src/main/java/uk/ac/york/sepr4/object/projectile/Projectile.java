@@ -11,7 +11,7 @@ public class Projectile extends Entity {
 
     private LivingEntity shooter;
     private Double damage = 5.0;
-    private Integer baseSpeed = 100;
+    private Integer baseSpeed = 200;
 
     private boolean active = true, onFire = false;
 

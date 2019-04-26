@@ -1,11 +1,13 @@
 package uk.ac.york.sepr4.object.entity.npc;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
+import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.Player;
@@ -17,7 +19,7 @@ import java.util.Optional;
 @Data
 public abstract class NPCEntity extends LivingEntity {
 
-    private float range = 1000f; //How far away it can see livingEntities/objects
+    private float range = 2000f; //How far away it can see livingEntities/objects
     private float accuracy = 0.5f; //This is how accurate this is (currently is (1/0.5)*Math.PI/32 which allows for that much range on both sides of the perfect shot and picks a random angle from that range
 
     private Optional<LivingEntity> lastTarget = Optional.empty(); //This is the target currently being fought
@@ -34,6 +36,36 @@ public abstract class NPCEntity extends LivingEntity {
     public NPCEntity(Texture texture, Vector2 pos, float difficulty) {
         super(texture, pos);
         this.difficulty = difficulty;
+    }
+
+    /***
+     *  This is the control logic of the NPCs AI. It uses functions from mainly AIUtil to be able to make decisions on how it is meant to behave.
+     *  They are broken down into sections as to be able to make the code and control structure easier to read.
+     *  When calling this function it will actually make the NPC that is in the world do the actions.
+     *
+     * @param deltaTime time since last act
+     */
+    public void act(float deltaTime) {
+        AIUtil.actNPCEntity(this, deltaTime);
+        checkDespawn();
+        super.act(deltaTime);
+    }
+
+    private void checkDespawn() {
+        Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
+
+        if (this.distanceFrom(player) > 3000) {
+            setDead(true);
+            Gdx.app.debug("NPCEntity", "Too far from player, despawning!");
+            if(this instanceof NPCBoat) {
+                NPCBoat npcBoat = (NPCBoat) this;
+                if(npcBoat.isBoss() && npcBoat.getAllied().isPresent()) {
+                    //if boss is spawning, set spawned to false (so it will spawn again)
+                    College allied = npcBoat.getAllied().get();
+                    allied.setBossSpawned(false);
+                }
+            }
+        }
     }
 
     /**

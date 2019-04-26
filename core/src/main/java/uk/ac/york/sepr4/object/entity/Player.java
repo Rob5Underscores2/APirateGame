@@ -153,7 +153,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
         if(keycode == Input.Keys.M) {
             //minimap
-            SailScreen.getInstance().getOrthographicCamera().zoom = 3;
+            SailScreen.getInstance().getOrthographicCamera().zoom = 10;
             return true;
         }
 

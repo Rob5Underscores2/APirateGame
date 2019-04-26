@@ -17,6 +17,7 @@ import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 import uk.ac.york.sepr4.object.entity.Player;
+import uk.ac.york.sepr4.object.entity.npc.NPCEntity;
 import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.object.item.RewardManager;
 import uk.ac.york.sepr4.object.projectile.Projectile;
@@ -111,7 +112,7 @@ public class SailScreen extends PirateScreen {
             entityManager.getAnimationManager().handleEffects(getStage(), delta);
         }
         if (gameInstance.getPirateMap().isObjectsEnabled()) {
-            gameInstance.getBuildingManager().spawnCollegeEnemies(delta);
+            gameInstance.getEntityManager().spawnEnemies(delta);
             buildingManager.checkBossSpawn();
         }
 
@@ -135,6 +136,11 @@ public class SailScreen extends PirateScreen {
             for (Polygon polygonMapObject : gameInstance.getPirateMap().getCollisionObjects()) {
                 shapeRenderer.polygon(polygonMapObject.getTransformedVertices());
             }
+            shapeRenderer.setColor(Color.BLUE);
+            for (Polygon polygonMapObject : gameInstance.getPirateMap().getSpawnZones().keySet()) {
+                shapeRenderer.polygon(polygonMapObject.getTransformedVertices());
+            }
+
             shapeRenderer.end();
         }
     }
@@ -150,10 +156,10 @@ public class SailScreen extends PirateScreen {
             }
         }
 
-        for (uk.ac.york.sepr4.object.entity.npc.NPCBoat NPCBoat : gameInstance.getEntityManager().getNpcList()) {
-            if (NPCBoat.getHealth() < NPCBoat.getMaxHealth()) {
-                if (!getStage().getActors().contains(NPCBoat.getHealthBar(), true)) {
-                    getStage().addActor(NPCBoat.getHealthBar());
+        for (NPCEntity npcEntity : gameInstance.getEntityManager().getNpcList()) {
+            if (npcEntity.getHealth() < npcEntity.getMaxHealth()) {
+                if (!getStage().getActors().contains(npcEntity.getHealthBar(), true)) {
+                    getStage().addActor(npcEntity.getHealthBar());
                 }
             }
         }
@@ -182,7 +188,7 @@ public class SailScreen extends PirateScreen {
     public void checkLivingEntityCollisions() {
         EntityManager entityManager = gameInstance.getEntityManager();
         //player/map collision check
-        //TODO: Improve to make player a polygon
+        //TODO: Improve to make player a polygon - cant do without a lot of work
         for (LivingEntity lE : entityManager.getLivingEntities()) {
             //Between entity and map
             if (gameInstance.getPirateMap().isColliding(lE.getRectBounds())) {
@@ -195,7 +201,6 @@ public class SailScreen extends PirateScreen {
             }
 
             //between living entities themselves
-            //TODO: still a bit buggy
             for (LivingEntity lE2 : entityManager.getLivingEntities()) {
                 if (!lE.equals(lE2)) {
                     if(!lE.isDying() && !lE2.isDying()) {

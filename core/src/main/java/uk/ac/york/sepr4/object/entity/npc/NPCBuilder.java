@@ -25,16 +25,20 @@ public class NPCBuilder {
      * @param isBoss Is the NPCBoat a college boss
      * @return An NPCBoat with correct stats
      */
-    public NPCBoat generateRandomEnemy(Vector2 pos, College allied, float difficulty, boolean isBoss) {
+    public NPCBoat generateRandomEnemy(Vector2 pos, Optional<College> allied, float difficulty, boolean isBoss) {
         Random random = new Random();
 
         NPCBoat npcBoat;
-
-        if (isBoss) {
-            npcBoat = new NPCBoat(FileManager.BOSS, pos, difficulty);
+        if(allied.isPresent()) {
+            if (isBoss) {
+                npcBoat = new NPCBoat(FileManager.BOSS, pos, difficulty);
+            } else {
+                npcBoat = new NPCBoat(FileManager.COLLEGE_ENEMY, pos, difficulty);
+            }
         } else {
             npcBoat = new NPCBoat(FileManager.ENEMY, pos, difficulty);
         }
+
 
         npcBoat.setAngle((float) (2*Math.PI*random.nextDouble()));;
         npcBoat.setAccuracy(accuracy + difficulty/50);
@@ -43,7 +47,7 @@ public class NPCBuilder {
         npcBoat.setMaxHealth(difficulty + maxHealth);
         npcBoat.setHealth(npcBoat.getMaxHealth());
         npcBoat.setTurningSpeed(Math.round(difficulty/50)+turningSpeed);
-        npcBoat.setAllied(Optional.of(allied));
+        npcBoat.setAllied(allied);
         npcBoat.setBoss(isBoss);
         npcBoat.setDamage(damage + difficulty / 50);
         npcBoat.setReqCooldown(reqCooldown);

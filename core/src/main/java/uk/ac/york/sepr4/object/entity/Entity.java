@@ -72,13 +72,12 @@ public abstract class Entity extends Actor {
     public double distanceFrom(Entity entity) {
         return (float) Math.sqrt(Math.pow((entity.getCentre().x - getCentre().x), 2) + Math.pow((entity.getCentre().y - getCentre().y), 2));
     }
+    public double distanceFrom(Vector2 pos) {
+        return (float) Math.sqrt(Math.pow((pos.x - getCentre().x), 2) + Math.pow((pos.y - getCentre().y), 2));
+    }
 
     public Rectangle getRectBounds() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
-    }
-
-    public String locToString(){
-        return ("X:" + Float.toString(this.getCentre().x) + " Y:" + Float.toString(this.getCentre().y) + " ANG:" + Float.toString(this.getAngle()) + " SPD:" + Float.toString(this.getSpeed()));
     }
 
 }
