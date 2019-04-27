@@ -31,7 +31,7 @@ public class MinigameScreen extends PirateScreen {
     private Image playerImage, enemyImage;
 
     public MinigameScreen(GameInstance gameInstance) {
-        super(gameInstance, new Stage(new ScreenViewport()), FileManager.miniGameMenu);
+        super(gameInstance, new Stage(new ScreenViewport()), FileManager.departmentScreenBG);
 
         getInputMultiplexer().addProcessor(new MinigameInputProcessor(this));
 
@@ -54,6 +54,7 @@ public class MinigameScreen extends PirateScreen {
             //minigame being played
             startCountdown -= delta;
             enemyShootTimer -= delta;
+            gameText.setText("Prepare to shoot.. (Z)");
             if (startCountdown <= 0) {
                     gameText.setText("SHOOT! (Z)");
                     gameText.setColor(Color.RED);
@@ -73,7 +74,8 @@ public class MinigameScreen extends PirateScreen {
     public void playerShoot() {
         if(startCountdown > 0) {
             //shot too early - loose!
-            resetGame();
+            gameText.setText("You drew too early! You lost!");
+            setGameOver(true);
         } else {
             giveReward();
             gameText.setText("You Won!");
@@ -100,38 +102,40 @@ public class MinigameScreen extends PirateScreen {
         table.top();
         table.setFillParent(true);
 
-        Label minigameText = new Label("How difficult do you want your minigame to be? Higher difficulty means higher rewards!", StyleManager.generateLabelStyle(35, Color.GRAY));
-        Label instructionText = new Label("Wait for the signal, then use the Z key to shoot before your opponent does.", StyleManager.generateLabelStyle(25, Color.GRAY));
+        Label minigameText1 = new Label("How difficult do you want your minigame to be?", StyleManager.generateLabelStyle(45, Color.GRAY));
+        Label minigameText2 = new Label("Higher difficulty means higher rewards!", StyleManager.generateLabelStyle(40, Color.GRAY));
 
-        TextButton quitMinigame = new TextButton("Exit Minigame", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+        Label instructionText = new Label("Wait for the signal, then use the Z key to shoot before your opponent does.", StyleManager.generateLabelStyle(30, Color.GRAY));
+
+        TextButton quitMinigame = new TextButton("Exit Minigame", StyleManager.generateTBStyle(30, Color.RED, Color.GRAY));
         quitMinigame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
                 getGameInstance().fadeSwitchScreen(getGameInstance().getSailScreen(), true);
             }
         });
-        TextButton easyMinigame = new TextButton("Easy (1 gold)", StyleManager.generateTBStyle(25, Color.GREEN, Color.GRAY));
+        TextButton easyMinigame = new TextButton("Easy (1 gold)", StyleManager.generateTBStyle(35, Color.GREEN, Color.GRAY));
         easyMinigame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
                 startGame(MinigameDifficulty.EASY);
             }
         });
-        TextButton medMinigame = new TextButton("Medium (10 gold)", StyleManager.generateTBStyle(25, Color.YELLOW, Color.GRAY));
+        TextButton medMinigame = new TextButton("Medium (10 gold)", StyleManager.generateTBStyle(35, Color.YELLOW, Color.GRAY));
         medMinigame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
                 startGame(MinigameDifficulty.MEDIUM);
             }
         });
-        TextButton hardMinigame = new TextButton("Hard (20 gold)", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+        TextButton hardMinigame = new TextButton("Hard (20 gold)", StyleManager.generateTBStyle(35, Color.RED, Color.GRAY));
         hardMinigame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
                 startGame(MinigameDifficulty.HARD);
             }
         });
-        TextButton veryHardMinigame = new TextButton("Very Hard (50 gold)", StyleManager.generateTBStyle(25, Color.BLACK, Color.GRAY));
+        TextButton veryHardMinigame = new TextButton("Very Hard (50 gold)", StyleManager.generateTBStyle(35, Color.BLACK, Color.GRAY));
         veryHardMinigame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
@@ -139,19 +143,21 @@ public class MinigameScreen extends PirateScreen {
             }
         });
 
-        table.add(minigameText).padTop(Value.percentHeight(0.05f, table)).expandX();
+        table.add(minigameText1).padTop(Value.percentHeight(0.20f, table)).expandX();
+        table.row();
+        table.add(minigameText2);
         table.row();
         table.add(instructionText).padTop(Value.percentHeight(0.02f, table));
         table.row();
-        table.add(easyMinigame);
+        table.add(easyMinigame).padTop(Value.percentHeight(0.02f, table));;
         table.row();
-        table.add(medMinigame);
+        table.add(medMinigame).padTop(Value.percentHeight(0.02f, table));;
         table.row();
-        table.add(hardMinigame);
+        table.add(hardMinigame).padTop(Value.percentHeight(0.02f, table));;
         table.row();
-        table.add(veryHardMinigame);
+        table.add(veryHardMinigame).padTop(Value.percentHeight(0.02f, table));;
         table.row();
-        table.add(quitMinigame).padTop(Value.percentHeight(0.02f, table));
+        table.add(quitMinigame).padTop(Value.percentHeight(0.05f, table));
 
     }
 

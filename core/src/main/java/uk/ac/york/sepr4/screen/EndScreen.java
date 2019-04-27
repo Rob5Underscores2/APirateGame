@@ -55,7 +55,7 @@ public class EndScreen extends PirateScreen {
                     gameInstance.switchScreen(gameInstance.getGame().getMenuScreen());
                 }
             });
-            table.add(textButton).padTop(Value.percentHeight(0.02f, table));
+            table.add(textButton).padTop(Value.percentHeight(0.02f, table)).fillX().uniformX();
 
             getStage().addActor(table);
         }
