@@ -11,6 +11,7 @@ import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
 import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.io.File;
 import java.util.*;
 
 public class AnimationManager {
@@ -19,7 +20,8 @@ public class AnimationManager {
 
     //For cleanup
     private Array<Entity> lastFrameEffects = new Array<>(); //Needed for clean up
-    private HashMap<LivingEntity, Float> deathAnimations = new HashMap<>();
+    @Getter
+    private List<DeathAnimation> deathAnimations = new ArrayList<>();
     private List<FireAnimation> fireAnimations = new ArrayList<>();
 
     //Death Animations
@@ -50,7 +52,7 @@ public class AnimationManager {
      * Effects work on a frame by frame basis so need to be spawned in every frame
      */
     public void handleEffects(Stage stage, float delta) {
-        handleDeathAnimations(delta);
+        updateDeathAnimations(delta);
         updateWaterTrails();
         updateFiringAnimations();
         updateBoatFire();
@@ -150,39 +152,67 @@ public class AnimationManager {
 
     //Death Animations
     //TODO: Cleanup like other animations
-    private void handleDeathAnimations(float delta) {
-        //add dying npcs if they arent already in there
+    private void updateDeathAnimations(float delta) {
+        //add dead NPCs if not yet animating
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
-            if(livingEntity.isDying() && !deathAnimations.containsKey(livingEntity)) {
-                deathAnimations.put(livingEntity, 0f);
+            if(livingEntity.isDying()) {
+                boolean isAdded = false;
+                for(DeathAnimation dA : deathAnimations) {
+                    if(dA.getLE().equals(livingEntity)) {
+                        isAdded = true;
+                        break;
+                    }
+                }
+                if(!isAdded) {
+                    deathAnimations.add(new DeathAnimation(livingEntity));
+                }
             }
         }
-        for(Iterator<Map.Entry<LivingEntity, Float>> it = deathAnimations.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<LivingEntity, Float> entry = it.next();
-            LivingEntity livingEntity = entry.getKey();
-            Float deathTimer = entry.getValue();
-            livingEntity.setTexture(FileManager.DEAD_ENEMY);
-            livingEntity.setAlpha(1-(deathTimer/5));
-            if (deathTimer < 1/6f) {
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), FileManager.EXPLOSION1, 40, 40,1);
-            } else if (deathTimer < 2/6f) {
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), FileManager.EXPLOSION2, 40, 40, 1);
-            } else if (deathTimer < 1/2f){
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), FileManager.EXPLOSION3, 40, 40,1);
-            }
-            if (deathTimer > 5){
-                livingEntity.setDead(true);
-                livingEntity.setDying(false);
-                it.remove();
+
+        List<DeathAnimation> toRemove = new ArrayList<>();
+        for(DeathAnimation deathAnimation : deathAnimations) {
+            if(deathAnimation.getDeathTimer() <= 5) {
+                deathAnimation.spawnEffects(this, delta);
             } else {
-                entry.setValue(entry.getValue()+delta);
+                toRemove.add(deathAnimation);
+            }
+        }
+        deathAnimations.removeAll(toRemove);
+    }
+
+}
+
+class DeathAnimation {
+    @Getter
+    private LivingEntity lE;
+    private int frame = 1;
+    @Getter
+    private float deathTimer = 0f;
+
+    public DeathAnimation(LivingEntity lE) {
+        this.lE = lE;
+        lE.setTexture(FileManager.DEAD_ENEMY);
+        lE.setAlpha(1-(deathTimer/5));
+    }
+
+    public void spawnEffects(AnimationManager animationManager, float delta) {
+        animationManager.addEffect(lE.getCentre().x, lE.getCentre().y, lE.getAngle(),
+                FileManager.deathFrame(frame), 40, 40, 1);
+
+        deathTimer+=delta;
+        if (deathTimer > 5){
+            //animation over -- set dead
+            lE.setDead(true);
+            lE.setDying(false);
+            return;
+        } else {
+            if(frame == 3) {
+                frame = 1;
+            } else {
+                frame ++;
             }
         }
     }
-
 }
 
 class FireAnimation {

@@ -38,12 +38,13 @@ public class FileManager {
             CANNONBALL_FIRE = new Texture(Gdx.files.internal(spritePath + "cannonball_fire.png")),
             KRAKEN_WAVE = new Texture(Gdx.files.internal(spritePath + "kraken_wave.png")),
             LOOT = new Texture(Gdx.files.internal(spritePath + "crew.png")),
-            EXPLOSION1 = new Texture(Gdx.files.internal(spritePath + "explosion1.png")),
-            EXPLOSION2 = new Texture(Gdx.files.internal(spritePath + "explosion2.png")),
-            EXPLOSION3 = new Texture(Gdx.files.internal(spritePath + "explosion3.png")),
             ORANGEFIRE = new Texture(Gdx.files.internal(spritePath + "fire1.png")),
             REDFIRE = new Texture(Gdx.files.internal(spritePath + "fire2.png")),
             MIDDLEBOATTRAIL1 = new Texture(Gdx.files.internal(spritePath + "boat_trail.png"));
+
+    public static Texture deathFrame(int number) {
+        return new Texture(Gdx.files.internal(spritePath + "explosion"+number+".png"));
+    }
 
     public static Texture firingFrame(int number) {
         return new Texture(Gdx.files.internal(spritePath + "cannon/frame" + number + ".png"));
