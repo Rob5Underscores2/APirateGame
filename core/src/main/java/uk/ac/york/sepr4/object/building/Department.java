@@ -5,7 +5,7 @@ import uk.ac.york.sepr4.object.crew.CrewMember;
 
 @Data
 public class Department extends Building {
-    private Float buildingRange = 1000f;
+    private Float buildingRange = 2500f;
     private Integer crewMemberId, healCost;
 
     //populated after load
