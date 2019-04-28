@@ -25,8 +25,8 @@ public class MenuScreen implements Screen {
 
     private Stage stage;
 
-    public MenuScreen(APirateGame APirateGame) {
-        this.game = APirateGame;
+    public MenuScreen(APirateGame game) {
+        this.game = game;
 
         this.stage = new Stage(new ScreenViewport());
 
@@ -62,13 +62,16 @@ public class MenuScreen implements Screen {
                 .expandX();
 
         //create buttons
+        TextButton howToPlay = new TextButton("How to Play", StyleManager.generateTBStyle(30, Color.BLACK, Color.GRAY));
         TextButton newGame = new TextButton("New Game", StyleManager.generateTBStyle(40, Color.BLACK, Color.GRAY));
-        TextButton exit = new TextButton("Exit", StyleManager.generateTBStyle(40, Color.BLACK, Color.GRAY));
+        TextButton exit = new TextButton("Exit", StyleManager.generateTBStyle(30, Color.BLACK, Color.GRAY));
 
         //add buttons to table
-        table.add(newGame).padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
-        table.row().pad(10,0,10,0);
-        table.add(exit).fillX().uniformX();
+        table.add(howToPlay).padTop(Value.percentHeight(0.01f, table)).fillX().uniformX();
+        table.row();
+        table.add(newGame).padTop(Value.percentHeight(0.01f, table)).fillX().uniformX();
+        table.row();
+        table.add(exit).padTop(Value.percentHeight(0.01f, table)).fillX().uniformX();
 
         // create button listeners
         exit.addListener(new ClickListener() {
@@ -86,6 +89,14 @@ public class MenuScreen implements Screen {
                 gameInstance.start();
             }
         });
+
+        howToPlay.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new HowToPlayScreen(game));
+            }
+        });
+
 
     }
 
