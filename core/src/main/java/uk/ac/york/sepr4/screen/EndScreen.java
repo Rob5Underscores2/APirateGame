@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import uk.ac.york.sepr4.GameInstance;
 import uk.ac.york.sepr4.io.FileManager;
@@ -37,14 +38,19 @@ public class EndScreen extends PirateScreen {
             table.setFillParent(true);
 
             //set win/lose label
+            Label label = new Label("", StyleManager.generateLabelStyle(40, Color.BLACK));
             if (win) {
-                table.add(new Label("You Won!", StyleManager.generateLabelStyle(40, Color.GOLD)))
-                        .padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
+                label.setText("You Won!");
+                label.setColor(Color.GOLD);
             } else {
-                table.add(new Label("You Lost!", StyleManager.generateLabelStyle(40, Color.RED)))
-                        .padTop(Value.percentHeight(0.03f, table)).fillX().uniformX();
-
+                label.setText("You Lost!");
+                label.setColor(Color.RED);
             }
+            label.setAlignment(Align.center);
+
+            table.add(label)
+                    .padTop(Value.percentHeight(0.03f, table))
+                    .fillX().uniformX();
             table.row();
 
             //exit to menu button
