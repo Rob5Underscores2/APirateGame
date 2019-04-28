@@ -1,7 +1,6 @@
 package uk.ac.york.sepr4.object.crew;
 
 import uk.ac.york.sepr4.GameInstance;
-import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.entity.Player;
 
 public class BoostCrew extends CrewMember {

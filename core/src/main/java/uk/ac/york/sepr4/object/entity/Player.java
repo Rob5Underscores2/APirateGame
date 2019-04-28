@@ -11,7 +11,6 @@ import uk.ac.york.sepr4.object.building.College;
 import uk.ac.york.sepr4.object.crew.CrewMember;
 import uk.ac.york.sepr4.object.item.Reward;
 import uk.ac.york.sepr4.screen.SailScreen;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +24,8 @@ public class Player extends LivingEntity implements InputProcessor {
 
     private List<CrewMember> crewMembers = new ArrayList<>();
     private Optional<CrewMember> selectedCrewMember = Optional.empty();
+
+    public final float DEFAULT_ZOOM = 2.0f, MAP_ZOOM = 5f;
 
     public Player(Vector2 pos) {
         super(FileManager.PLAYER, pos);
@@ -153,7 +154,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
         if(keycode == Input.Keys.M) {
             //minimap
-            SailScreen.getInstance().getOrthographicCamera().zoom = 10;
+            SailScreen.getInstance().getOrthographicCamera().zoom = MAP_ZOOM;
             return true;
         }
 
@@ -186,7 +187,7 @@ public class Player extends LivingEntity implements InputProcessor {
         }
         if(keycode == Input.Keys.M) {
             //minimap
-            SailScreen.getInstance().getOrthographicCamera().zoom = 1.5f;
+            SailScreen.getInstance().getOrthographicCamera().zoom = DEFAULT_ZOOM;
             return true;
         }
         return false;

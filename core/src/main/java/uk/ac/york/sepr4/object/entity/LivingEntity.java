@@ -18,8 +18,8 @@ public abstract class LivingEntity extends Entity {
 
     private Double health = 10.0, maxHealth = 10.0, damage = 4.0;
     private boolean isAccelerating, isBraking, isDead, isDying;
-    private float currentCooldown = 0f, reqCooldown = 0.8f, maxSpeed = 100f,
-            angularSpeed = 0f, acceleration = 40f, turningSpeed = 2f, onFire = 0f, fireDmgCooldown;
+    private float currentCooldown = 0f, reqCooldown = 0.8f, maxSpeed = 140f,
+            angularSpeed = 0f, acceleration = 60f, turningSpeed = 2f, onFire = 0f, fireDmgCooldown;
 
     //TODO: Better ways to monitor this
     private int collidedWithIsland = 0, colliedWithBoat = 0;
