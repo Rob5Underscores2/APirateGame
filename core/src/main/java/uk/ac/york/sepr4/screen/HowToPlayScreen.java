@@ -21,9 +21,12 @@ public class HowToPlayScreen implements Screen {
     private APirateGame game;
     private Stage stage;
 
-    public HowToPlayScreen(APirateGame game) {
+    private Screen returnScreen;
+
+    public HowToPlayScreen(APirateGame game, Screen returnScreen) {
         this.stage = new Stage(new ScreenViewport());
         this.game = game;
+        this.returnScreen = returnScreen;
 
         Gdx.input.setInputProcessor(stage);
 
@@ -52,12 +55,12 @@ public class HowToPlayScreen implements Screen {
         goal.setWrap(true);
         goal.setAlignment(Align.center);
 
-        TextButton toMenu = new TextButton("Back to Menu",
-                StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+        TextButton toMenu = new TextButton("Continue..",
+                StyleManager.generateTBStyle(25, Color.GOLD, Color.GRAY));
         toMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.getMenuScreen());
+                game.setScreen(returnScreen);
             }
         });
 

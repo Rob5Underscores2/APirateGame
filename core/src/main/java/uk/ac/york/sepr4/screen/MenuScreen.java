@@ -86,14 +86,15 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameInstance gameInstance = new GameInstance(game);
-                gameInstance.start();
+                //start game and display how to play screen
+                gameInstance.start(true);
             }
         });
 
         howToPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new HowToPlayScreen(game));
+                game.setScreen(new HowToPlayScreen(game, game.getMenuScreen()));
             }
         });
 

@@ -21,7 +21,7 @@ public class APirateGame extends Game {
 			//if debug, enable lower logging level and launch into game
 			Gdx.app.setLogLevel(Application.LOG_DEBUG);
 			GameInstance gameInstance = new GameInstance(this);
-			gameInstance.start();
+			gameInstance.start(false);
 		} else {
 			setScreen(menuScreen);
 		}

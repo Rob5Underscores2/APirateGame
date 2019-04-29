@@ -53,15 +53,28 @@ public class EndScreen extends PirateScreen {
                     .fillX().uniformX();
             table.row();
 
+            //play again button
+            TextButton playAgain = new TextButton("Play Again!", StyleManager.generateTBStyle(25, Color.GREEN, Color.GRAY));
+            playAgain.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent ev, float x, float y) {
+                    //start a new game
+                    GameInstance newGI = new GameInstance(gameInstance.getGame());
+                    newGI.start(false);
+                }
+            });
+
             //exit to menu button
-            TextButton textButton = new TextButton("Exit to Menu!", StyleManager.generateTBStyle(40, Color.RED, Color.GRAY));
-            textButton.addListener(new ClickListener() {
+            TextButton exitButton = new TextButton("Exit to Menu!", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
+            exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent ev, float x, float y) {
                     gameInstance.switchScreen(gameInstance.getGame().getMenuScreen());
                 }
             });
-            table.add(textButton).padTop(Value.percentHeight(0.02f, table)).fillX().uniformX();
+            table.add(exitButton).padTop(Value.percentHeight(0.02f, table)).fillX().uniformX();
+            table.row();
+            table.add(playAgain).fillX().uniformX();
 
             getStage().addActor(table);
         }

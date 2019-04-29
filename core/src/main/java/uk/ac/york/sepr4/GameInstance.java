@@ -14,6 +14,7 @@ import uk.ac.york.sepr4.object.building.BuildingManager;
 import uk.ac.york.sepr4.object.crew.CrewBank;
 import uk.ac.york.sepr4.object.entity.EntityManager;
 import uk.ac.york.sepr4.object.item.RewardManager;
+import uk.ac.york.sepr4.screen.HowToPlayScreen;
 import uk.ac.york.sepr4.screen.PirateScreen;
 import uk.ac.york.sepr4.screen.SailScreen;
 import uk.ac.york.sepr4.screen.TransitionScreen;
@@ -61,9 +62,14 @@ public class GameInstance {
         sailScreen = new SailScreen(this);
     }
 
-    public void start() {
-        Gdx.app.debug("GameInstance", "Starting Instance");
-        switchScreen(sailScreen);
+    public void start(boolean showHowToPlay) {
+        if(showHowToPlay) {
+            Gdx.app.debug("GameInstance", "Starting Instance - Show how to play!");
+            switchScreen(new HowToPlayScreen(getGame(), sailScreen));
+        } else {
+            Gdx.app.debug("GameInstance", "Starting Instance");
+            switchScreen(sailScreen);
+        }
 
         //DEBUG - add crew members to player by default
         if(game.DEBUG) {
