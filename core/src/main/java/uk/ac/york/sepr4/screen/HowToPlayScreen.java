@@ -55,6 +55,16 @@ public class HowToPlayScreen implements Screen {
         goal.setWrap(true);
         goal.setAlignment(Align.center);
 
+        Label controlsHeader = new Label("Controls", StyleManager.generateLabelStyle(35,Color.BLACK));
+        Label controls = new Label("WASD - Movement" +
+                "\n" +
+                "Left Click - Fire Cannons" +
+                "\n" +
+                "1-6 - Weapon Selection" +
+                "\n" +
+                "M - Zoom Out", StyleManager.generateLabelStyle(25,Color.BLACK));
+        controls.setAlignment(Align.center);
+
         TextButton toMenu = new TextButton("Continue..",
                 StyleManager.generateTBStyle(25, Color.GOLD, Color.GRAY));
         toMenu.addListener(new ClickListener() {
@@ -67,7 +77,7 @@ public class HowToPlayScreen implements Screen {
         table.add(storyHeader).padTop(Value.percentHeight(0.05f, table)).expandX();
         table.row();
         table.add(story)
-                .padTop(Value.percentHeight(0.05f, table))
+                .padTop(Value.percentHeight(0.03f, table))
                 .width(Value.percentWidth(0.8f, table))
                 .expandX();
         table.row();
@@ -75,7 +85,15 @@ public class HowToPlayScreen implements Screen {
         table.add(goalHeader).padTop(Value.percentHeight(0.05f, table)).expandX();
         table.row();
         table.add(goal)
-                .padTop(Value.percentHeight(0.05f, table))
+                .padTop(Value.percentHeight(0.03f, table))
+                .width(Value.percentWidth(0.8f, table))
+                .expandX();
+        table.row();
+
+        table.add(controlsHeader).padTop(Value.percentHeight(0.05f, table)).expandX();
+        table.row();
+        table.add(controls)
+                .padTop(Value.percentHeight(0.03f, table))
                 .width(Value.percentWidth(0.8f, table))
                 .expandX();
         table.row();
@@ -83,8 +101,13 @@ public class HowToPlayScreen implements Screen {
         table.add(toMenu)
                 .padTop(Value.percentHeight(0.05f, table))
                 .expandX();
+        table.row();
 
-        stage.addActor(table);
+
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setFillParent(true);
+        stage.addActor(scrollPane);
+        stage.setScrollFocus(scrollPane);
     }
 
     @Override
