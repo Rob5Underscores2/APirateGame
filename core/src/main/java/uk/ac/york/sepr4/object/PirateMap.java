@@ -72,15 +72,17 @@ public class PirateMap {
 
     private void setSpawnZones() {
         for(MapObject objects : objectLayer.getObjects()){
-            if(objects.getName().contains("npc_spawn")) {
-                if(objects instanceof PolygonMapObject) {
-                    String name = objects.getName();
-                    name = name.replace("npc_spawn", "");
-                    Integer difficulty = Integer.valueOf(name);
-                    if (difficulty != null) {
-                        PolygonMapObject polygonMapObject = (PolygonMapObject) objects;
-                        Polygon polygon = polygonMapObject.getPolygon();
-                        spawnZones.put(convertTiledPolygonToMap(polygon,0,0), difficulty);
+            if(objects.getName() != null) {
+                if (objects.getName().contains("npc_spawn")) {
+                    if (objects instanceof PolygonMapObject) {
+                        String name = objects.getName();
+                        name = name.replace("npc_spawn", "");
+                        Integer difficulty = Integer.valueOf(name);
+                        if (difficulty != null) {
+                            PolygonMapObject polygonMapObject = (PolygonMapObject) objects;
+                            Polygon polygon = polygonMapObject.getPolygon();
+                            spawnZones.put(convertTiledPolygonToMap(polygon, 0, 0), difficulty);
+                        }
                     }
                 }
             }
