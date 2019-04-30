@@ -29,7 +29,8 @@ public class StatsHUD {
     //Added for Assessment 3: Many labels and tables for the different features added in SailHUD
     private Label goldValueLabel, xpValueLabel, locationLabel;
 
-    private Image hudLocation;
+    private Image hudLocation, gameMap;
+    private boolean showingMap;
 
     @Getter
     private Table table;
@@ -48,6 +49,22 @@ public class StatsHUD {
 
         stage = new Stage(new FitViewport(w, h, new OrthographicCamera()));
 
+        createHUD();
+        setGameMap();
+    }
+
+    private void setGameMap() {
+        //Set gamemap
+        gameMap = new Image(FileManager.MAP);
+        gameMap.setVisible(false);
+        float MAP_SIZE = Gdx.graphics.getHeight()*0.8f;
+        gameMap.setSize(MAP_SIZE, MAP_SIZE);
+        gameMap.setX((Gdx.graphics.getWidth()-MAP_SIZE)/2);
+        gameMap.setY((Gdx.graphics.getHeight()-MAP_SIZE)/2);
+        stage.addActor(gameMap);
+    }
+
+    private void createHUD() {
         //background images (wooden effect) for stats
         Image hudTopLeft = new Image(FileManager.hudTopLeft);
         hudTopLeft.setY(Gdx.graphics.getHeight()-hudTopLeft.getHeight());
@@ -70,8 +87,6 @@ public class StatsHUD {
         table.top();
         //make the table fill the entire stage
         table.setFillParent(true);
-
-        //table.debug();
 
         //stats hud images
         Image hudGold = new Image(FileManager.hudGold);
@@ -106,7 +121,11 @@ public class StatsHUD {
                 .expandX();
 
         stage.addActor(table);
+    }
 
+    public void toggleMap(boolean val) {
+        showingMap = val;
+        gameMap.setVisible(val);
     }
 
     /***

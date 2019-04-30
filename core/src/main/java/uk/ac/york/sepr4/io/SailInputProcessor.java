@@ -62,6 +62,12 @@ public class SailInputProcessor implements InputProcessor {
             }
         }
 
+        if (keycode == Input.Keys.Q) {
+            Gdx.app.debug("SIP", "Toggling Map On!");
+            gameInstance.getStatsHUD().toggleMap(true);
+            return true;
+        }
+
         if (keycode == Input.Keys.ESCAPE) {
             //toggle pause menu on/off
             gameInstance.setPaused(!gameInstance.isPaused());
@@ -73,6 +79,11 @@ public class SailInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.Q) {
+            Gdx.app.debug("SIP", "Toggling Map Off!");
+            gameInstance.getStatsHUD().toggleMap(false);
+            return true;
+        }
         return false;
     }
 

@@ -40,7 +40,9 @@ public class FileManager {
             LOOT = new Texture(Gdx.files.internal(spritePath + "crew.png")),
             ORANGEFIRE = new Texture(Gdx.files.internal(spritePath + "fire1.png")),
             REDFIRE = new Texture(Gdx.files.internal(spritePath + "fire2.png")),
-            MIDDLEBOATTRAIL1 = new Texture(Gdx.files.internal(spritePath + "boat_trail.png"));
+            MIDDLEBOATTRAIL1 = new Texture(Gdx.files.internal(spritePath + "boat_trail.png")),
+
+    MAP = new Texture(Gdx.files.internal( "map/Map.png"));
 
     public static Texture deathFrame(int number) {
         return new Texture(Gdx.files.internal(spritePath + "explosion"+number+".png"));

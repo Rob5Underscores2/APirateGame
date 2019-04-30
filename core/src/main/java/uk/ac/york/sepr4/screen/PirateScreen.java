@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import lombok.Data;
 import uk.ac.york.sepr4.GameInstance;
@@ -73,10 +74,10 @@ public abstract class PirateScreen implements Screen {
             if (enableMessageHUD) {
                 gameInstance.getMessageHUD().update();
             }
+            stage.draw();
             if (enableStatsHUD) {
                 gameInstance.getStatsHUD().update();
             }
-            stage.draw();
         }
     }
 
