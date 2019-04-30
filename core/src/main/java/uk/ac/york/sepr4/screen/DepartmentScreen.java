@@ -55,10 +55,10 @@ public class DepartmentScreen extends PirateScreen {
 
         //REPAIR BUTTON
         //label to display if player's boat has full health
-        Label noRepair = new Label("Your ship does not need repair!", StyleManager.generateLabelStyle(40, Color.GREEN));
+        Label noRepair = new Label("Your ship does not need repair!", StyleManager.generateLabelStyle(30, Color.BLACK));
 
         //button updated regularly in render
-        repair = new TextButton("", StyleManager.generateTBStyle(40, Color.GREEN, Color.GRAY));
+        repair = new TextButton("", StyleManager.generateTBStyle(40, Color.BLACK, Color.GRAY));
         repair.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
@@ -81,7 +81,7 @@ public class DepartmentScreen extends PirateScreen {
         //button updated regularly in render
         CrewMember crewMember = department.getCrewMember();
         upgrade = new TextButton("",
-                StyleManager.generateTBStyle(40, Color.BLUE, Color.GRAY));
+                StyleManager.generateTBStyle(30, Color.BLACK, Color.GRAY));
         upgrade.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
@@ -95,7 +95,7 @@ public class DepartmentScreen extends PirateScreen {
         });
 
         //EXIT BUTTON
-        TextButton exit = new TextButton("Exit!", StyleManager.generateTBStyle(35, Color.RED, Color.GRAY));
+        TextButton exit = new TextButton("Exit!", StyleManager.generateTBStyle(25, Color.RED, Color.GRAY));
         exit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
@@ -107,9 +107,9 @@ public class DepartmentScreen extends PirateScreen {
         table.add(welcome).padTop(Value.percentHeight(0.35f, table)).expandX();
         table.row();
         if(player.getHealth().equals(player.getMaxHealth())) {
-            table.add(noRepair).padTop(Value.percentHeight(0.02f, table)).expandX();
+            table.add(noRepair).padTop(Value.percentHeight(0.05f, table)).expandX();
         } else {
-            table.add(repair).padTop(Value.percentHeight(0.02f, table)).expandX();
+            table.add(repair).padTop(Value.percentHeight(0.05f, table)).expandX();
         }
         table.row();
         if(player.getCrewMembers().contains(crewMember)) {
@@ -123,7 +123,7 @@ public class DepartmentScreen extends PirateScreen {
             table.add(noUpgrade).padTop(Value.percentHeight(0.02f, table)).expandX();
         }
         table.row();
-        table.add(exit).padTop(Value.percentHeight(0.02f, table)).expandX();
+        table.add(exit).padTop(Value.percentHeight(0.05f, table)).expandX();
 
         getStage().addActor(table);
     }
@@ -134,7 +134,7 @@ public class DepartmentScreen extends PirateScreen {
     private void updateTextButtons() {
         CrewMember crewMember = department.getCrewMember();
         repair.setText("Click to repair your ship for "+getHealCost()+ " gold!");
-        upgrade.setText("Upgrade " + crewMember.getName() + " for "+crewMember.getUpgradeCost()+" gold!");
+        upgrade.setText("Click to upgrade " + crewMember.getName() + " for "+crewMember.getUpgradeCost()+" gold!");
     }
 
     private Integer getHealCost() {
