@@ -11,7 +11,7 @@ public class APirateGame extends Game {
 	@Getter
 	private MenuScreen menuScreen;
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	@Override
 	public void create () {
