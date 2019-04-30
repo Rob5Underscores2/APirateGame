@@ -29,6 +29,7 @@ public class ShapeUtil {
         return false;
     }
 
+    //get random coordinate within polygon
     public static Optional<Vector2> getRandomPosition(Polygon polygon) {
         Integer attempts = 25;
         Rectangle rectangle = polygon.getBoundingRectangle();

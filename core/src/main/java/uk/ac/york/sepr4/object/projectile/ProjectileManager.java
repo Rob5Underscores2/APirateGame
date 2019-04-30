@@ -17,7 +17,6 @@ public class ProjectileManager {
 
     public ProjectileManager() {
         this.projectileList = new Array<>();
-
     }
 
     /**

@@ -22,7 +22,8 @@ public class MinigameScreen extends PirateScreen {
     private Table table, gameTable;
     @Getter
     private MinigameDifficulty difficulty;
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean gameStarted = false, gameOver = false;
 
     private float enemyShootTimer, startCountdown;
@@ -43,25 +44,27 @@ public class MinigameScreen extends PirateScreen {
 
     @Override
     public void renderInner(float delta) {
-        if(gameOver) {
+        if (gameOver) {
+            //delay then reset game
             setGameStarted(false);
-            startCountdown+=delta;
-            if(startCountdown>3f) {
+            startCountdown += delta;
+            if (startCountdown > 3f) {
                 resetGame();
             }
         }
-        if(difficulty != null && gameStarted) {
+        if (difficulty != null && gameStarted) {
             //minigame being played
             startCountdown -= delta;
             enemyShootTimer -= delta;
             gameText.setText("Prepare to shoot.. (Z)");
             if (startCountdown <= 0) {
-                    gameText.setText("SHOOT! (Z)");
-                    gameText.setColor(Color.RED);
-                    if (enemyShootTimer <= 0) {
-                        enemyShoot();
-                    }
+                //change text - player can now shoot
+                gameText.setText("SHOOT! (Z)");
+                gameText.setColor(Color.RED);
+                if (enemyShootTimer <= 0) {
+                    enemyShoot();
                 }
+            }
         }
 
     }
@@ -72,7 +75,7 @@ public class MinigameScreen extends PirateScreen {
     }
 
     public void playerShoot() {
-        if(startCountdown > 0) {
+        if (startCountdown > 0) {
             //shot too early - loose!
             gameText.setText("You drew too early! You lost!");
             setGameOver(true);
@@ -98,15 +101,17 @@ public class MinigameScreen extends PirateScreen {
     }
 
     private void createMenu() {
+        //table setup
         table = new Table();
         table.top();
         table.setFillParent(true);
 
+        //intro text
         Label minigameText1 = new Label("How difficult do you want your minigame to be?", StyleManager.generateLabelStyle(45, Color.GRAY));
         Label minigameText2 = new Label("Higher difficulty means higher rewards!", StyleManager.generateLabelStyle(40, Color.GRAY));
-
         Label instructionText = new Label("Wait for the signal, then use the Z key to shoot before your opponent does.", StyleManager.generateLabelStyle(30, Color.GRAY));
 
+        //minigame buttons
         TextButton quitMinigame = new TextButton("Exit Minigame", StyleManager.generateTBStyle(30, Color.RED, Color.GRAY));
         quitMinigame.addListener(new ClickListener() {
             @Override
@@ -143,19 +148,20 @@ public class MinigameScreen extends PirateScreen {
             }
         });
 
+        //populate table
         table.add(minigameText1).padTop(Value.percentHeight(0.20f, table)).expandX();
         table.row();
         table.add(minigameText2);
         table.row();
         table.add(instructionText).padTop(Value.percentHeight(0.02f, table));
         table.row();
-        table.add(easyMinigame).padTop(Value.percentHeight(0.02f, table));;
+        table.add(easyMinigame).padTop(Value.percentHeight(0.02f, table));
         table.row();
-        table.add(medMinigame).padTop(Value.percentHeight(0.02f, table));;
+        table.add(medMinigame).padTop(Value.percentHeight(0.02f, table));
         table.row();
-        table.add(hardMinigame).padTop(Value.percentHeight(0.02f, table));;
+        table.add(hardMinigame).padTop(Value.percentHeight(0.02f, table));
         table.row();
-        table.add(veryHardMinigame).padTop(Value.percentHeight(0.02f, table));;
+        table.add(veryHardMinigame).padTop(Value.percentHeight(0.02f, table));
         table.row();
         table.add(quitMinigame).padTop(Value.percentHeight(0.05f, table));
 
@@ -166,9 +172,14 @@ public class MinigameScreen extends PirateScreen {
         getStage().addActor(table);
     }
 
+    /***
+     * Player has selected to start game on specified difficulty
+     * @param difficulty selected difficulty
+     */
     private void startGame(MinigameDifficulty difficulty) {
         Player player = getGameInstance().getEntityManager().getOrCreatePlayer();
-        if(player.getBalance() >= difficulty.getCost()) {
+        if (player.getBalance() >= difficulty.getCost()) {
+            //if player has enough money
             player.deductBalance(difficulty.getCost());
             setCountdowns(difficulty);
             this.difficulty = difficulty;
@@ -179,6 +190,10 @@ public class MinigameScreen extends PirateScreen {
         }
     }
 
+    /***
+     * Create UI for game itself
+     * @param difficulty selected difficulty
+     */
     private void createGameUI(MinigameDifficulty difficulty) {
         gameTable = new Table();
         gameTable.top();
@@ -200,18 +215,18 @@ public class MinigameScreen extends PirateScreen {
 
     private void setCountdowns(MinigameDifficulty minigameDifficulty) {
         Random random = new Random();
-        startCountdown = random.nextInt(3)+1;
-        enemyShootTimer = startCountdown+minigameDifficulty.getCountdown();
+        startCountdown = random.nextInt(3) + 1;
+        enemyShootTimer = startCountdown + minigameDifficulty.getCountdown();
     }
 }
 
 
 @Getter
 enum MinigameDifficulty {
-    EASY(FileManager.MINIGAME_ENEMY_EASY_1,FileManager.MINIGAME_ENEMY_EASY_2,1, 2,0.5f),
-    MEDIUM(FileManager.MINIGAME_ENEMY_MED_1,FileManager.MINIGAME_ENEMY_MED_2,10, 50,0.3f),
-    HARD(FileManager.MINIGAME_ENEMY_HARD_1,FileManager.MINIGAME_ENEMY_HARD_2,20, 200,0.26f),
-    VERY_HARD(FileManager.MINIGAME_ENEMY_VHARD_1,FileManager.MINIGAME_ENEMY_VHARD_2,50, 500,0.23f);
+    EASY(FileManager.MINIGAME_ENEMY_EASY_1, FileManager.MINIGAME_ENEMY_EASY_2, 1, 2, 0.4f),
+    MEDIUM(FileManager.MINIGAME_ENEMY_MED_1, FileManager.MINIGAME_ENEMY_MED_2, 10, 20, 0.27f),
+    HARD(FileManager.MINIGAME_ENEMY_HARD_1, FileManager.MINIGAME_ENEMY_HARD_2, 20, 40, 0.23f),
+    VERY_HARD(FileManager.MINIGAME_ENEMY_VHARD_1, FileManager.MINIGAME_ENEMY_VHARD_2, 50, 100, 0.20f);
 
     private Texture enemyHolstered, enemyShooting;
     private Integer cost, reward;

@@ -27,11 +27,9 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(APirateGame game) {
         this.game = game;
-
         this.stage = new Stage(new ScreenViewport());
 
         Gdx.input.setInputProcessor(stage);
-
         createTable();
     }
 
@@ -53,7 +51,6 @@ public class MenuScreen implements Screen {
                 .maxHeight(Value.percentWidth(0.17f, logoTable))
                 .expandX();
         logoTable.row();
-
         Image teamLogo = new Image(FileManager.teamLogo);
         teamLogo.setScaling(Scaling.fit);
         logoTable.add(teamLogo)

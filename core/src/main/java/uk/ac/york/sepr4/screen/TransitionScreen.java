@@ -17,6 +17,13 @@ public class TransitionScreen implements Screen {
     private boolean fading = true, dispose;
     private float fadeTime = 0.4f, fadeTimer;
 
+    /***
+     * Transition Constructor
+     * @param gameInstance current gameinstance
+     * @param fadeOut screen to fade in
+     * @param fadeIn screen to fade out
+     * @param dispose whether to dispose fade out screen when animation finished.
+     */
     public TransitionScreen(GameInstance gameInstance, PirateScreen fadeOut, PirateScreen fadeIn, boolean dispose) {
         this.gameInstance = gameInstance;
         this.fadeIn = fadeIn;

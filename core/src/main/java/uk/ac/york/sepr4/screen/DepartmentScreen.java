@@ -28,6 +28,7 @@ public class DepartmentScreen extends PirateScreen {
         this.gameInstance = gameInstance;
         this.department = department;
 
+        //make stats (gold) visible on this screen
         setEnableStatsHUD(true);
 
         createShopMenu();

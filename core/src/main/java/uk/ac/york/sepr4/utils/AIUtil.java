@@ -12,7 +12,6 @@ import java.util.Random;
 
 public class AIUtil {
 
-
     private static float idealDistFromTarget = 250f; //For the distance you want NPC to be away from target (Goldy Lox Zone)
     private static float gradientForNormalDist = 50f; //This is the standard deviation of the normal distabution
 
@@ -39,7 +38,7 @@ public class AIUtil {
 
                 //FORCES WANTED TO BE COMPUTED***************
                 //Explained more on the resultant force function take a look
-                float f = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(target), gradientForNormalDist, idealDistFromTarget); //---Normal Distrubtion 0 to 1 in max force this allows for us to have diffrent forces depending on distances to the player
+                float f = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(target), gradientForNormalDist, idealDistFromTarget); //---Normal Distribution 0 to 1 in max force this allows for us to have different forces depending on distances to the player
 
                 //Forces due to the target**
                 if ((float) npcEntity.distanceFrom(target) < idealDistFromTarget) {
@@ -53,9 +52,9 @@ public class AIUtil {
                 angles.add(AIUtil.normalizeAngle(target.getAngle() - (float) Math.PI));
                 //**
 
-                //Forces due to the other living entitys**
+                //Forces due to the other living entities**
                 for (LivingEntity livingentity : npcEntity.getLivingEntitiesInRangeMinusTarget(target)) {
-                    float n = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(livingentity), 50, 200); //---Normal Distrubtion again but to all livining entitys stops them wanting to collide
+                    float n = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(livingentity), 50, 200); //---Normal Distribution again but to all living entities stops them wanting to collide
                     if ((float) npcEntity.distanceFrom(livingentity) < 200) {
                         forces.add((1 - n) / 2);
                         angles.add(AIUtil.normalizeAngle(npcEntity.getAngleTowardsEntity(livingentity) - (float) Math.PI));
@@ -67,7 +66,7 @@ public class AIUtil {
                 //**
 
                 //Other forces can be applied in this way where the forces can be any value. In the cases above the max values they can get is 1 this should give you rough estimates of the power of the forces
-                //Really good to add in functions that take into account certain things for strategic poistioning/cool interactions like ramming and whirlpools and things like that *HINT* *HINT*
+                //Really good to add in functions that take into account certain things for strategic positioning/cool interactions like ramming and whirlpools and things like that *HINT* *HINT*
 
                 //********************************************
 
@@ -80,13 +79,13 @@ public class AIUtil {
 
 
                 //NO DUMB MOVE CHECK**************
-                //This section can be made to check whether certain moves maybe a bad move, e.g. moving into projectiles firing line, better strategic poistioning *HINT* *HINT*
+                //This section can be made to check whether certain moves maybe a bad move, e.g. moving into projectiles firing line, better strategic positioning *HINT* *HINT*
                 float wantedAngle = ang; //change
                 //********************************
 
 
                 //SPEED STUFF*****************
-                //Look at NPC Behaviour 2 for more details/visuallisation
+                //Look at NPC Behaviour 2 for more details/visualisation
                 //If not dodging
                 if (npcEntity.getDodging() == 0) {
                     //gets the normal of the angle towards the boat explained in NPC Functions 3
@@ -162,7 +161,7 @@ public class AIUtil {
 
 
                 //FIRING************************
-                //Calculates perfectShot into fireangle then adds some randomness to the shot with the parameter of accuracy which is inveresed
+                //Calculates perfectShot into fireangle then adds some randomness to the shot with the parameter of accuracy which is inverted
 
                 if (target.getSpeed() < target.getMaxSpeed() / 5) {
                     float fireangle = npcEntity.getAngleTowardsEntity(target);

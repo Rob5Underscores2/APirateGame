@@ -34,11 +34,13 @@ public class HowToPlayScreen implements Screen {
     }
 
     private void createTable() {
-
+        //create table
         Table table = new Table();
         table.top();
         table.setFillParent(true);
-        table.debug();
+        //table.debug();
+
+        //story
         Label storyHeader = new Label("Your Story", StyleManager.generateLabelStyle(40,Color.BLACK));
         Label story = new Label("In a not too distant dystopian future, Earth has been submerged in water. The battle for dry land has plunged the world into war, famine and financial chaos. The last vestiges of law in York attempt to restrain the pirate rebels from disrupting order.\n" +
                 "\n" +
@@ -48,6 +50,7 @@ public class HowToPlayScreen implements Screen {
         story.setWrap(true);
         story.setAlignment(Align.center);
 
+        //goals
         Label goalHeader = new Label("Your Mission", StyleManager.generateLabelStyle(40,Color.BLACK));
         Label goal = new Label("Muster your crew and venture into the open waters in order to defeat the scourge of the seas." +
                 "\n" +
@@ -55,6 +58,7 @@ public class HowToPlayScreen implements Screen {
         goal.setWrap(true);
         goal.setAlignment(Align.center);
 
+        //controls
         Label controlsHeader = new Label("Controls", StyleManager.generateLabelStyle(35,Color.BLACK));
         Label controls = new Label("WASD - Movement" +
                 "\n" +
@@ -65,6 +69,7 @@ public class HowToPlayScreen implements Screen {
                 "M - Zoom Out", StyleManager.generateLabelStyle(25,Color.BLACK));
         controls.setAlignment(Align.center);
 
+        //start game/continue button
         TextButton toMenu = new TextButton("Continue..",
                 StyleManager.generateTBStyle(25, Color.GOLD, Color.GRAY));
         toMenu.addListener(new ClickListener() {
@@ -74,6 +79,7 @@ public class HowToPlayScreen implements Screen {
             }
         });
 
+        //populate table
         table.add(storyHeader).padTop(Value.percentHeight(0.05f, table)).expandX();
         table.row();
         table.add(story)
@@ -103,7 +109,8 @@ public class HowToPlayScreen implements Screen {
                 .expandX();
         table.row();
 
-
+        //add table to a scroll pane.
+        //On smaller screens this will allow text to be scrolled if it flows over page
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setFillParent(true);
         stage.addActor(scrollPane);

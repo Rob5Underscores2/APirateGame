@@ -62,6 +62,10 @@ public class GameInstance {
         sailScreen = new SailScreen(this);
     }
 
+    /***
+     * Start game instance - switch to sailscreen (or HTP screen if new game)
+     * @param showHowToPlay
+     */
     public void start(boolean showHowToPlay) {
         if(showHowToPlay) {
             Gdx.app.debug("GameInstance", "Starting Instance - Show how to play!");

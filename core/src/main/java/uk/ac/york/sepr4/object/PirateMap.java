@@ -70,15 +70,21 @@ public class PirateMap {
         return false;
     }
 
+    /***
+     * Generate spawn zones from map objects. Parse difficulty from object name.
+     * These will areas will be used to spawn NPCs (krakens, boats).
+     */
     private void setSpawnZones() {
         for(MapObject objects : objectLayer.getObjects()){
             if(objects.getName() != null) {
                 if (objects.getName().contains("npc_spawn")) {
+                    //is an npc_spawn object
                     if (objects instanceof PolygonMapObject) {
                         String name = objects.getName();
                         name = name.replace("npc_spawn", "");
                         Integer difficulty = Integer.valueOf(name);
                         if (difficulty != null) {
+                            //parse difficulty from name
                             PolygonMapObject polygonMapObject = (PolygonMapObject) objects;
                             Polygon polygon = polygonMapObject.getPolygon();
                             spawnZones.put(convertTiledPolygonToMap(polygon, 0, 0), difficulty);
@@ -90,6 +96,11 @@ public class PirateMap {
         Gdx.app.log("PirateMap", "Loaded "+spawnZones.size()+" spawn zones!");
     }
 
+    /***
+     * Generate objects from individual tiles (based on respective tile's object).
+     *
+     * This function provides functionality that should really be in LibGDX's TiledMap package.
+     */
     private void setCollisionObjects() {
         for (MapLayer mapLayer : tiledMap.getLayers()) {
 
@@ -124,7 +135,13 @@ public class PirateMap {
         Gdx.app.log("PirateMap", "Loaded " + this.collisionObjects.size() + " collision objects!");
     }
 
-    //x,y are offset
+    /***
+     * Convert TiledPolygon to Polygon with correct relative coordinate.
+     * @param tiledPolyon input polygon
+     * @param x x offset
+     * @param y y offset
+     * @return Polygon with respect to map coordinates
+     */
     private Polygon convertTiledPolygonToMap(Polygon tiledPolyon, Integer x, Integer y) {
         Polygon polygon = new Polygon();
         polygon.setVertices(tiledPolyon.getVertices());
@@ -138,6 +155,7 @@ public class PirateMap {
         return polygon;
     }
 
+    //check if map contains objectlayer
     private boolean checkObjectLayer() {
         this.objectLayer = tiledMap.getLayers().get(objectLayerName);
         if (this.objectLayer != null) {
@@ -161,6 +179,7 @@ public class PirateMap {
         return Optional.empty();
     }
 
+    //set spawn object
     private boolean setSpawnObject() {
         MapObject mapObject = objectLayer.getObjects().get(spawnPointObject);
         if (mapObject != null && mapObject instanceof RectangleMapObject) {
@@ -171,6 +190,7 @@ public class PirateMap {
         return false;
     }
 
+    //scale tiledvector to real vector
     public Vector2 scaleTiledVectorToMap(Vector2 tiledVector) {
         return tiledVector.scl(1 / 2f);
     }

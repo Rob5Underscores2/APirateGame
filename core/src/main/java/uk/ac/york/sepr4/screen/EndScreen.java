@@ -81,6 +81,7 @@ public class EndScreen extends PirateScreen {
 
         @Override
         public void renderInner(float delta) {
+            //no moving parts - not required
         }
 
 }

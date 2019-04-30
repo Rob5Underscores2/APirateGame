@@ -31,6 +31,10 @@ public class Projectile extends Entity {
         setDamage(damage);
     }
 
+    /***
+     * Move projectile and despawn if too far from shooter.
+     * @param deltaTime time since last render
+     */
     @Override
     public void act(float deltaTime) {
         if(this.distanceFrom(shooter) > 1000) {

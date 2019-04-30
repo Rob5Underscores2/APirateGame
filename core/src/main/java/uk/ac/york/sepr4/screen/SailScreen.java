@@ -112,7 +112,6 @@ public class SailScreen extends PirateScreen {
         }
 
         handleHealthBars();
-
         checkCollisions();
 
         // Update camera and focus on player.
@@ -146,14 +145,18 @@ public class SailScreen extends PirateScreen {
     private void handleHealthBars() {
         Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         if (player.getHealth() < player.getMaxHealth()) {
+            //if player has less than max health
             if (!getStage().getActors().contains(player.getHealthBar(), true)) {
+                //if healthbar isnt on stage, add it
                 getStage().addActor(player.getHealthBar());
             }
         }
 
         for (NPCEntity npcEntity : gameInstance.getEntityManager().getNpcList()) {
             if (npcEntity.getHealth() < npcEntity.getMaxHealth()) {
+                //if entity has less than max health
                 if (!getStage().getActors().contains(npcEntity.getHealthBar(), true)) {
+                    //if healthbar isnt on stage, add it
                     getStage().addActor(npcEntity.getHealthBar());
                 }
             }
@@ -164,6 +167,7 @@ public class SailScreen extends PirateScreen {
                 HealthBar healthBar = (HealthBar) actors;
                 LivingEntity livingEntity = healthBar.getLivingEntity();
                 if (livingEntity.getHealth() == livingEntity.getMaxHealth() || livingEntity.isDead() || livingEntity.isDying()) {
+                    //if living entity has healed, is dead or is dying --> remove healthbar
                     toRemove.add(actors);
                 }
             }
@@ -180,6 +184,9 @@ public class SailScreen extends PirateScreen {
         checkLivingEntityCollisions();
     }
 
+    /***
+     * Nested loop through each entity against others and check if colliding (overlapping).
+     */
     public void checkLivingEntityCollisions() {
         EntityManager entityManager = gameInstance.getEntityManager();
         //player/map collision check
@@ -214,17 +221,21 @@ public class SailScreen extends PirateScreen {
         }
     }
 
+    /***
+     * Loop through all projectiles and entities and check if colliding (overlapping).
+     */
     private void checkProjectileCollisions() {
         EntityManager entityManager = gameInstance.getEntityManager();
         for (Projectile projectile : entityManager.getProjectileManager().getProjectileList()) {
             if(gameInstance.getPirateMap().isColliding(projectile.getRectBounds())) {
+                //if projectile collides with map objects - remove
                 projectile.setActive(false);
                 return;
             }
 
             for (LivingEntity livingEntity : entityManager.getLivingEntities()) {
                 if (projectile.getShooter() != livingEntity && projectile.getRectBounds().overlaps(livingEntity.getRectBounds())) {
-                    //if bullet overlaps player and shooter not player
+                    //if bullet overlaps LE and shooter not LE
                     if (!(livingEntity.isDying() || livingEntity.isDead())) {
                         livingEntity.damage(projectile);
                         Gdx.app.debug("SailScreen", "LivingEntity damaged by projectile.");

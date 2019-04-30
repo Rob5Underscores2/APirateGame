@@ -65,9 +65,11 @@ public abstract class PirateScreen implements Screen {
         }
         renderInner(delta);
         if (isFading()) {
+            //fade in/out
             applyFadeOverlay();
         }
         if(gameInstance.isPaused()) {
+            //if paused show pausehud
             gameInstance.getPauseHUD().update();
         } else {
             stage.act(delta);
