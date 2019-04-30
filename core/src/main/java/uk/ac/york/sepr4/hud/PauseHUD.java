@@ -43,6 +43,10 @@ public class PauseHUD {
         createCrewTable();
     }
 
+    /***
+     * Create display for controls table.
+     * The controls display appears mid-left on the PauseHUD.
+     */
     private void createControlsTable() {
         Table controlsTable = new Table();
         controlsTable.top();
@@ -54,12 +58,14 @@ public class PauseHUD {
         controlsTable.add(controlsHeader).padTop(Value.percentHeight(0.22f, controlsTable)).expandX();
         controlsTable.row();
 
+        //create labels
         Label W = new Label("Accelerate : W", StyleManager.generateLabelStyle(25, Color.GOLD));
         Label A = new Label("Turn Left : A", StyleManager.generateLabelStyle(25, Color.GOLD));
         Label S = new Label("Slow down : S", StyleManager.generateLabelStyle(25, Color.GOLD));
         Label D = new Label("Turn Right : D", StyleManager.generateLabelStyle(25, Color.GOLD));
         Label M = new Label("Open Minimap : M", StyleManager.generateLabelStyle(25, Color.GOLD));
 
+        //add labels to table
         controlsTable.add(W).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
         controlsTable.row();
         controlsTable.add(A).padTop(Value.percentHeight(0.02f, controlsTable)).expandX();
@@ -73,18 +79,24 @@ public class PauseHUD {
         stage.addActor(controlsTable);
     }
 
+    /***
+     * Create display for crew table.
+     * The crew table appears mid-right and shows the player which upgrades they have and what level they are.
+     */
     private void createCrewTable() {
         Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         Table crewTable = new Table();
         crewTable.top();
         crewTable.setFillParent(true);
-        //crewTable.debug();
+
+        //setup table
         crewTable.padLeft(Value.percentWidth(0.5f, crewTable))
                         .padRight(Value.percentWidth(0.16f, crewTable));
 
         Label crewHeader = new Label("Crew Members", StyleManager.generateLabelStyle(35, Color.NAVY));
         crewTable.add(crewHeader).padTop(Value.percentHeight(0.22f, crewTable)).expandX();
 
+        //programmatically add crew member label
         for(CrewMember crew : player.getCrewMembers()) {
             Label crewLabel = new Label(crew.getName()+" : "+crew.getLevel()+"/"+crew.getMaxLevel(),
                     StyleManager.generateLabelStyle(25, Color.GOLD));
@@ -95,6 +107,10 @@ public class PauseHUD {
         stage.addActor(crewTable);
     }
 
+    /***
+     * Create main PauseHUD table.
+     * Has quit button, pause label and objective table (colleges captured)
+     */
     private void createTable() {
         Player player = gameInstance.getEntityManager().getOrCreatePlayer();
         //define a table used to organize our sailHud's labels
@@ -122,6 +138,7 @@ public class PauseHUD {
         table.row();
         table.add(btnMenu).expandX();
         table.row();
+
         //College/Goal Tracker
         Label collegesHeader = new Label("Colleges", StyleManager.generateLabelStyle(35, Color.BLACK));
         table.add(collegesHeader).padTop(Value.percentHeight(0.11f, table)).expandX();

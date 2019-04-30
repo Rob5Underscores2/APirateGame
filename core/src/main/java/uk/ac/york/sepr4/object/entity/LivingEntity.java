@@ -72,12 +72,17 @@ public abstract class LivingEntity extends Entity {
         return this.healthBar;
     }
 
+    /***
+     * LivingEntity update/act method
+     * @param deltaTime time since last render
+     */
     @Override
     public void act(float deltaTime) {
-        //Assessment 3 - do nothing if paused
 
+        //decrease weapon cooldown
         setCurrentCooldown(getCurrentCooldown() + deltaTime);
         if(isOnFire()) {
+            //if on fire decrease fire time
             if(getOnFire()>deltaTime) {
                 setOnFire(getOnFire() - deltaTime);
             } else {
@@ -85,20 +90,22 @@ public abstract class LivingEntity extends Entity {
             }
         }
 
-        if(isOnFire()) {
-            if (fireDmgCooldown - deltaTime < 0) {
-                setHealth(getHealth() - 0.5);
-                setFireDmgCooldown(0.5f);
-            } else {
-                fireDmgCooldown-=deltaTime;
-            }
-        }
-
         if (!this.isDying) {
+            //if not dying
+
+            if(isOnFire()) {
+                //if on fire take damage
+                if (fireDmgCooldown - deltaTime < 0) {
+                    setHealth(getHealth() - 0.5);
+                    setFireDmgCooldown(0.5f);
+                } else {
+                    fireDmgCooldown-=deltaTime;
+                }
+            }
+
+            //change speed based on acceleration
             float speed = getSpeed();
-
             if (isAccelerating) {
-
                 if (speed > maxSpeed) {
                     speed = maxSpeed;
                 } else {

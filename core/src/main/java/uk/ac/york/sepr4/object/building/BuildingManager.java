@@ -46,9 +46,12 @@ public class BuildingManager {
         }
     }
 
-    //TODO: Could have a cooldown here
+    /***
+     * Check whether the college boss should spawn.
+     */
     public void checkBossSpawn() {
         for(College college : colleges) {
+            //check if boss already spawned or college npc kill threshold reached
             if(!college.isBossSpawned() && college.getBossSpawnThreshold() == 0) {
                 //TODO: Add collision check for boss spawn
                 Player player = gameInstance.getEntityManager().getOrCreatePlayer();
@@ -65,6 +68,12 @@ public class BuildingManager {
         }
     }
 
+    /***
+     * Generate random spawn point for College NPCs.
+     * @param college College to get spawn point in
+     * @param size range to check in
+     * @return Optional spawn point if valid point found in certain no. of attempts.
+     */
     private Optional<Vector2> getValidRandomSpawn(College college, float size) {
         int attempts = 0;
         while (attempts<10) {
@@ -91,7 +100,7 @@ public class BuildingManager {
             Optional<Vector2> pos = getValidRandomSpawn(college, 250f);
             if(pos.isPresent()) {
                 NPCBoat boat = new NPCBuilder().generateRandomEnemyBoat( pos.get(), Optional.of(college),
-                         boss ? college.getBossDifficulty().floatValue() : college.getEnemyDifficulty().floatValue(), boss);
+                         boss ? college.getBossDifficulty() : college.getEnemyDifficulty(), boss);
                 return Optional.of(boat);
             }
         }
@@ -101,6 +110,12 @@ public class BuildingManager {
 
 
     //TODO: Make generic method and remove duplicate code
+
+    /***
+     * Load buildings (College, Departments, MinigameBuildings) into stores.
+     * Check if they are initialized correctly (exist on the map too).
+     * @param loading list of buildings to load
+     */
     private void loadBuildings(Array<Building> loading) {
         for(Building building : loading) {
             if (building.load(gameInstance.getPirateMap())) {

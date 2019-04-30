@@ -21,7 +21,7 @@ public class NPCBuilder {
      * @param isBoss Is the NPCBoat a college boss
      * @return An NPCBoat with correct stats
      */
-    public NPCBoat generateRandomEnemyBoat(Vector2 pos, Optional<College> allied, float difficulty, boolean isBoss) {
+    public NPCBoat generateRandomEnemyBoat(Vector2 pos, Optional<College> allied, Integer difficulty, boolean isBoss) {
         Random random = new Random();
 
         NPCBoat npcBoat;
@@ -37,7 +37,7 @@ public class NPCBuilder {
 
         npcBoat.setAngle((float) (2*Math.PI*random.nextDouble()));;
         npcBoat.setAccuracy(npcBoat.getAccuracy());
-        //10f extra speed per difficulty leve
+        //10f extra speed per difficulty level
         npcBoat.setMaxSpeed(npcBoat.getMaxSpeed() + (difficulty*10f));
         //5.0 extra health per difficulty
         npcBoat.setMaxHealth(npcBoat.getMaxHealth() + (difficulty*5.0));
@@ -60,7 +60,7 @@ public class NPCBuilder {
      * @param difficulty Arbitrary difficulty value which determines health, damage, speed and accuracy
      * @return An NPCMonster with correct stats
      */
-    public NPCMonster generateRandomMonster(Vector2 pos, float difficulty) {
+    public NPCMonster generateRandomMonster(Vector2 pos, Integer difficulty) {
         Random random = new Random();
 
         NPCMonster npcMonster = new NPCMonster(pos, difficulty);

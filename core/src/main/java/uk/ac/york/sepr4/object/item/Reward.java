@@ -8,8 +8,6 @@ public class Reward {
     private Integer xp;
     private Integer gold;
 
-    public Reward() {}
-
     public Reward(Integer xp, Integer gold) {
         this.xp = xp;
         this.gold = gold;

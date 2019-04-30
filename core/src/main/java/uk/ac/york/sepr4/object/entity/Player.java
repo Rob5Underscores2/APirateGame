@@ -31,13 +31,12 @@ public class Player extends LivingEntity implements InputProcessor {
         super(FileManager.PLAYER, pos);
         //face up
         setAngle((float)Math.PI);
-
-        //testing
-        //setMaxHealth(1000.0);
-        //setHealth(1000.0);
-
     }
 
+    /***
+     * Player update/act method
+     * @param deltaTime time since last render
+     */
     @Override
     public void act(float deltaTime) {
         if(!isDying() && !isDead()) {
@@ -50,6 +49,7 @@ public class Player extends LivingEntity implements InputProcessor {
             if (turningRight) {
                 angularSpeed -= getTurningSpeed();
             }
+            //change angle based on turning/angular speed
             angle += ((angularSpeed * deltaTime) * (getSpeed() / getMaxSpeed())) % (float) (2 * Math.PI);
             setAngle(angle);
             decrementCrewCooldown(deltaTime);
@@ -74,6 +74,7 @@ public class Player extends LivingEntity implements InputProcessor {
         crewMembers.add(crewMember);
     }
 
+    //decrement cooldown for crewmembers (abilities)
     public void decrementCrewCooldown(float delta) {
         crewMembers.forEach(crewMember -> crewMember.decrementCooldown(delta));
     }
@@ -181,7 +182,6 @@ public class Player extends LivingEntity implements InputProcessor {
 
         if(keycode == Input.Keys.D) {
             // Assessment 3 - changed to make turning more responsive
-            // TODO: unexpected behaviour when changing input managers
             turningRight = false;
             return true;
         }

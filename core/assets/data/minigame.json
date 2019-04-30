@@ -4,5 +4,17 @@
     "name": "The Thick Sea",
     "mapObjectStr": "minigame1",
     "buildingRange": 750
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.MinigameBuilding",
+    "name": "The Murky Bucket",
+    "mapObjectStr": "minigame2",
+    "buildingRange": 750
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.MinigameBuilding",
+    "name": "The Angry Crow",
+    "mapObjectStr": "minigame3",
+    "buildingRange": 750
   }
 ]

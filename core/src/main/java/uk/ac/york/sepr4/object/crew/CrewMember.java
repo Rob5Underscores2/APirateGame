@@ -22,18 +22,25 @@ public abstract class CrewMember {
         this.baseCooldown = baseCooldown;
     }
 
+    /***
+     * Calculate cost of upgrade.
+     * @return Integer cost of next upgrade.
+     */
     public Integer getUpgradeCost() {
         return baseUpgradeCost*level;
     }
 
+    //is crew member at max level
     public boolean canUpgrade() {
         return level<maxLevel;
     }
 
+    //increase crew member level
     public void upgrade() {
         level++;
     }
 
+    //implemented by extending classses
     public abstract boolean fire(float angle);
 
     public void decrementCooldown(float delta) {

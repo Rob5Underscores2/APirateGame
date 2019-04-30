@@ -25,6 +25,9 @@ public abstract class Entity extends Actor {
         setY(pos.y);
     }
 
+    /***
+     * Draw entity to the stage.
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -39,6 +42,9 @@ public abstract class Entity extends Actor {
                 getTexture().getWidth(), getTexture().getHeight(), false, false);
     }
 
+    /***
+     * Run actor's moving methods.
+     */
     @Override
     public void act(float deltaTime) {
         //Assessment 3 do nothing if paused
@@ -48,7 +54,7 @@ public abstract class Entity extends Actor {
         setX((float) (getX()+(getSpeed()*deltaTime*Math.sin(getAngle()))));
     }
 
-
+    //UTILITY METHODS
     public float getAngleTowardsEntity(Entity entity) {
         double d_angle = Math.atan(((entity.getCentre().y - getCentre().y) / (entity.getCentre().x - getCentre().x)));
         if (entity.getCentre().x < getCentre().x) {

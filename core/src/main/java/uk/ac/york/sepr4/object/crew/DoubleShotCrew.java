@@ -28,6 +28,7 @@ public class DoubleShotCrew extends CrewMember {
 
             Timer timer = new Timer();
 
+            //start a task to fire another projectile later
             TimerTask delayedThreadStartTask = new TimerTask() {
                 @Override
                 public void run() {

@@ -22,7 +22,7 @@ public class NPCBoat extends NPCEntity {
 
     private boolean isBoss;
 
-    public NPCBoat(Texture texture, Vector2 pos, float difficulty) {
+    public NPCBoat(Texture texture, Vector2 pos, Integer difficulty) {
         super(texture, pos, difficulty);
 
     }

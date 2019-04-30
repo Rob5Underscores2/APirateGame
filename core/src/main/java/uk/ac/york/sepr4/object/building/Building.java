@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.object.PirateMap;
-
 import java.util.Optional;
 
 @Data
@@ -29,6 +28,10 @@ public abstract class Building {
         return false;
     }
 
+    /***
+     * Create rectangle representing a building's zone. Based on it's location on the map and range.
+     * @return building zone Rectangle.
+     */
     public Rectangle getBuildingZone() {
         Vector2 pos = getMapLocation();
         return new Rectangle(pos.x-(getBuildingRange()/2), pos.y-(getBuildingRange()/2), getBuildingRange(), getBuildingRange());

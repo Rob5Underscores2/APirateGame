@@ -27,7 +27,7 @@ public class StatsHUD {
     private Stage stage;
 
     //Added for Assessment 3: Many labels and tables for the different features added in SailHUD
-    private Label goldLabel, goldValueLabel, xpLabel, xpValueLabel, locationLabel;
+    private Label goldValueLabel, xpValueLabel, locationLabel;
 
     private Image hudLocation;
 
@@ -52,12 +52,12 @@ public class StatsHUD {
         Image hudTopLeft = new Image(FileManager.hudTopLeft);
         hudTopLeft.setY(Gdx.graphics.getHeight()-hudTopLeft.getHeight());
         stage.addActor(hudTopLeft);
-
         Image hudTopRight = new Image(FileManager.hudTopRight);
         hudTopRight.setY(Gdx.graphics.getHeight()-hudTopRight.getHeight());
         hudTopRight.setX(Gdx.graphics.getWidth()-hudTopRight.getWidth());
         stage.addActor(hudTopRight);
 
+        //background image for location overlay
         hudLocation = new Image(FileManager.hudMiddle);
         hudLocation.setX((Gdx.graphics.getWidth()-hudLocation.getWidth())/2);
         hudLocation.setY(Gdx.graphics.getHeight()-hudLocation.getHeight());

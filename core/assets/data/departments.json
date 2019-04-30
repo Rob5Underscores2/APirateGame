@@ -15,9 +15,23 @@
   },
   {
     "class": "uk.ac.york.sepr4.object.building.Department",
-    "name": "Biology",
-    "mapObjectStr": "biology",
+    "name": "TVFT",
+    "mapObjectStr": "tvft",
     "healCost": 3,
     "crewMemberId": 3
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.Department",
+    "name": "Maths",
+    "mapObjectStr": "maths",
+    "healCost": 2,
+    "crewMemberId": 4
+  },
+  {
+    "class": "uk.ac.york.sepr4.object.building.Department",
+    "name": "Law and Management",
+    "mapObjectStr": "lam",
+    "healCost": 1,
+    "crewMemberId": 5
   }
 ]

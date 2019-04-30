@@ -72,6 +72,9 @@ public class AnimationManager {
         cannonExplosions.add(new CannonExplosion(livingEntity, firingAngle));
     }
 
+    /***
+     * Remove complete cannon effects and activate current ones.
+     */
     private void updateFiringAnimations() {
         List<CannonExplosion> toRemove = new ArrayList<>();
         for(CannonExplosion cannonExplosion: cannonExplosions) {
@@ -84,7 +87,9 @@ public class AnimationManager {
     }
 
 
-    //for boat fire animation
+    /***
+     * Add new, remove complete and then activate current boat fire animations.
+     */
     private void updateBoatFire() {
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
             if(livingEntity.isOnFire()) {
@@ -118,7 +123,9 @@ public class AnimationManager {
     }
 
     //TODO: Could be cleaned up
-    //Water Trails
+    /***
+     * Add new, remove complete and then activate current water trails.
+     */
     private void updateWaterTrails() {
         List<WaterTrail> toRemove = new ArrayList<>();
         for(WaterTrail waterTrail : waterTrails) {
@@ -150,8 +157,9 @@ public class AnimationManager {
         waterTrails.add(new WaterTrail(livingEntity));
     }
 
-    //Death Animations
-    //TODO: Cleanup like other animations
+    /***
+     * Add new, remove complete and then activate current boat death animations.
+     */
     private void updateDeathAnimations(float delta) {
         //add dead NPCs if not yet animating
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {

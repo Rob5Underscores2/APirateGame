@@ -38,6 +38,10 @@ public class DepartmentScreen extends PirateScreen {
         updateTextButtons();
     }
 
+    /***
+     * Create Shop Menu.
+     * Player can repair ship if damaged or upgrade crew member.
+     */
     private void createShopMenu() {
         Player player = gameInstance.getEntityManager().getOrCreatePlayer();
 
@@ -70,6 +74,10 @@ public class DepartmentScreen extends PirateScreen {
         //label to display if allied college not defeat (crew member not unlocked)
         Label noUpgrade = new Label("You have not unlocked this crew member!", StyleManager.generateLabelStyle(40, Color.BLACK));
 
+        //Maximum level label
+        Label maxUpgrade = new Label("This crew member is at it's maximum level!", StyleManager.generateLabelStyle(40, Color.BLACK));
+
+
         //button updated regularly in render
         CrewMember crewMember = department.getCrewMember();
         upgrade = new TextButton("",
@@ -77,8 +85,9 @@ public class DepartmentScreen extends PirateScreen {
         upgrade.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent ev, float x, float y) {
-                if(player.getBalance()>=crewMember.getUpgradeCost()) {
-                    //has enough gold
+                if((player.getBalance()>=crewMember.getUpgradeCost())
+                        && crewMember.canUpgrade()) {
+                    //has enough gold and not maximum level
                     player.deductBalance(crewMember.getUpgradeCost());
                     crewMember.upgrade();
                 }
@@ -105,7 +114,11 @@ public class DepartmentScreen extends PirateScreen {
         table.row();
         if(player.getCrewMembers().contains(crewMember)) {
             //has unlocked crew member
-            table.add(upgrade).padTop(Value.percentHeight(0.02f, table)).expandX();;
+            if(crewMember.canUpgrade()) {
+                table.add(upgrade).padTop(Value.percentHeight(0.02f, table)).expandX();
+            } else {
+                table.add(maxUpgrade).padTop(Value.percentHeight(0.02f, table)).expandX();
+            }
         } else {
             table.add(noUpgrade).padTop(Value.percentHeight(0.02f, table)).expandX();
         }
@@ -115,6 +128,9 @@ public class DepartmentScreen extends PirateScreen {
         getStage().addActor(table);
     }
 
+    /***
+     * Update repair and upgrade cost.
+     */
     private void updateTextButtons() {
         CrewMember crewMember = department.getCrewMember();
         repair.setText("Click to repair your ship for "+getHealCost()+ " gold!");

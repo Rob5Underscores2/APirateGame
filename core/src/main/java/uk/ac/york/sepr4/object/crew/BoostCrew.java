@@ -16,6 +16,7 @@ public class BoostCrew extends CrewMember {
         if(getCurrentCooldown() == 0) {
             //can fire
             Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
+            //"boost" player forward
             player.setSpeed(350f);
             setCurrentCooldown(getCooldown());
             return true;

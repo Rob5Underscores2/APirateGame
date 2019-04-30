@@ -57,6 +57,7 @@ public class SailInputProcessor implements InputProcessor {
                 gameInstance.fadeSwitchScreen(new MinigameScreen(gameInstance));
                 return true;
             } else if(keycode == Input.Keys.MINUS) {
+                //used to test end screen (death)
                 gameInstance.fadeSwitchScreen(new EndScreen(gameInstance, true));
             }
         }

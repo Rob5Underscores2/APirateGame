@@ -23,16 +23,14 @@ public class EntityManager {
 
     private Player player;
 
-    @Getter
-    private Array<NPCEntity> npcList = new Array<>();
-
     private GameInstance gameInstance;
-
     @Getter
     private AnimationManager animationManager;
     @Getter
     private ProjectileManager projectileManager;
 
+    @Getter
+    private Array<NPCEntity> npcList = new Array<>();
     private Integer MAX_ENTITIES = 5;
     private float KRAKEN_CHANCE = 0.15f;
 
@@ -62,6 +60,7 @@ public class EntityManager {
         return new ArrayList<>(list);
     }
 
+    //check if rectangle is occupied by a living entity already.
     public boolean isOccupied(Rectangle rectangle) {
         for(LivingEntity livingEntities : getLivingEntities()) {
             if(rectangle.overlaps(livingEntities.getRectBounds())) {
@@ -71,6 +70,10 @@ public class EntityManager {
         return false;
     }
 
+    /***
+     * Get which building the player is within range of.
+     * @return Optional building if player is within range of one.
+     */
     public Optional<Building> getPlayerLocation() {
         for(College building : gameInstance.getBuildingManager().getColleges()) {
             if(building.getBuildingZone().contains(player.getX(), player.getY())) {
@@ -90,8 +93,10 @@ public class EntityManager {
         return  Optional.empty();
     }
 
-
-
+    /***
+     * Start EntityManager tracking a new NPC.
+     * @param npcEntity npc to track.
+     */
     public void addNPC(NPCEntity npcEntity){
         if(!npcList.contains(npcEntity, false)) {
             this.npcList.add(npcEntity);
@@ -103,6 +108,7 @@ public class EntityManager {
         }
     }
 
+    //General update method for entities.
     public void handleStageEntities(Stage stage, float delta){
         projectileManager.handleProjectiles(stage);
         handleNPCs(stage);
@@ -123,17 +129,23 @@ public class EntityManager {
         }
     }
 
+    /***
+     * Spawn college and random NPCs.
+     * @param delta time since last render.
+     */
     public void spawnEnemies(float delta) {
         spawnDelta+=delta;
+        //dont check for spawn every render (every second).
         if(spawnDelta >= 1f) {
-
             //Spawn college NPCs if player close
             BuildingManager buildingManager = gameInstance.getBuildingManager();
             for (College college : buildingManager.getColleges()) {
                 //check how many entities already exist in college zone (dont spawn too many)
                 if (college.getBuildingZone().contains(player.getRectBounds())) {
+                    //if player is in college range
                     if (gameInstance.getEntityManager().getLivingEntitiesInArea(college.getBuildingZone()).size
                             < college.getMaxEntities()) {
+                        //if not too many entities already
                         Optional<NPCBoat> optionalEnemy = gameInstance.getBuildingManager().generateCollegeNPC(college, false);
                         if (optionalEnemy.isPresent()) {
                             //checks if spawn spot is valid
@@ -149,18 +161,23 @@ public class EntityManager {
             HashMap<Polygon, Integer> spawnZones = gameInstance.getPirateMap().getSpawnZones();
             Player player = gameInstance.getEntityManager().getOrCreatePlayer();
             if(npcList.size < MAX_ENTITIES) {
+                //if not too many entities already
                 spawnZones.forEach(((polygon, difficulty) -> {
+                    //for each spawn zone
                     if (polygon.contains(player.getX(), player.getY())) {
                         //player is spawn zone
                         Optional<Vector2> optionalSpawnPos = ShapeUtil.getRandomPosition(polygon);
                         if (optionalSpawnPos.isPresent()) {
+                            //got valid spawn point
                             if(checkSpawnPoint(optionalSpawnPos.get())) {
                                 Random random = new Random();
                                 if(KRAKEN_CHANCE>=random.nextFloat()) {
+                                    //chose to generate kraken
                                     NPCMonster npcMonster = new NPCBuilder().generateRandomMonster(optionalSpawnPos.get(), difficulty);
                                     Gdx.app.debug("Building Manager", "Spawning a moster");
                                     addNPC(npcMonster);
                                 } else {
+                                    //chose to generate boat
                                     NPCBoat npcBoat = new NPCBuilder().generateRandomEnemyBoat(optionalSpawnPos.get(), Optional.empty(),
                                             difficulty, false);
                                     Gdx.app.debug("Building Manager", "Spawning an enemy");
@@ -172,6 +189,7 @@ public class EntityManager {
                 }));
             }
 
+            //reset spawn cooldown
             spawnDelta = 0f;
         }
     }

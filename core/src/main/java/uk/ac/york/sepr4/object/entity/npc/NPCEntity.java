@@ -29,12 +29,12 @@ public abstract class NPCEntity extends LivingEntity {
 
     private int dodging = 0; //Not dodging = 0 anything other than 0 is meaning dodging. this is the amount of frames you want the NPC to dodge for
     //Adjusted - should be 1-10 for correct balancing
-    private float difficulty;
+    private Integer difficulty;
 
     private float targetCheck = 3f; //Timer so target check aint every frame
 
 
-    public NPCEntity(Texture texture, Vector2 pos, float difficulty) {
+    public NPCEntity(Texture texture, Vector2 pos, Integer difficulty) {
         super(texture, pos);
         this.difficulty = difficulty;
     }
@@ -52,6 +52,9 @@ public abstract class NPCEntity extends LivingEntity {
         super.act(deltaTime);
     }
 
+    /***
+     * Check whether Entity is far enough away from the player to despawn.
+     */
     private void checkDespawn() {
         Player player = GameInstance.INSTANCE.getEntityManager().getOrCreatePlayer();
 

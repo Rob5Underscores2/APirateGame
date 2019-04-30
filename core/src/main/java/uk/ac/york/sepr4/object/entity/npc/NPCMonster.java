@@ -13,7 +13,7 @@ public class NPCMonster extends NPCEntity {
     private Integer spriteFrame = 1;
     private float spriteUpdate = 0.05f;
 
-    public NPCMonster(Vector2 pos, float difficulty) {
+    public NPCMonster(Vector2 pos, Integer difficulty) {
         super(FileManager.krackenFrame(1), pos, difficulty);
         //half speed and slower firing but more damage
         setMaxSpeed(50f);
