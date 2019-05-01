@@ -1,11 +1,13 @@
 package uk.ac.york.sepr4.object.projectile;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
+import uk.ac.york.sepr4.io.FileManager;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 
 public class ProjectileManager {
@@ -15,22 +17,23 @@ public class ProjectileManager {
 
     public ProjectileManager() {
         this.projectileList = new Array<>();
-
-    }
-
-
-    public void spawnProjectile(LivingEntity livingEntity, float speed, float angle) {
-        Projectile projectile = new Projectile(livingEntity, speed, angle);
-        projectileList.add(projectile);
     }
 
     /**
      * Added for Assessment 3: overloaded spawnProjectile to add a damage parameter
      */
     public void spawnProjectile(LivingEntity livingEntity, float speed, float angle, double damage) {
-        Projectile projectile = new Projectile(livingEntity, speed, angle, damage);
+        Projectile projectile = new Projectile(livingEntity, FileManager.CANNONBALL, speed, angle, damage);
         projectileList.add(projectile);
     }
+
+    //added for crew members to be able to spawn projectiles with different textures
+    public void spawnProjectile(LivingEntity livingEntity, Texture texture, float speed, float angle, double damage, boolean fire) {
+        Projectile projectile = new Projectile(livingEntity, texture, speed, angle, damage);
+        projectile.setOnFire(fire);
+        projectileList.add(projectile);
+    }
+
     public Array<Projectile> getProjectileInArea(Rectangle rectangle) {
         Array<Projectile> projectiles = new Array<>();
         for(Projectile projectile : projectileList) {

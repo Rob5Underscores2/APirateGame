@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import lombok.Data;
-import uk.ac.york.sepr4.GameScreen;
 
 @Data
 public abstract class Entity extends Actor {
@@ -26,6 +25,9 @@ public abstract class Entity extends Actor {
         setY(pos.y);
     }
 
+    /***
+     * Draw entity to the stage.
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -40,26 +42,19 @@ public abstract class Entity extends Actor {
                 getTexture().getWidth(), getTexture().getHeight(), false, false);
     }
 
+    /***
+     * Run actor's moving methods.
+     */
     @Override
     public void act(float deltaTime) {
         //Assessment 3 do nothing if paused
-        if (GameScreen.isPaused()) {
-            return;
-        }
+
         super.act(deltaTime);
-
-        float speed = getSpeed();
-        float angle = getAngle();
-
-        float y = getY();
-        float x = getX();
-        y -= speed * deltaTime * Math.cos(angle);
-        x += speed * deltaTime * Math.sin(angle);
-
-        setPosition(x, y);
+        setY((float) (getY()-(getSpeed()*deltaTime*Math.cos(getAngle()))));
+        setX((float) (getX()+(getSpeed()*deltaTime*Math.sin(getAngle()))));
     }
 
-
+    //UTILITY METHODS
     public float getAngleTowardsEntity(Entity entity) {
         double d_angle = Math.atan(((entity.getCentre().y - getCentre().y) / (entity.getCentre().x - getCentre().x)));
         if (entity.getCentre().x < getCentre().x) {
@@ -75,13 +70,12 @@ public abstract class Entity extends Actor {
     public double distanceFrom(Entity entity) {
         return (float) Math.sqrt(Math.pow((entity.getCentre().x - getCentre().x), 2) + Math.pow((entity.getCentre().y - getCentre().y), 2));
     }
+    public double distanceFrom(Vector2 pos) {
+        return (float) Math.sqrt(Math.pow((pos.x - getCentre().x), 2) + Math.pow((pos.y - getCentre().y), 2));
+    }
 
     public Rectangle getRectBounds() {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
-    }
-
-    public String locToString(){
-        return ("X:" + Float.toString(this.getCentre().x) + " Y:" + Float.toString(this.getCentre().y) + " ANG:" + Float.toString(this.getAngle()) + " SPD:" + Float.toString(this.getSpeed()));
     }
 
 }

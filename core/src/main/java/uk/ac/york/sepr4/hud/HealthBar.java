@@ -40,6 +40,9 @@ public class HealthBar extends ProgressBar {
         setAnimateDuration(0.25f);
     }
 
+    /***
+     * Update health bar's position and value
+     */
     public void update() {
         setX(livingEntity.getX());
         //just above

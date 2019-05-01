@@ -33,14 +33,18 @@ public class PirateMap {
     private boolean objectsEnabled;
 
     @Getter
-    private List<Polygon> collisionObjects;
+    private List<Polygon> collisionObjects = new ArrayList<>();
+    @Getter
+    private HashMap<Polygon, Integer> spawnZones = new HashMap<>();
+
+
 
     public PirateMap(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
-        this.collisionObjects = new ArrayList<>();
 
         if (checkObjectLayer()) {
             setCollisionObjects();
+            setSpawnZones();
             this.objectsEnabled = true;
         } else {
             Gdx.app.error("Pirate Map", "Map does NOT contain object layer!");
@@ -66,6 +70,37 @@ public class PirateMap {
         return false;
     }
 
+    /***
+     * Generate spawn zones from map objects. Parse difficulty from object name.
+     * These will areas will be used to spawn NPCs (krakens, boats).
+     */
+    private void setSpawnZones() {
+        for(MapObject objects : objectLayer.getObjects()){
+            if(objects.getName() != null) {
+                if (objects.getName().contains("npc_spawn")) {
+                    //is an npc_spawn object
+                    if (objects instanceof PolygonMapObject) {
+                        String name = objects.getName();
+                        name = name.replace("npc_spawn", "");
+                        Integer difficulty = Integer.valueOf(name);
+                        if (difficulty != null) {
+                            //parse difficulty from name
+                            PolygonMapObject polygonMapObject = (PolygonMapObject) objects;
+                            Polygon polygon = polygonMapObject.getPolygon();
+                            spawnZones.put(convertTiledPolygonToMap(polygon, 0, 0), difficulty);
+                        }
+                    }
+                }
+            }
+        }
+        Gdx.app.log("PirateMap", "Loaded "+spawnZones.size()+" spawn zones!");
+    }
+
+    /***
+     * Generate objects from individual tiles (based on respective tile's object).
+     *
+     * This function provides functionality that should really be in LibGDX's TiledMap package.
+     */
     private void setCollisionObjects() {
         for (MapLayer mapLayer : tiledMap.getLayers()) {
 
@@ -87,16 +122,7 @@ public class PirateMap {
                                     if (mapObject instanceof PolygonMapObject) {
                                         PolygonMapObject polygonMapObject = (PolygonMapObject) mapObject;
                                         Polygon oldPoly = polygonMapObject.getPolygon();
-                                        Polygon polygon = new Polygon();
-                                        polygon.setVertices(oldPoly.getVertices());
-                                        polygon.setOrigin(oldPoly.getOriginX(), oldPoly.getOriginY());
-                                        polygon.setPosition((x+(oldPoly.getX()/64))*32f, (y+(oldPoly.getY())/64)*32f);
-                                        //TODO: LibGDX fault. LoadObject does not correctly get tile rotation.
-                                        //Rotation value is always 0 (even on rotated tiles).
-                                        //Simple replace with non-rotated tiles in map editor.
-                                        polygon.setRotation(polygonMapObject.getPolygon().getRotation());
-                                        polygon.setScale(1/2f, 1/2f);
-                                        collisionObjects.add(polygon);
+                                        collisionObjects.add(convertTiledPolygonToMap(oldPoly, x, y));
                                     }
                                 }
                             }
@@ -109,6 +135,27 @@ public class PirateMap {
         Gdx.app.log("PirateMap", "Loaded " + this.collisionObjects.size() + " collision objects!");
     }
 
+    /***
+     * Convert TiledPolygon to Polygon with correct relative coordinate.
+     * @param tiledPolyon input polygon
+     * @param x x offset
+     * @param y y offset
+     * @return Polygon with respect to map coordinates
+     */
+    private Polygon convertTiledPolygonToMap(Polygon tiledPolyon, Integer x, Integer y) {
+        Polygon polygon = new Polygon();
+        polygon.setVertices(tiledPolyon.getVertices());
+        polygon.setOrigin(tiledPolyon.getOriginX(), tiledPolyon.getOriginY());
+        polygon.setPosition((x+(tiledPolyon.getX()/64))*32f, (y+(tiledPolyon.getY())/64)*32f);
+        //TODO: LibGDX fault. LoadObject does not correctly get tile rotation.
+        //Rotation value is always 0 (even on rotated tiles).
+        //Simple replace with non-rotated tiles in map editor.
+        //polygon.setRotation(polygonMapObject.getPolygon().getRotation());
+        polygon.setScale(1/2f, 1/2f);
+        return polygon;
+    }
+
+    //check if map contains objectlayer
     private boolean checkObjectLayer() {
         this.objectLayer = tiledMap.getLayers().get(objectLayerName);
         if (this.objectLayer != null) {
@@ -132,6 +179,7 @@ public class PirateMap {
         return Optional.empty();
     }
 
+    //set spawn object
     private boolean setSpawnObject() {
         MapObject mapObject = objectLayer.getObjects().get(spawnPointObject);
         if (mapObject != null && mapObject instanceof RectangleMapObject) {
@@ -142,6 +190,7 @@ public class PirateMap {
         return false;
     }
 
+    //scale tiledvector to real vector
     public Vector2 scaleTiledVectorToMap(Vector2 tiledVector) {
         return tiledVector.scl(1 / 2f);
     }

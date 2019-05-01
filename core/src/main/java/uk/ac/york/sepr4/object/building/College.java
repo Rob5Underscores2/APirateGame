@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Data;
 import uk.ac.york.sepr4.object.PirateMap;
+import uk.ac.york.sepr4.object.crew.CrewMember;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,17 +16,20 @@ public class College extends Building {
 
     //Must be defined in file
     private String bossName;
-    private Double bossDifficulty;
+    private Integer bossDifficulty, enemyDifficulty;
+    //id of crew member to be upgraded here and number of normal boats before boss spawns
+    private Integer crewMemberId, bossSpawnThreshold;
 
     //Can be set optionally in file to change college parameters
     private float spawnRange = 500f;
-    private Double spawnChance = 0.1, enemyDifficulty = 0.1;
+    private Double spawnChance = 0.1;
     private Integer maxEntities = 2;
     private List<String> requiresCollegeStr = new ArrayList<>(); //yet to be implemented (questing)
 
     //Set from college file variables
     private List<College> requiresCollege; //yet to be implemented (questing)
     private boolean bossSpawned = false;
+    private CrewMember crewMember;
 
 
     public College() {
@@ -49,6 +54,10 @@ public class College extends Building {
         return false;
     }
 
+    public void decrementBossSpawnThreshold() {
+        bossSpawnThreshold--;
+    }
+
     /***
      * Check if the boss specified by file is defined and can be created.
      * @return
@@ -57,7 +66,7 @@ public class College extends Building {
         return(bossName != null && bossDifficulty != null);
     }
 
-
+    //return rectangle representing maximum college spawn zone.
     public Rectangle getCollegeSpawnZone() {
         Vector2 pos = getMapLocation();
         return new Rectangle(pos.x-(spawnRange/2), pos.y-(spawnRange/2), spawnRange, spawnRange);

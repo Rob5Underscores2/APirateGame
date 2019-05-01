@@ -1,8 +1,8 @@
 package uk.ac.york.sepr4.object.projectile;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import lombok.Data;
-import uk.ac.york.sepr4.TextureManager;
 import uk.ac.york.sepr4.object.entity.Entity;
 import uk.ac.york.sepr4.object.entity.LivingEntity;
 
@@ -11,30 +11,18 @@ public class Projectile extends Entity {
 
     private LivingEntity shooter;
     private Double damage = 5.0;
-    private Integer baseSpeed = 100;
+    private Integer baseSpeed = 125;
 
-    private boolean active = true;
-
-    public Projectile(LivingEntity shooter, float speed, float angle) {
-        //Take speed from the shooter so bullet has a speed relative to the shooter
-        //TODO: Make the speed direction dependant (how much of the force is in the direction of the projectile)
-        super(TextureManager.CANNONBALL, shooter.getCentre());
-
-        this.shooter = shooter;
-
-        setAngle(angle);
-        setSpeed(speed + baseSpeed);
-    }
+    private boolean active = true, onFire = false;
 
     /**
-     * Added for Assessment 3: overloaded projectile constructor to add a damage parameter
      * @param shooter The entity shooting the projectile
      * @param speed Speed of the projectile
      * @param angle Angle at which the projectile is shot
      * @param damage Damage dealt on impact by projectile
      */
-    public Projectile(LivingEntity shooter, float speed, float angle, double damage){
-         super(TextureManager.CANNONBALL, shooter.getCentre());
+    public Projectile(LivingEntity shooter, Texture texture, float speed, float angle, double damage){
+         super(texture, shooter.getCentre());
 
         this.shooter = shooter;
 
@@ -43,6 +31,10 @@ public class Projectile extends Entity {
         setDamage(damage);
     }
 
+    /***
+     * Move projectile and despawn if too far from shooter.
+     * @param deltaTime time since last render
+     */
     @Override
     public void act(float deltaTime) {
         if(this.distanceFrom(shooter) > 1000) {

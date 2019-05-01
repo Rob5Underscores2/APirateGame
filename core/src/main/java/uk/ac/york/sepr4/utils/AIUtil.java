@@ -1,11 +1,190 @@
 package uk.ac.york.sepr4.utils;
 
 
-import uk.ac.york.sepr4.object.entity.Entity;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import uk.ac.york.sepr4.object.entity.Entity;
+import uk.ac.york.sepr4.object.entity.LivingEntity;
+import uk.ac.york.sepr4.object.entity.npc.NPCEntity;
+
+import java.util.Optional;
+import java.util.Random;
 
 public class AIUtil {
+
+    private static float idealDistFromTarget = 250f; //For the distance you want NPC to be away from target (Goldy Lox Zone)
+    private static float gradientForNormalDist = 50f; //This is the standard deviation of the normal distabution
+
+    public static void actNPCEntity(NPCEntity npcEntity, float deltaTime) {
+        //Clears arrays for later use
+        Array<Float> forces = new Array<>();
+        Array<Float> angles = new Array<>();
+
+        Random r = new Random();
+
+        if (!npcEntity.isDying()) {
+            //TARGET CHECK***************
+            // timer to check for new target (expensive if done every tick)
+            if (npcEntity.getTargetCheck() < 4f) {
+                npcEntity.setTargetCheck(npcEntity.getTargetCheck()+deltaTime);
+            }
+            //Gets a target
+            Optional<LivingEntity> optionalTarget = npcEntity.getTarget();
+            if (optionalTarget.isPresent()) {
+                LivingEntity target = optionalTarget.get();
+                npcEntity.setLastTarget(optionalTarget);
+                //***************************
+
+
+                //FORCES WANTED TO BE COMPUTED***************
+                //Explained more on the resultant force function take a look
+                float f = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(target), gradientForNormalDist, idealDistFromTarget); //---Normal Distribution 0 to 1 in max force this allows for us to have different forces depending on distances to the player
+
+                //Forces due to the target**
+                if ((float) npcEntity.distanceFrom(target) < idealDistFromTarget) {
+                    forces.add(1 - f);
+                    angles.add(AIUtil.normalizeAngle(npcEntity.getAngleTowardsEntity(target)));
+                } else {
+                    forces.add(1 - f);
+                    angles.add(AIUtil.normalizeAngle(npcEntity.getAngleTowardsEntity(target) - (float) Math.PI));
+                }
+                forces.add(f);
+                angles.add(AIUtil.normalizeAngle(target.getAngle() - (float) Math.PI));
+                //**
+
+                //Forces due to the other living entities**
+                for (LivingEntity livingentity : npcEntity.getLivingEntitiesInRangeMinusTarget(target)) {
+                    float n = AIUtil.normalDistFromMean((float) npcEntity.distanceFrom(livingentity), 50, 200); //---Normal Distribution again but to all living entities stops them wanting to collide
+                    if ((float) npcEntity.distanceFrom(livingentity) < 200) {
+                        forces.add((1 - n) / 2);
+                        angles.add(AIUtil.normalizeAngle(npcEntity.getAngleTowardsEntity(livingentity) - (float) Math.PI));
+                    } else {
+                        forces.add((1 - n) / 2);
+                        angles.add(AIUtil.normalizeAngle(npcEntity.getAngleTowardsEntity(livingentity)));
+                    }
+                }
+                //**
+
+                //Other forces can be applied in this way where the forces can be any value. In the cases above the max values they can get is 1 this should give you rough estimates of the power of the forces
+                //Really good to add in functions that take into account certain things for strategic positioning/cool interactions like ramming and whirlpools and things like that *HINT* *HINT*
+
+                //********************************************
+
+
+                //RESULTANT ANGLE*****************
+                //Gets the resultant force of all the forces and angles of those forces given by forces and angles arrays
+                //returns and array which is basically a pair being (resultant force, resultant forces angle)
+                float ang = AIUtil.resultantForce(angles, forces).get(1);
+                //********************************
+
+
+                //NO DUMB MOVE CHECK**************
+                //This section can be made to check whether certain moves maybe a bad move, e.g. moving into projectiles firing line, better strategic positioning *HINT* *HINT*
+                float wantedAngle = ang; //change
+                //********************************
+
+
+                //SPEED STUFF*****************
+                //Look at NPC Behaviour 2 for more details/visualisation
+                //If not dodging
+                if (npcEntity.getDodging() == 0) {
+                    //gets the normal of the angle towards the boat explained in NPC Functions 3
+                    float NormalFactor = Math.min(AIUtil.normalDistFromMean(AIUtil.angleDiffrenceBetweenTwoAngles(AIUtil.normalizeAngle(target.getAngle()), npcEntity.getAngleTowardsEntity(target)), (float) Math.PI / 8, (float) Math.PI / 2) * 100, 1f);
+                    float A;
+                    if (target.getSpeed() > npcEntity.getMaxSpeed()) {
+                        A = npcEntity.getMaxSpeed();
+                    } else {
+                        A = target.getSpeed();
+                    }
+                    float idealSpeed = (1 - f) * npcEntity.getMaxSpeed() + ((f + NormalFactor) / 2) * A;
+                    if (idealSpeed > npcEntity.getSpeed()) {
+                        npcEntity.setAccelerating(true);
+                        npcEntity.setBraking(false);
+                    } else {
+                        if (npcEntity.getSpeed() / 5 > idealSpeed) {
+                            npcEntity.setBraking(true);
+                            npcEntity.setAccelerating(false);
+                        } else {
+                            npcEntity.setAccelerating(false);
+                            npcEntity.setBraking(false);
+                        }
+                    }
+                } else {
+                    //If dodging act this out
+                    npcEntity.setAccelerating(false);
+                    npcEntity.setBraking(true);
+                    npcEntity.setDodging(npcEntity.getDodging()-1);
+                }
+                //****************************
+
+
+                //DODGE STARTER*****************
+
+                //Actual dodge movements are implemented in Speed stuff but for more advanced dodge can be adjusted in both Speed stuff and Turn action *HINT* *HINT*
+
+                //Gets all projectiles that will hit NPC and if above 0
+                if (npcEntity.getProjectilesToDodge(npcEntity.getProjectilesInRange()).size > 0) {
+
+                    //Set on a dodge if probability has chosen
+                    float prob = 1f * npcEntity.getProjectilesToDodge(npcEntity.getProjectilesInRange()).size;
+                    float random = r.nextFloat() * 100f;
+                    if (random < prob) {
+                        npcEntity.setDodging(100);
+                        Gdx.app.debug("npcEntity", "Dodging");
+                    }
+                } else {
+                    //Stops the NPC being still for longer than needed
+                    if (npcEntity.getDodging() > 0) {
+                        npcEntity.setDodging(10);
+                    }
+                }
+                //******************************
+
+
+                //TURN ACTION*******************
+                //Stops movement of under PI/16 from actually taking affect
+                if (AIUtil.angleDiffrenceBetweenTwoAngles(npcEntity.getAngle(), wantedAngle) < Math.PI / 16) {
+                    npcEntity.setTurning(false);
+                } else {
+                    npcEntity.setTurning(true);
+                }
+
+                //Checks for changes in turning so angular speed will be correct
+                npcEntity.turnPreCalcs(AIUtil.rightForAngleDiffrenceBetweenTwoAngles(npcEntity.getAngle(), wantedAngle));
+
+                //Sets previous turn to this turns right boolean e.g. if turning right then = true else false meaning left turn
+                npcEntity.setPreviousTurn(AIUtil.rightForAngleDiffrenceBetweenTwoAngles(npcEntity.getAngle(), wantedAngle));
+
+                //Sets the angle depending on parameters same as in livingentity
+                npcEntity.setAngle(npcEntity.getAngle() + (npcEntity.getAngularSpeed() * deltaTime) * (npcEntity.getSpeed() / npcEntity.getMaxSpeed()) % (float) (2 * Math.PI));
+                //******************************
+
+
+                //FIRING************************
+                //Calculates perfectShot into fireangle then adds some randomness to the shot with the parameter of accuracy which is inverted
+
+                if (target.getSpeed() < target.getMaxSpeed() / 5) {
+                    float fireangle = npcEntity.getAngleTowardsEntity(target);
+                    //Calls fire at angle
+                    npcEntity.fire((float) (fireangle + (-(1 / npcEntity.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcEntity.getAccuracy()) * (Math.PI / 32)))));
+                } else {
+                    //Stops the AI shooting at distances that are longer than 3 seconds due to infinte inteception points, if going parrell
+                    if (AIUtil.timeForPerfectAngleToCollide(npcEntity, target, AIUtil.thetaForAngleDiffrence(AIUtil.normalizeAngle(target.getAngle()), npcEntity.getAngleTowardsEntity(target)), 100) < 3) {
+                        float fireangle = AIUtil.perfectAngleToCollide(npcEntity, target, 100);
+                        //calls fire at angle
+                        npcEntity.fire((float) (fireangle + (-(1 / npcEntity.getAccuracy()) * (Math.PI / 32) + r.nextFloat() * (2 * (1 / npcEntity.getAccuracy()) * (Math.PI / 32)))));
+                    }
+                }
+                //******************************
+            } else {
+                //PATROL**********************
+                npcEntity.setAccelerating(false);
+                npcEntity.setDodging(0);
+                //TODO: Pursue for a bit if had a previous target, then stop moving
+                //****************************
+            }
+        }
+    }
 
     /**
      * @param x1 The original x position
@@ -132,7 +311,7 @@ public class AIUtil {
      * @param addedSpeed
      * @return b = the time taken for the source object or shot to connect with the target
      */
-    public static float timeForPerfectAngleToCollide(Entity source, Entity target, float theta, double addedSpeed) {
+    private static float timeForPerfectAngleToCollide(Entity source, Entity target, float theta, double addedSpeed) {
         double time = source.distanceFrom(target) / (source.getSpeed() + addedSpeed);
 
         double b = time / (2 * Math.cos(theta));
@@ -153,7 +332,8 @@ public class AIUtil {
         //Is fx/by max fx when the dist = mean
         return (float) (fx/(1 / (Math.sqrt(2 * Math.PI) * (double)standardDeviation)) * Math.pow(Math.E, -(1 / (2 * Math.pow((double)standardDeviation, 2)))));
     }
-    public static float straightLineGraphOneIfCloser(float dist, float lowestdist, float startdist) {
+
+    private static float straightLineGraphOneIfCloser(float dist, float lowestdist, float startdist) {
         if(dist <= lowestdist){
             return 1f;
         } else if (dist<= startdist){
@@ -192,7 +372,7 @@ public class AIUtil {
      * @param forces
      * @return An array acting as a pair (Resultant force magnitude, Resultant force angle) [Basically a vector]
      */
-    public static Array<Float> resultantForce(Array<Float> angles, Array<Float> forces){
+    private static Array<Float> resultantForce(Array<Float> angles, Array<Float> forces){
         Array<Float> force_angle = new Array<Float>();
         float N = 0, E = 0;
         double sigma;

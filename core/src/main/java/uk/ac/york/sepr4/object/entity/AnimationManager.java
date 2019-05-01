@@ -6,9 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
-import uk.ac.york.sepr4.TextureManager;
+import uk.ac.york.sepr4.io.FileManager;
+import uk.ac.york.sepr4.object.entity.npc.NPCBoat;
+import uk.ac.york.sepr4.object.entity.npc.NPCMonster;
 import uk.ac.york.sepr4.utils.AIUtil;
 
+import java.io.File;
 import java.util.*;
 
 public class AnimationManager {
@@ -17,7 +20,9 @@ public class AnimationManager {
 
     //For cleanup
     private Array<Entity> lastFrameEffects = new Array<>(); //Needed for clean up
-    private HashMap<LivingEntity, Float> deathAnimations = new HashMap<>();
+    @Getter
+    private List<DeathAnimation> deathAnimations = new ArrayList<>();
+    private List<FireAnimation> fireAnimations = new ArrayList<>();
 
     //Death Animations
     private Array<Entity> effects = new Array<>();
@@ -47,9 +52,10 @@ public class AnimationManager {
      * Effects work on a frame by frame basis so need to be spawned in every frame
      */
     public void handleEffects(Stage stage, float delta) {
-        handleDeathAnimations(delta);
+        updateDeathAnimations(delta);
         updateWaterTrails();
         updateFiringAnimations();
+        updateBoatFire();
         stage.getActors().removeAll(this.lastFrameEffects, true);
 
         for (Entity effect : effects) {
@@ -66,6 +72,9 @@ public class AnimationManager {
         cannonExplosions.add(new CannonExplosion(livingEntity, firingAngle));
     }
 
+    /***
+     * Remove complete cannon effects and activate current ones.
+     */
     private void updateFiringAnimations() {
         List<CannonExplosion> toRemove = new ArrayList<>();
         for(CannonExplosion cannonExplosion: cannonExplosions) {
@@ -77,8 +86,46 @@ public class AnimationManager {
         }
     }
 
+
+    /***
+     * Add new, remove complete and then activate current boat fire animations.
+     */
+    private void updateBoatFire() {
+        for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
+            if(livingEntity.isOnFire()) {
+                boolean isAdded = false;
+                for(FireAnimation fireAnimation : fireAnimations) {
+                    if(fireAnimation.getLE().equals(livingEntity)) {
+                        isAdded = true;
+                        break;
+                    }
+                }
+                if(!isAdded) {
+                    fireAnimations.add(new FireAnimation(livingEntity));
+                }
+            } else {
+                FireAnimation toRemove = null;
+                for(FireAnimation fireAnimation : fireAnimations) {
+                    if(fireAnimation.getLE().equals(livingEntity)) {
+                        toRemove = fireAnimation;
+                        break;
+                    }
+                }
+                if(toRemove !=null) {
+                    fireAnimations.remove(toRemove);
+                }
+            }
+        }
+
+        for(FireAnimation fireAnimation:fireAnimations) {
+            fireAnimation.spawnEffects(this);
+        }
+    }
+
     //TODO: Could be cleaned up
-    //Water Trails
+    /***
+     * Add new, remove complete and then activate current water trails.
+     */
     private void updateWaterTrails() {
         List<WaterTrail> toRemove = new ArrayList<>();
         for(WaterTrail waterTrail : waterTrails) {
@@ -109,46 +156,95 @@ public class AnimationManager {
     public void createWaterTrail(LivingEntity livingEntity) {
         waterTrails.add(new WaterTrail(livingEntity));
     }
-    
 
-
-    //Death Animations
-    //TODO: Cleanup like other animations
-    private void handleDeathAnimations(float delta) {
-        //add dying npcs if they arent already in there
+    /***
+     * Add new, remove complete and then activate current boat death animations.
+     */
+    private void updateDeathAnimations(float delta) {
+        //add dead NPCs if not yet animating
         for(LivingEntity livingEntity : entityManager.getLivingEntities()) {
-            if(livingEntity.isDying() && !deathAnimations.containsKey(livingEntity)) {
-                deathAnimations.put(livingEntity, 0f);
+            if(livingEntity.isDying()) {
+                boolean isAdded = false;
+                for(DeathAnimation dA : deathAnimations) {
+                    if(dA.getLE().equals(livingEntity)) {
+                        isAdded = true;
+                        break;
+                    }
+                }
+                if(!isAdded) {
+                    deathAnimations.add(new DeathAnimation(livingEntity));
+                }
             }
         }
-        for(Iterator<Map.Entry<LivingEntity, Float>> it = deathAnimations.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<LivingEntity, Float> entry = it.next();
-            LivingEntity livingEntity = entry.getKey();
-            Float deathTimer = entry.getValue();
-            livingEntity.setTexture(TextureManager.DEADENEMY);
-            livingEntity.setAlpha(1-(deathTimer/5));
-            if (deathTimer < 1/6f) {
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION1, 40, 40,1);
-            } else if (deathTimer < 2/6f) {
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION2, 40, 40, 1);
-            } else if (deathTimer < 1/2f){
-                addEffect(livingEntity.getCentre().x, livingEntity.getCentre().y,
-                        livingEntity.getAngle(), TextureManager.EXPLOSION3, 40, 40,1);
-            }
-            if (deathTimer > 5){
-                livingEntity.setDead(true);
-                livingEntity.setDying(false);
-                it.remove();
+
+        List<DeathAnimation> toRemove = new ArrayList<>();
+        for(DeathAnimation deathAnimation : deathAnimations) {
+            if(deathAnimation.getDeathTimer() <= 5) {
+                deathAnimation.spawnEffects(this, delta);
             } else {
-                entry.setValue(entry.getValue()+delta);
+                toRemove.add(deathAnimation);
+            }
+        }
+        deathAnimations.removeAll(toRemove);
+    }
+
+}
+
+class DeathAnimation {
+    @Getter
+    private LivingEntity lE;
+    private int frame = 1;
+    @Getter
+    private float deathTimer = 0f;
+
+    public DeathAnimation(LivingEntity lE) {
+        this.lE = lE;
+        lE.setTexture(FileManager.DEAD_ENEMY);
+        lE.setAlpha(1-(deathTimer/5));
+    }
+
+    public void spawnEffects(AnimationManager animationManager, float delta) {
+        animationManager.addEffect(lE.getCentre().x, lE.getCentre().y, lE.getAngle(),
+                FileManager.deathFrame(frame), 40, 40, 1);
+
+        deathTimer+=delta;
+        if (deathTimer > 5){
+            //animation over -- set dead
+            lE.setDead(true);
+            lE.setDying(false);
+            return;
+        } else {
+            if(frame == 3) {
+                frame = 1;
+            } else {
+                frame ++;
             }
         }
     }
+}
 
+class FireAnimation {
+    @Getter
+    private LivingEntity lE;
+    private int frame = 1;
 
-
+    public FireAnimation(LivingEntity lE) {
+        this.lE = lE;
+    }
+    public void spawnEffects(AnimationManager animationManager) {
+        animationManager.addEffect(lE.getCentre().x,
+                lE.getCentre().y,
+                lE.getAngle(),
+                FileManager.boatFireFrame(frame),
+                (int)lE.getWidth(),
+                (int)lE.getHeight(),
+                1);
+        if(frame==17) {
+            frame=1;
+        } else {
+            frame++;
+        }
+    }
 }
 
 class CannonExplosion {
@@ -170,7 +266,7 @@ class CannonExplosion {
                 firingAngle + (float)Math.PI/2, 50),
                 AIUtil.getYwithAngleandDistance(lE.getCentre().y,
                         firingAngle + (float)Math.PI/2, 50),
-                firingAngle, TextureManager.firingFrame(frame),
+                firingAngle, FileManager.firingFrame(frame),
                 70, 50, 1);
         frame++;
     }
@@ -207,17 +303,17 @@ class WaterTrail {
 
             if (distance > 0.1) {
                 if (i < lTrails.size() / 4) {
-                    animationManager.addEffect(xM, yM, angleP, TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.1f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.1f);
+                    animationManager.addEffect(xM, yM, angleP, FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.1f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.1f);
                 } else if (i < lTrails.size() / 2) {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.2f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.2f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.2f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.2f);
                 } else if (i < 3 * lTrails.size() / 4) {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.3f);
-                    animationManager.addEffect(xM2, yM2, angleP2,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.3f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.3f);
+                    animationManager.addEffect(xM2, yM2, angleP2,  FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.3f);
                 } else {
-                    animationManager.addEffect(xM, yM, angleP,  TextureManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.5f);
-                    animationManager.addEffect(xM2, yM2, angleP2, TextureManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.5f);
+                    animationManager.addEffect(xM, yM, angleP,  FileManager.MIDDLEBOATTRAIL1, (int)(distance + 5), 10,0.5f);
+                    animationManager.addEffect(xM2, yM2, angleP2, FileManager.MIDDLEBOATTRAIL1, (int)(distance2 + 5), 10,0.5f);
                 }
             }
         }
